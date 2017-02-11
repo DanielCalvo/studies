@@ -1,0 +1,7 @@
+The DevOps page from Atlassian seems to have some very interesting items
+https://www.atlassian.com/devops
+
+Learn git: https://www.atlassian.com/git
+Learn CD: https://www.atlassian.com/continuous-delivery
+Learn about agile: https://www.atlassian.com/agile
+Browser their assorted articles to see what else can you find: https://www.atlassian.com/it-unplugged
