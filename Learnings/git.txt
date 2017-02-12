@@ -1,0 +1,13 @@
+The absolute basics:
+
+Cloning a repo:
+git clone git@github.com:DanielCalvo/studies.git
+
+To tell git to track a file or diretocty you just created:
+git
+
+To see which branch you're on:
+git branch
+
+To see the local changes that you have:
+git status
