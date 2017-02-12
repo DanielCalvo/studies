@@ -34,6 +34,24 @@ git checkout mytestbranch
 While doing this whole branch thing, I edited git.txt (this document). I'm then going to add this file to the new branch:
 git add git.txt
 
+We can then commit the stuff on our test branch:
+git commit -m "adding stuff to my test branch"
+
+Then you can do a fast forward merge:
+git checkout master
+git merge mytestbranch
+git branch -d mytestbranch
+
+If you do a git status, you should be ahead of master by 1 commit:
+git status
+
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+
+We can then push our changes:
+git push
 
 
 
