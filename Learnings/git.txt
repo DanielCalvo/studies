@@ -1,13 +1,22 @@
+I'm merely following Atlassian's page on git (https://www.atlassian.com/git/tutorials/learn-git-with-bitbucket-cloud) and writing stuff here so I assimilate it better.
+
 The absolute basics:
 
-Cloning a repo:
+Cloning a repo
 git clone git@github.com:DanielCalvo/studies.git
 
 To tell git to track a file or diretocty you just created:
-git
+git add Learnings
 
-To see which branch you're on:
-git branch
+To commit these changes:
+git push origin master
 
-To see the local changes that you have:
-git status
+The above pushes the changes to the master branch on origin. You can see your git urls with
+git remote -v
+
+
+
+
+To change your push/pull method to SSH:
+What I think this actually does is that it overwrites the origin remote URL to be the ssh one over the https one.
+git remote set-url origin git@github.com:DanielCalvo/studies.git
