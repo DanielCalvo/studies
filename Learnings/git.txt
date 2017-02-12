@@ -8,12 +8,19 @@ git clone git@github.com:DanielCalvo/studies.git
 To tell git to track a file or diretocty you just created:
 git add Learnings
 
-To commit these changes:
+Once things have been added, removed or moved, you can commit them:
+git commit  -m "adding my Learnings folder"
+
+To push these changes:
 git push origin master
 
 The above pushes the changes to the master branch on origin. You can see your git urls with
 git remote -v
 
+To get changes from the repo, pull all:
+git pull --all
+Or simply pull:
+git pull
 
 
 
