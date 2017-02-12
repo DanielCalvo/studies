@@ -1,6 +1,6 @@
 I'm merely following Atlassian's page on git (https://www.atlassian.com/git/tutorials/learn-git-with-bitbucket-cloud) and writing stuff here so I assimilate it better.
 
-The absolute basics:
+THE ABSOLUTE BASICS
 
 Cloning a repo
 git clone git@github.com:DanielCalvo/studies.git
@@ -21,6 +21,19 @@ To get changes from the repo, pull all:
 git pull --all
 Or simply pull:
 git pull
+
+
+BRANCHING
+
+Lets create a branch on our project. The below command creates a branch, but does not switch to it:
+git branch mytestbranch
+
+Lets then switch to our branch:
+git checkout mytestbranch
+
+While doing this whole branch thing, I edited git.txt (this document). I'm then going to add this file to the new branch:
+git add git.txt
+
 
 
 
