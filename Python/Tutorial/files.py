@@ -1,7 +1,11 @@
 
-f = open('data.txt', 'w')
+#f = open('data.txt', 'w')
+#f.write("hey!")
+#f.write("wassup?")
+#f.close()
 
-f.write("hey!")
-f.write("wassup?")
+for line in open('data.txt'):
+    print (line, end='')
 
-f.close()
+print (open('data.txt').read())
+
