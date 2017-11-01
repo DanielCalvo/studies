@@ -8,3 +8,6 @@ apt-get update
 apt-get upgrade -y
 
 apt-get install vim git #what else?
+
+git config --global user.email "vioseven@gmail.com"
+git config --global user.name "Daniel Calvo"
