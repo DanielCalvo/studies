@@ -1,0 +1,30 @@
+1. Name three ways that you can assign three variables to the same value.
+
+One:
+a = 0
+b = 0
+c = 0
+
+Two:
+a = b = c = 0
+
+Three:
+a, b, c = 0, 0, 0
+
+2. Why might you need to care when assigning three variables to a mutable object?
+
+Internally, python might treat these 3 variables as a reference to the same object. Thus, changing the value of one variable could change the value of the other two.
+
+3. What’s wrong with saying L = L.sort()?
+
+What is probably intended here is to assign the sorted array back to L.
+
+Instead, L will receive the return value of the L.sort execution ('None', in this case) which is not the sorted array itself.
+
+L.sort() will sort the array in place, you don't need to do any assignment back to the L variable.
+
+4. How might you use the print operation to send text to an external file?
+
+Using the file argument on the print function
+
+print("message!", file=myfile)

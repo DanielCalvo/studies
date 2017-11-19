@@ -1,0 +1,25 @@
+
+1. How might you code a multiway branch in Python?
+
+If with elif statements!
+The compact stuff can be difficult to read, I'd rather skip it
+
+2. How can you code an if/else statement as an expression in Python?
+
+X = Z if X else B
+
+3. How can you make a single statement spam many lines?
+
+Some statements such as declaring lists or printing things can be simply be typed over multiple lines:
+
+print('hello'
+      'world')
+
+You can also use a reverse bar, though it is discouraged
+
+A = 1 + 2 \
+    + 3
+
+4. What do the words True and False mean?
+
+True and False are just aliases for 1 and 0.
