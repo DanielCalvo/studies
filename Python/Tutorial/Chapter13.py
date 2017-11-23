@@ -133,4 +133,37 @@ print(x)
 
 print([x for x in seq1 if x in seq2])
 
-file = open()
+file = open('Chapter13_file.txt', 'r')
+print (file.read())
+
+file = open('Chapter13_file.txt', 'r')
+while True:
+    char = file.read(1)
+    if not char: break
+    print(char)
+
+for char in open('Chapter13_file.txt', 'r'):
+    print(char)
+
+#Read into memory line by line:
+file = open('Chapter13_file.txt', 'r')
+while True:
+    line = file.readline()
+    if not line: break
+    print(line.rstrip()) #line already has a newline at the end of it!
+
+#Probably the easiest bit:
+
+for line in open('Chapter13_file.txt', 'r'):
+    print(line.rstrip())
+    if not line: break
+
+file = open('Chapter13_file.txt', 'rb')
+while True:
+    chunk = file.read(10)
+    if not chunk: break
+    print(chunk) #oh wow, weird output
+
+
+for line in reversed(open('Chapter13_file.txt', 'r').readlines()):
+    print(line)
