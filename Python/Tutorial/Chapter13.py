@@ -167,3 +167,10 @@ while True:
 
 for line in reversed(open('Chapter13_file.txt', 'r').readlines()):
     print(line)
+
+print(list(range(10)))
+print(list(range(5, 20, 2)))
+
+for a in range(10):
+    print (a)
+
