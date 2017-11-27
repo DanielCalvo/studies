@@ -174,3 +174,52 @@ print(list(range(5, 20, 2)))
 for a in range(10):
     print (a)
 
+
+L = [1,2,3,4,6,7]
+
+for i in range(len(L)):
+    X = L[i:] + L[:i]
+    print(X, end=' ')
+
+print()
+S = 'abcdefghijklmno'
+for i in range(0, len(S), 2):
+    print(S[i], end=' ')
+
+print()
+print("L contains:", L)
+
+print()
+for a in range(len(L)):
+    print(L[a], end=' ')
+
+L1 = [1,2,3,4]
+L2 = [5,6,7,8]
+L3 = list(zip(L1, L2))
+
+print()
+print(L3)
+
+for a in L3:
+    print(a)
+
+print()
+S = ' daniel'
+
+for (offset, item) in enumerate(S):
+    print(offset, item)
+
+print('Look, cat -n!', '\n')
+for (i, l) in enumerate(open('Chapter13_file.txt')):
+    print(i, l, end='')
+
+import os
+
+F = os.popen('dir')
+print(F.readline())
+print(F.read(50))
+
+for line in os.popen('dir'): print(line.rstrip())
+
+for line in os.popen('systeminfo'):
+    print(line)
