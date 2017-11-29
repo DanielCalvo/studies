@@ -215,11 +215,18 @@ for (i, l) in enumerate(open('Chapter13_file.txt')):
 
 import os
 
-F = os.popen('dir')
-print(F.readline())
-print(F.read(50))
+#F = os.popen('dir')
+#print(F.readline())
+#print(F.read(50))
 
-for line in os.popen('dir'): print(line.rstrip())
+#for line in os.popen('dir'): print(line.rstrip())
 
-for line in os.popen('systeminfo'):
+#for line in os.popen('systeminfo'):
+#    parts = line.split(':')
+#    if parts and parts[0].lower() == 'system type':
+#        print(parts[1].strip())
+
+#Hey, this is pretty useful for you crawler later on!
+from urllib.request import urlopen
+for line in urlopen('https://www.google.com'):
     print(line)
