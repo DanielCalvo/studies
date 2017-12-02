@@ -1,5 +1,5 @@
 
-Learning Python 5ed: 432
+Learning Python 5ed: 436
 
 
 Ideas:
@@ -9,3 +9,7 @@ Write a function or object (object with a write method!) or something that write
 
 Things you glossed over:
 - Zip in loop coding techniques, page 407
+
+
+--- NOTES ---
+Page 436: I still don't understand the map function very well. Zip also confuses me a bit.

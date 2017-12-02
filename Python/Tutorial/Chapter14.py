@@ -196,5 +196,78 @@ print('x = 2\n' in open('script2.py'))
 L = [1,2,3]
 L.extend(open('script2.py'))
 
+print('\n')
+print(set(open('script2.py')))
 
+#I'm still confused as to what set does
+for thing in set(open('script2.py')):
+    print('here be the thing:', thing.rstrip())
 
+#Some advanced Chapter 20 stuff:
+
+print(list(line.upper() for line in open('script2.py')))
+
+print(sum([1,5,6,7,888]))
+print(max([1,5,6,7,888]))
+print(min([1,5,6,7,888]))
+
+mylist = [] #empty list
+
+print(any(mylist))
+mylist.extend('hello!')
+print(any(mylist))
+
+print([1,2,3])
+print(*[1,2,3]) #Cool! Each element of the list is a separete argument!
+
+#So if you writea function that receives two arguments, can you pass a list with two items and make it work?
+
+def hello(x,y):
+    print(x,y)
+
+def singlehello(x):
+    print(x)
+hellolist=['hello', 'human']
+hello(*hellolist) #OH WOAH I'M LEARNING THINGS
+
+X = (1,2)
+Y = (3,4)
+
+print(list(zip(X,Y)))
+
+A, B = zip(*zip(X,Y))
+
+print(A,B)
+
+#From the book: In Python 3.x as opposed to 2.x, many functions return iterable objects, as opposed to lists.
+#"Delayed evaluation" conservers memory and avoids pauses while large results are computed
+
+#Let's take a look at some iterables
+
+R = range(10)
+print(R)
+
+for a in R:
+    print(a, end=' ')
+print('\n')
+
+I = R.__iter__()
+print(I)
+print(next(I))
+print(next(I))
+print(I.__next__())
+print(I.__next__())
+
+#In Python 3.x, range supports only iteration, indexing and len(). Use a list if you require more tools!
+print('\n')
+print(R[3])
+print(R.__len__())
+print(len(R))
+
+#map, zip and filter are also iterables in 3.x
+
+print('\n')
+A = map(abs, (-1, 0, 1))
+print(A.__next__())
+print(A.__next__())
+print(A.__next__())
