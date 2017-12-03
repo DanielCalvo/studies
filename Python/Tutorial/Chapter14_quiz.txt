@@ -1,0 +1,5 @@
+1. How are for loops and iterable objects related?
+2. How are for loops and list comprehensions related?
+3. Name four iteration contexts in the Python language.
+4. What is the best way to read line by line from a text file today?
+5. What sort of weapons would you expect to see employed by the Spanish Inquisition?

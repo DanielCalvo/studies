@@ -1,5 +1,5 @@
 
-Learning Python 5ed: 436
+Learning Python 5ed: 467
 
 
 Ideas:
@@ -13,3 +13,9 @@ Things you glossed over:
 
 --- NOTES ---
 Page 436: I still don't understand the map function very well. Zip also confuses me a bit.
+
+Review the early chapters (especially the ones on lists and dictionaries). I feel I could benefit from reviewing them with a better understanding of the language.
+
+Chapter 14 left me rather confused.
+
+Chapter 15: The documentation that ships with python may prove itself useful. Perhaps skimming it could teach you new things.

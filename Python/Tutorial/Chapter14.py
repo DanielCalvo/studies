@@ -271,3 +271,72 @@ A = map(abs, (-1, 0, 1))
 print(A.__next__())
 print(A.__next__())
 print(A.__next__())
+
+#Zip is a one pass iterator
+print('\n')
+Z = zip((1,2,3), (4,5,6), (7,8,9))
+print(Z)
+
+print('First for:')
+for pair in Z: print(pair)
+print('Second for:')
+for pair in Z: print(pair)
+
+#If you make it a list though, you can iterate through it as many times as you need:
+Z = list(zip((1,2,3), (4,5,6), (7,8,9)))
+print('\n')
+print('First for:')
+for pair in Z: print(pair)
+print('Second for:')
+for pair in Z: print(pair)
+
+#Actually, zip, map and filter are all one pass iterators. Hmm...
+
+print(filter(bool, ['spam', '', 'dani']))
+print(list(filter(bool, ['spam', '', 'dani'])))
+
+FI = filter(bool, ['spam', '', 'dani'])
+for element in FI: print(element)
+for element in FI: print(element) # Doesn't print anything
+
+
+#Range supports multiple iterators:
+
+R = range(3)
+
+I1 = iter(R)
+print(next(I1))
+print(next(I1))
+
+I2 = iter(R)
+print(next(I2))
+print(next(I2))
+
+#zip, map and filter do not support multiple iterators:
+
+Z = zip((1,2,3), (4,5,6), (7,8,9))
+I1 = iter(Z)
+I2 = iter(Z)
+
+print(next(I1))
+print(next(I1))
+print(next(I2)) #Wait a minute!
+
+D = dict(a=1,b=2,c=3)
+print(D)
+
+K = D.keys()
+print(K)
+#next(K) # Won't work, not an iterator
+
+I = K.__iter__()
+print(next(I))
+print(next(I))
+
+print('\n')
+
+myitems = D.items()
+print(type(myitems))
+[print(k,v) for k,v in myitems]
+
+for k in sorted(D): print(k, D[k], end=' ')
