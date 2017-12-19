@@ -1,6 +1,5 @@
 
-Learning Python 5ed: 467
-
+Learning Python 5ed: 506
 
 Ideas:
 Doing it by python, grants all rights to tables on a database except one table
@@ -12,10 +11,14 @@ Things you glossed over:
 
 
 --- NOTES ---
+Page 407: Zip in loops remained gloosed over
 Page 436: I still don't understand the map function very well. Zip also confuses me a bit.
+Chapter 15: The documentation that ships with python may prove itself useful. Perhaps skimming it could teach you new things.
+Page 468: The fourth exercise remains to be done at some other time
+Page 501: Is the concept of a function factory useful in Python?
+Page 507: Avoided nested functions as it may be too elaborate for any real world use scenario (I hope to not be wrong...)
+
 
 Review the early chapters (especially the ones on lists and dictionaries). I feel I could benefit from reviewing them with a better understanding of the language.
 
-Chapter 14 left me rather confused.
 
-Chapter 15: The documentation that ships with python may prove itself useful. Perhaps skimming it could teach you new things.

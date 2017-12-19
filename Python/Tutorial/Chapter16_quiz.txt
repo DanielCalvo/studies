@@ -1,0 +1,19 @@
+1. What is the point of coding functions?
+
+To be able to reuse code! This way you don't have to type and modify the same thing over and over multiple times across a program.
+
+2. At what time does Python create a function?
+
+When it goes through the def statement
+
+3. What does a function return if it has no return statement in it?
+
+It returns None.
+
+4. When does the code nested inside the function definition statement run?
+
+When the function is called (not defined!)
+
+5. What’s wrong with checking the types of objects passed into a function?
+
+Python supports polymorphism! A given function can work with multiple object types. If incompatible objects are passed to a function, it'll raise an exception anyway.
