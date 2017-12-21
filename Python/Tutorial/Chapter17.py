@@ -77,3 +77,96 @@ print(x(3)) #what is going on here?! I
 #Non local only has meaning inside functions. This fails:
 #nonlocal Z
 
+def tester(start):
+    state = start
+    def nested(label):
+        nonlocal state
+        print(label, state)
+        state += 1
+    return nested
+
+F = tester(0)
+F('spam')
+F('banana')
+
+
+#tested/nested above as a class:
+
+class testerclass: #much easier to read and understand! I like it!
+    def __init__(self, start):
+        self.state = start
+    def nested(self, label):
+        print(label, self.state)
+        self.state += 1
+
+F = testerclass(4)
+F.nested('apple')
+F.nested('orange')
+F.nested('spam')
+
+class testertwo:
+    def __init__(self, start):
+        self.state = start
+    def __call__(self, label):
+        print(label,self.state)
+        self.state += 1
+
+H = testertwo(99)
+H('stuff')
+
+def testermore(start):
+    def nested(label):
+        print (label, nested.state)
+        nested.state += 1
+    nested.state = start
+    return nested
+
+HH = testermore(4)
+HH('ruhroh')
+HH('wabadiblapda!')
+
+X = 'Spam'
+def func1():
+    print(X)
+func1()
+
+
+X = 'Spam'
+def func2():
+    X = 'NI!'
+func2()
+print(X)
+
+X = 'Spam'
+def func3():
+    X = 'NI'
+    print(X)
+func3()
+print(X)
+
+X = 'Spam'
+def func4():
+    global X
+    X = 'NI'
+func4()
+print(X)
+
+
+X = 'Spam'
+def func5():
+    X = 'NI'
+    def nested():
+        print(X)
+    nested()
+
+func5()
+
+def func6():
+    X = 'NI'
+    def nested():
+        nonlocal X
+        X = 'Spam'
+    nested()
+    print(X)
+
+func6()

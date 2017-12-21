@@ -1,5 +1,5 @@
 
-Learning Python 5ed: 506
+Learning Python 5ed: 523
 
 Ideas:
 Doing it by python, grants all rights to tables on a database except one table
@@ -17,7 +17,7 @@ Chapter 15: The documentation that ships with python may prove itself useful. Pe
 Page 468: The fourth exercise remains to be done at some other time
 Page 501: Is the concept of a function factory useful in Python?
 Page 507: Avoided nested functions as it may be too elaborate for any real world use scenario (I hope to not be wrong...)
-
+Page 518: Left that somewhat complicated custom open function to be seen at a later chapter...
 
 Review the early chapters (especially the ones on lists and dictionaries). I feel I could benefit from reviewing them with a better understanding of the language.
 

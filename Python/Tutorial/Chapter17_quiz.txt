@@ -1,0 +1,63 @@
+1. What is the output of the following code, and why?
+>>> X = 'Spam'
+>>> def func():
+print(X)
+>>> func()
+
+Answer: It would print Spam, as it's a global variable and can be seen inside the function func()
+
+2. What is the output of this code, and why?
+>>> X = 'Spam'
+>>> def func():
+X = 'NI!'
+>>> func()
+>>> print(X)
+
+Answer: It would print 'Spam', as the variable inside func() is local and doesn't exist on the global scope. Print happens on global scope.
+
+3. What does this code print, and why?
+>>> X = 'Spam'
+>>> def func():
+X = 'NI'
+print(X)
+>>> func()
+>>> print(X)
+
+Answer: Prints 'NI', followed by 'Spam'. X is two different variables, one inside the def and other in the global scope.
+
+4. What output does this code produce? Why?
+>>> X = 'Spam'
+>>> def func():
+global X
+X = 'NI'
+>>> func()
+>>> print(X)
+
+Answer: Prints 'NI', as the X variable inside the def statement is set to reference the global variable X.
+
+5. What about this code—what’s the output, and why?
+>>> X = 'Spam'
+>>> def func():
+X = 'NI'
+def nested():
+print(X)
+nested()
+>>> func()
+
+Answer: Prints NI, as per LEGB. (Local, Enclosing, Global, Built-in)
+
+6. How about this example: what is its output in Python 3.X, and why?
+>>> def func():
+X = 'NI'
+def nested():
+nonlocal X
+X = 'Spam'
+nested()
+print(X)
+>>> func()
+
+Answer: Prints spam due to that non local statement.
+
+7. Name three or more ways to retain state information in a Python function.
+
+Nested functions, classes and nested functions with some OOP witchcraft as seen on that last example on the book (forgot the name...). You can also use global variables (but should resist the temptation...)
