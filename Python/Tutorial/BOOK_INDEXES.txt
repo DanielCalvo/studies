@@ -1,10 +1,10 @@
 
-Learning Python 5ed: 537
+Learning Python 5ed: 544
 
 Ideas:
 Doing it by python, grants all rights to tables on a database except one table
-
 Write a function or object (object with a write method!) or something that writes stuff to multiple files and/or over the network!
+Do something with APIs
 
 Things you glossed over:
 - Zip in loop coding techniques, page 407

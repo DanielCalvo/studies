@@ -102,5 +102,83 @@ fu6(**myargs)
 
 fu6(*(1,2), **{'d': 44, 'c': 33})
 
-
 #That tracer function looks cool!
+
+def tracer (func, *pargs, **kargs):
+    print('arguments received:', func, *pargs, **kargs)
+    print('calling:', func.__name__)
+    return func(*pargs, **kargs)
+
+def func(a,b,c,d):
+    return a+b+c+d
+
+print(tracer(func, 1,2,3,4))
+print(func(1,2,2,3))
+
+def kwonly1(a, *b, c):
+    print(a,b,c)
+
+kwonly1(1,2,33,c=3) #a may be passed by name or position, b collects any extra positional arguments, c must be passed by keyword
+
+def kwonly2(a, *, b, c): #this forces b and c to be passed by keyword
+    print(a,b,c)
+
+kwonly2(1, b=44, c=55)
+
+def kwonly3(a, *, b, c='spammm'):
+    print(a,b,c)
+
+kwonly3('a', b='stuff')
+
+#Keyword arguments must be defined after a single star, not two star!
+
+def fu7(a=0, *b, c=7, **d):
+    print(a, b, c, d)
+    for key in d:
+        print(key, d[key])
+
+fu7(1,2,3,4)
+fu7(ccc=8, ddd=9, eee=10)
+
+def fu8(a, *b, c=6, **d): print(a,b,c,d)
+
+fu8(1, *(2,3), **dict(x=8,z=99))
+
+def min1(*args):
+    res = args[0]
+    for arg in args[1:]:
+        if arg < res:
+            res = arg
+    return res
+
+def min2(first, *rest):
+    for arg in rest:
+        if arg < first:
+            first = arg
+    return first
+
+def min3(*args):
+    tmp = list(args)
+    tmp.sort()
+    return tmp[0]
+
+def max1(*args):
+    tmp = list(args)
+    tmp.sort()
+    return tmp[-1]
+
+print(min1(45,6,6,6,6,777,4))
+print(min2(45,6,6,6,6,777,4))
+print(max1(55,66,1))
+
+def minmax(function, *args):
+    res = args[0]
+    for arg in args[1:]:
+        if function(arg, res):
+            res = arg
+    return res
+
+def lessthen(x, y): return x < y
+def greaterthen(x, y): return x > y
+
+print(minmax(lessthen,6,4,3,32,22,66,2,34,4,8,888)) #I am so confused.
