@@ -181,4 +181,49 @@ def minmax(function, *args):
 def lessthen(x, y): return x < y
 def greaterthen(x, y): return x > y
 
-print(minmax(lessthen,6,4,3,32,22,66,2,34,4,8,888)) #I am so confused.
+print(minmax(lessthen,6,4,3,32,22,66,2,34,4,8,888)) #I am so confused. EDIT: I am only slightly confused.
+
+def intersect(*args):
+    res = []
+    for x in args[0]:
+        if x in res: continue
+        for other in args[1:]:
+            if not x in other: break
+            else:
+                res.append(x)
+    return res
+
+def union(*args):
+    res = []
+    for seq in args:
+        for x in seq:
+            if not x in res:
+                res.append(x)
+    return res
+
+s1 = 'SPAM'
+s2 = 'SCAM'
+s3 = 'BLAM'
+dani1 = 'dani'
+dani2 = 'dani'
+
+list_one = [1,5,6]
+list_two = [1,8,7,6,6,6,6,7,66]
+
+print(intersect(list_one,list_two))
+print(intersect(s1,s2,s3), union(s1,s2))
+print(intersect(dani1,dani2))
+#A google search reveals that intersections can be performed with a lot less fuss:
+
+list_three = [val for val in list_one if val in list_two]
+print(list_three)
+
+
+def tester(func, items, trace=True):
+    for i in range (len(items)):
+        items = items[1:] + items[:1]
+        if trace: print(items)
+        print(sorted(func(*items)))
+
+print('checking out the tester fucntion')
+print(tester(union,(list_one,list_two),trace=False))

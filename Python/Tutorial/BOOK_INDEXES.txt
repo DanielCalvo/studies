@@ -1,5 +1,5 @@
 
-Learning Python 5ed: 544
+Learning Python 5ed: 546
 
 Ideas:
 Doing it by python, grants all rights to tables on a database except one table
