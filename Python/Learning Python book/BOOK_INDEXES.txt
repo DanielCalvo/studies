@@ -23,6 +23,4 @@ Review the early chapters (especially the ones on lists and dictionaries). I fee
 IDEAS:
 - Grant SELECT rights to all tables on a given database except the user table
 - Do something interesting with the 4chan api! (it covers working with APIs and json!)
-- Crawl milanuncios (difficult — against TOS and have issues getting around their anti-scrapping stuff). Probably will need some non-pyhton hacks
-
-- Create resized versions of all your mobile pictures on a "Resized" folder. More info here: http://docs.python-guide.org/en/latest/scenarios/imaging/
+- Crawl milanuncios (difficult — against TOS and have issues getting around their anti-scrapping stuff). Probably will need some non-python hacks
