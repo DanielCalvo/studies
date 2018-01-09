@@ -1,0 +1,47 @@
+1. What is the output of the following code, and why?
+def func(a, b=4, c=5):
+    print(a, b, c)
+func(1, 2)
+
+Answer: 1,2,5
+
+2. What is the output of this code, and why?
+def func(a, b, c=5):
+    print(a, b, c)
+func(1, c=3, b=2)
+
+Answer: 1,2,3
+
+3. How about this code: what is its output, and why?
+def func(a, *pargs):
+    print(a, pargs)
+func(1, 2, 3)
+
+Answer; 1(2,3). pargs is a list!
+
+4. What does this code print, and why?
+def func(a, **kargs):
+    print(a, kargs)
+func(a=1, c=3, b=2)
+
+Answer: (1, {'c':3}, {'b':2}
+
+5. What gets printed by this, and why?
+
+def func(a, b, c=3, d=4): print(a, b, c, d)
+
+func(1, *(5, 6))
+
+Answer: 1,(5,6),3,4
+Wrong! Actual answer: 1 5 6 4
+
+
+
+def func(a, b, c): a = 2; b[0] = 'x'; c['a'] = 'y'
+
+l=1; m=[1]; n={'a':0}
+func(l, m, n)
+print(l, m, n)
+
+Amswer:
+Partially wrong. Right answer: 1,['x'],{'a':'y'}

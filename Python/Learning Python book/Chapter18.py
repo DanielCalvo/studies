@@ -228,3 +228,8 @@ def tester(func, items, trace=True):
 print('checking out the tester fucntion')
 print(tester(union,(list_one,list_two),trace=False))
 
+
+def myfunc1(a, b, c=3, d=4): print(a, b, c, d)
+
+myfunc1(1, *(5, 6))
+

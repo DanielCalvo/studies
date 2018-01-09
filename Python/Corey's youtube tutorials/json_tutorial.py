@@ -18,4 +18,7 @@ response = urlopen('http://a.4cdn.org/n/catalog.json')
 data = json.loads(response.read())
 print(json.dumps(data, indent=2))
 
+for thread in data['threads']:
+    print(thread)
+
 #https://www.youtube.com/watch?v=9N6a-VLBa2I
