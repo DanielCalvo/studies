@@ -151,3 +151,22 @@ key = 'got'
 'got': (lambda: print(2*4)),
 'one': (lambda: 2**6)}[key]()
 
+lower = (lambda x, y: x if x > y else y)
+
+print(lower(1,3))
+
+import sys
+showall = lambda x: list(map(print, x))
+
+t = showall(['asd, bsd'])
+
+showall1 = lambda x: [print(line) for line in x]
+t = showall1(['asd','asd','asd'])
+
+def action(x):
+    return (lambda y: x+y)
+
+act = action(99)
+print(act(2))
+
+#Nested lambdas are usually best avoided!

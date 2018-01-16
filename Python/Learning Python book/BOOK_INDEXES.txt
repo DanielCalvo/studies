@@ -1,5 +1,5 @@
 
-Learning Python 5ed: 571
+Learning Python 5ed: 574
 
 Ideas:
 Write a function or object (object with a write method!) or something that writes stuff to multiple files and/or over the network!
