@@ -170,3 +170,19 @@ act = action(99)
 print(act(2))
 
 #Nested lambdas are usually best avoided!
+
+counters = [1,2,3,4]
+updated = []
+
+for x in counters:
+    updated.append(x+10)
+
+print(updated)
+
+#The map function applies a passed in function to each item in an iterable object and returns a list containing all the function call results
+
+def inc(x): return x+10
+
+print(list(map(inc, counters)))
+
+print(map((lambda x: x+11), counters))
