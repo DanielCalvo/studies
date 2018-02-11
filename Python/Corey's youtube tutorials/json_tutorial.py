@@ -2,6 +2,7 @@
 import json
 from urllib.request import urlopen
 from html.parser import HTMLParser
+import time
 
 class MyHTMLParser(HTMLParser):
     def handle_data(self, data):
@@ -13,7 +14,7 @@ def post_shortendate(post_now):
     return result
 
 parser = MyHTMLParser()
-
+dbt_found = False
 #TODO: If no initial json, save the catalog json
 #TODO: Download the catalog every time you run the program. Display display which threads had replies, and how many (compared to the last stored json)
 #TODO: Display thread and/or new replies on thread?
@@ -22,38 +23,28 @@ parser = MyHTMLParser()
 #TODO: Do a function that gets the catalog
 #TODO: Expand replies on the post that is replying to them (after the contents of post that is replying)
 #TODO: Use pygments to colorize output!
+#TODO: Handle bad responses from the API (appears to happen!)
 
 # Ran once to save the 4chan catalog to a file so we don't make API calls every time we run the program...
 
-#response = urlopen('http://a.4cdn.org/o/catalog.json')
-#data = json.loads(response.read())
-#fh = open('4chan_catalog.json', 'w')
-#json.dump(data, fh, indent=2)
-
-catalog_file = open('4chan_catalog.json', 'r')
-catalog_json = json.load(catalog_file)
-#print(json.dumps(catalog_json, indent=2))
+response = urlopen('http://a.4cdn.org/o/catalog.json')
+catalog_json = json.loads(response.read())
 
 for pages in catalog_json:
     for threads in pages['threads']:
         try:
             if 'dbt' in threads['sub'] or 'dbt' in threads['com']: #TODO: [1]
+                dbt_found = True
                 dbt_thread_urlopen = urlopen('http://a.4cdn.org/o/thread/' + str(threads['no']) + '.json')
                 dbt_thread_data = json.loads(dbt_thread_urlopen.read())
-                dbt_thread_fh = open(str(threads['no']) + '.json', 'w')
-                json.dump(dbt_thread_data, dbt_thread_fh, indent=2)
+                for posts in dbt_thread_data['posts']:
+                    print(post_shortendate(posts['now']), end=' ')
+                    parser.feed(posts['com'])
+                    print()
         except KeyError:
             pass
-
-for posts in dbt_thread_data['posts']:
-    # print(posts['no'], ' - ', posts['now'], parser.feed(html.unescape(posts['com'])))
-    print(posts['no'], post_shortendate(posts['now']), end=' ')
-    try:
-        parser.feed(posts['com'])
-        print()
-    except KeyError:
-        pass
-
-    #print()
-
+        if dbt_found:
+            break
+    if dbt_found:
+        break
 
