@@ -18,3 +18,4 @@ json.dump(rec, fp=open('testjson.txt', 'w'), indent=4)
 P = json.load(open('testjson.txt'))
 
 print ("Printing P:", P)
+
