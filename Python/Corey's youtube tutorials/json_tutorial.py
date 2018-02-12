@@ -24,6 +24,7 @@ dbt_found = False
 #TODO: Expand replies on the post that is replying to them (after the contents of post that is replying)
 #TODO: Use pygments to colorize output!
 #TODO: Handle bad responses from the API (appears to happen!)
+#TODO: Adjust that try catch. Apparently, as soon as it catches the exception, it goes to the except block. Put the try/except only around the stuff that actually fails!
 
 # Ran once to save the 4chan catalog to a file so we don't make API calls every time we run the program...
 
