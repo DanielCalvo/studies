@@ -2,11 +2,12 @@
 import json
 from urllib.request import urlopen
 from html.parser import HTMLParser
+from termcolor import colored, cprint
 import time
 
 class MyHTMLParser(HTMLParser):
     def handle_data(self, data):
-        print(data, end=' ') #TODO: Return data instead of printing it, print it later on the main program
+       cprint(data,'green',end=' ') #TODO: Return data instead of printing it, print it later on the main program
 
 def post_shortendate(post_now):
     split_date = post_now.split('(')
@@ -23,7 +24,6 @@ dbt_found = False
 #TODO: Do a function that gets the catalog
 #TODO: Expand replies on the post that is replying to them (after the contents of post that is replying)
 #TODO: Use pygments to colorize output!
-#TODO: Handle bad responses from the API (appears to happen!)
 
 # Ran once to save the 4chan catalog to a file so we don't make API calls every time we run the program...
 
@@ -38,7 +38,7 @@ for pages in catalog_json:
                 dbt_thread_urlopen = urlopen('http://a.4cdn.org/o/thread/' + str(threads['no']) + '.json')
                 dbt_thread_data = json.loads(dbt_thread_urlopen.read())
                 for posts in dbt_thread_data['posts']:
-                    print(post_shortendate(posts['now']), end=' ')
+                    cprint(post_shortendate(posts['now']),'cyan', end=' ')
                     parser.feed(posts['com'])
                     print()
         except KeyError:
