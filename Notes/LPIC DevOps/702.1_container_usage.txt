@@ -1,0 +1,19 @@
+702.1 Container Usage (weight: 7)
+Weight: 7
+
+Description: Candidates should be able to build, share and operate Docker containers. This includes creating Dockerfiles, using a Docker registry, creating and interacting with containers as well as connecting containers to networks and storage volumes. This objective covers the feature set of Docker version 17.06 or later.
+
+Key Knowledge Areas:
+
+- Understand the Docker architecture
+- Use existing Docker images from a Docker registry
+- Create Dockerfiles and build images from Dockerfiles
+- Upload images to a Docker registry
+- Operate and access Docker containers
+- Connect container to Docker networks
+- Use Docker volumes for shared and persistent container storage
+
+The following is a partial list of the used files, terms and utilities:
+- docker
+- Dockerfile
+- .dockerignore

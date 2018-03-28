@@ -1,0 +1,18 @@
+702.2 Container Deployment and Orchestration (weight: 5)
+Weight: 5
+
+Description: Candidates should be able to run and manage multiple containers that work together to provide a service. This includes the orchestration of Docker containers using Docker Compose in conjunction with an existing Docker Swarm cluster as well as using an existing Kubernetes cluster. This objective covers the feature sets of Docker Compose version 1.14 or later, Docker Swarm included in Docker 17.06 or later and Kubernetes 1.6 or later.
+
+Key Knowledge Areas:
+
+- Understand the application model of Docker Compose
+- Create and run Docker Compose Files (version 3 or later)
+- Understand the architecture and functionality of Docker Swarm mode
+- Run containers in a Docker Swarm, including the definition of services, stacks and the usage of secrets
+- Understand the architecture and application model Kubernetes
+- Define and manage a container-based application for Kubernetes, including the definition of Deployments, Services, ReplicaSets and Pods
+
+The following is a partial list of the used files, terms and utilities:
+- docker-compose
+- docker
+- kubectl
