@@ -1,0 +1,26 @@
+TODO:
+- Study docker machine to launch an ansible server (a persistent, full fledged vm with apt-get and so on)
+- Make a reference sheet of dockerfile commands/entry types
+- Go through some more Dockerfiles to understand further examples
+
+Mastering docker: Page 53
+
+Move faster!
+
+How do you create and use your own custom debian image?
+
+Nice (basic?) docker cheat sheet: http://blog.baudson.de/blog/stop-and-remove-all-docker-containers-and-images
+
+
+Possible workflow:
+- Create dockerfile
+- Create image (docker image build --tag local:debiantest .)
+- Launch container (docker container run -it--name debiantest1 local:debiantest /bin/bash)
+
+
+docker build --tag local/apache-php:7 .
+docker container run -d -p 8080:80 --name apache-php7 local/apache-php:7
+
+docker image inspect local:debiantest #Neat!
+
+Document docker per subcomands (image, container, swarm, volume and so on)
