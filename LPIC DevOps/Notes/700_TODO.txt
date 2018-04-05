@@ -3,7 +3,7 @@ TODO:
 - Make a reference sheet of dockerfile commands/entry types
 - Go through some more Dockerfiles to understand further examples
 
-Mastering docker: Page 53
+Mastering docker: Page 68
 
 Move faster!
 
