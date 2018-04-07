@@ -1,9 +1,15 @@
 TODO:
+- Move the git.txt in learnings to a LPIC text file in it's corresponding section and get rid of that folder
 - Study docker machine to launch an ansible server (a persistent, full fledged vm with apt-get and so on)
 - Make a reference sheet of dockerfile commands/entry types
 - Go through some more Dockerfiles to understand further examples
+- Do a workflow for docker things (create image, upload to docker hub, deploy swarm?)
+- Note: Images can have depending child images! (such as a debian image)
+- docker run -it: What does it mean?
+- On docker, it appears changes do not persist when running images (welp, that oughta be obvious)
 
-Mastering docker: Page 68
+
+Mastering docker: Page 74
 
 Move faster!
 
@@ -22,5 +28,7 @@ docker build --tag local/apache-php:7 .
 docker container run -d -p 8080:80 --name apache-php7 local/apache-php:7
 
 docker image inspect local:debiantest #Neat!
+
+docker pull vioseven/docker_automated #pull image from dockerhub (created on dockerhub)
 
 Document docker per subcomands (image, container, swarm, volume and so on)

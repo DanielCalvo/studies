@@ -1,0 +1,27 @@
+704.1 Ansible (weight: 8)
+Weight: 8
+
+Description: Candidates should be able to use Ansible to ensure a target server is in a specific state regarding its configuration and installed software. This objective covers the feature set of Ansible version 2.2 or later.
+
+Key Knowledge Areas:
+
+- Understand the principles of automated system configuration and software installation
+- Create and maintain inventory files
+- Understand how Ansible interacts with remote systems
+- Manage SSH login credentials for Ansible, including using unprivileged login accounts
+- Create, maintain and run Ansible playbooks, including tasks, handlers, conditionals, loops and registers
+- Set and use variables
+- Maintain secrets using Ansible vaults
+- Write Jinja2 templates, including using common filters, loops and conditionals
+- Understand and use Ansible roles and install Ansible roles from Ansible Galaxy
+- Understand and use important Ansible tasks, including file, copy, template, ini_file, lineinfile, patch, replace, user, group, command, shell, service, systemd, cron, apt, debconf, yum, git, and debug
+- Awareness of dynamic inventory
+- Awareness of Ansibles features for non-Linux systems
+- Awareness of Ansible containers
+
+The following is a partial list of the used files, terms and utilities:
+- ansible.cfg
+- ansible-playbook
+- ansible-vault
+- ansible-galaxy
+- ansible-doc
