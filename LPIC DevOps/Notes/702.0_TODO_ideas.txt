@@ -1,4 +1,0 @@
-TODO ideas:
-- List all the docker commands, their possibilities and what they do!
-- Explain containers, services and stacks conceptually (docker architecture?)
-- Create a stack with ansible! (covers also 704.1)

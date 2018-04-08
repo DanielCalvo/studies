@@ -1,0 +1,21 @@
+705.1 IT Operations and Monitoring (weight: 4)
+Weight: 4
+
+Description: Candidates should understand how IT infrastructure is involved in delivering a service. This includes knowledge about the major goals of IT operations, understanding functional and nonfunctional properties of an IT services and ways to monitor and measure them using Prometheus. Furthermore candidates should understand major security risks in IT infrastructure. This objective covers the feature set of Prometheus 1.7 or later.
+
+Key Knowledge Areas:
+
+- Understand goals of IT operations and service provisioning, including nonfunctional properties such as availability, latency, responsiveness
+- Understand and identify metrics and indicators to monitor and measure the technical functionality of a service
+- Understand and identify metrics and indicators to monitor and measure the logical functionality of a service
+- Understand the architecture of Prometheus, including Exporters, Pushgateway, Alertmanager and Grafana
+- Monitor containers and microservices using Prometheus
+- Understand the principles of IT attacks against IT infrastructure
+- Understand the principles of the most important ways to protect IT infrastructure
+- Understand core IT infrastructure components and their the role in deployment
+
+The following is a partial list of the used files, terms and utilities:
+- Prometheus, Node exporter, Pushgateway, Altermanager, Grafana
+- Service exploits, brute force attacks, and denial of service attacks
+- Security updates, packet filtering and application gateways
+- Virtualization hosts, DNS and load balancers

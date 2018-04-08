@@ -18,3 +18,20 @@ The following is a partial list of the used files, terms and utilities:
 - Dockerfile
 - .dockerignore
 
+
+
+Possible workflow:
+- Create dockerfile
+- Create image (docker image build --tag local:debiantest .)
+- Launch container (docker container run -it--name debiantest1 local:debiantest /bin/bash)
+
+
+docker build --tag local/apache-php:7 .
+docker container run -d -p 8080:80 --name apache-php7 local/apache-php:7
+
+docker image inspect local:debiantest #Neat!
+
+docker pull vioseven/docker_automated #pull image from dockerhub (created on dockerhub)
+
+Document docker per subcomands (image, container, swarm, volume and so on)
+
