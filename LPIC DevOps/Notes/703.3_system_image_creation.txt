@@ -1,0 +1,17 @@
+703.3 System Image Creation (weight: 2)
+Weight: 2
+
+Description: Candidates should be able to create images for containers, virtual machines and IaaS cloud instances.
+
+Key Knowledge Areas:
+
+-Understand the functionality and features of Packer
+-Create and maintain template files
+-Build images from template files using different builders
+
+The following is a partial list of the used files, terms and utilities:
+packerb
+
+
+Resources:
+https://www.packer.io/intro/index.html

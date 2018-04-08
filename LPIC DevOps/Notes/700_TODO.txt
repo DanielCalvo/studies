@@ -32,3 +32,5 @@ docker image inspect local:debiantest #Neat!
 docker pull vioseven/docker_automated #pull image from dockerhub (created on dockerhub)
 
 Document docker per subcomands (image, container, swarm, volume and so on)
+
+
