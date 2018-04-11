@@ -33,4 +33,4 @@ Ansile from beginner to pro page num:
 NOTE: Trivago's laptop comes with UEFI enabled. Installing virtualbox requires fiddling with secure boot, something I'm not very keep to do on the company laptop! I'll guess I'll have to study this one on my desktop at home at a later time
 
 
-Ansible from beginner to pro page: 9
+Ansible from beginner to pro page: 19
