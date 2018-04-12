@@ -34,3 +34,26 @@ NOTE: Trivago's laptop comes with UEFI enabled. Installing virtualbox requires f
 
 
 Ansible from beginner to pro page: 19
+
+There is no central server in ansible :o
+By default, ansible will read /etc/ansible/hosts as its inventory file
+
+You can pass a custom inventory file to ansible:
+ansible all -i /path/to/inventory -m ping
+
+Inventory files are either a ini or json file. Most of the times it's an ini file. They appear to contain a list of hosts which you want to target by ansible. (above, it runs the ping commant on the hosts in the intenvory file)
+
+The contents of an inventory file in the ini format:
+
+host1.example.com
+host2.example.com
+host3.example.com
+192.168.9.29:2222
+
+(Literally just a list of hosts. You can also specify a different ssh port as seen in the last entry)
+
+Ansible also support ranges:
+
+host[1:3].example.com
+
+
