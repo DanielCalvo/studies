@@ -1,0 +1,26 @@
+703.1 Virtual Machine Deployment (weight: 4)
+
+Weight: 4
+
+Description: Candidates should be able to automate the deployment of a virtual machine with an operating system and a specific set of configuration files and software.
+
+Key Knowledge Areas:
+
+- Understand Vagrant architecture and concepts, including storage and networking
+- Retrieve and use boxes from Atlas
+- Create and run Vagrantfiles
+- Access Vagrant virtual machines
+- Share and synchronize folder between a Vagrant virtual machine and the host system
+- Understand Vagrant provisioning, including File, Shell, Ansible and Docker
+- Understand multi-machine setup
+
+The following is a partial list of the used files, terms and utilities:
+
+- vagrant
+- Vagrantfile
+
+
+Stopped right about here:
+https://www.vagrantup.com/intro/getting-started/synced_folders.html
+
+Didn't get synced folders to work, revisit

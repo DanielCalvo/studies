@@ -19,7 +19,7 @@ ANSIBLE TODO:
 - Get a docker instance with ansible installed on it
 
 VAGRANT TODO:
-- Get it going with VMware Workstation and see if it is any different from Virtualbox?
+- Find a way to launch multiple, different machines at the same time!
 
 
 OTHER TODO:

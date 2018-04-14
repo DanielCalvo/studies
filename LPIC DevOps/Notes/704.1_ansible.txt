@@ -32,8 +32,9 @@ Ansile from beginner to pro page num:
 
 NOTE: Trivago's laptop comes with UEFI enabled. Installing virtualbox requires fiddling with secure boot, something I'm not very keep to do on the company laptop! I'll guess I'll have to study this one on my desktop at home at a later time
 
-
-Ansible from beginner to pro page: 19
+---
+Ansible from beginner to pro page: 26
+---
 
 There is no central server in ansible :o
 By default, ansible will read /etc/ansible/hosts as its inventory file
@@ -73,9 +74,17 @@ Example entry: 192.168.100.10 ansible_ssh_private_key_file=/home/daniel/.ssh/id_
 ansible_ssh_pass - If you don't use key based auth, this allows you to specify a password to login on the inventory file :laughing_emoji: Highly insecure, don't use this!
 Example entry:  192.168.200.10 ansible_ssh_pass=supersecretpassword
 
-ansible_ssh_common_args
-ansible_ssh_extra_args
-ansible_sftp_extra_args
-ansible_scp_extra_args
+ansible_ssh_common_args - Extra arguments, as if you were calling ssh -o something. Valid one: –o ForwardAgent=yes
+ansible_ssh_extra_args - Same as above, but only when running a ssh command (ssh host@address 'ls /root' ?)
+ansible_sftp_extra_args - Same as above, but for sftp
+ansible_scp_extra_args - Same as above, but for scp
+
+Some options regarding priviledges:
+
+ansible_become_method - to run commands as root. Apparently default if you use become: true on your playbooks?
+ansible_become_user - run commands as a given user. Note that this is not the same as the user that is used to logon onto the machine, ansible_user is the entry that controls that!
+Example entry: 10.0.0.42 ansible_become_user=jenkins
+
+
 
 

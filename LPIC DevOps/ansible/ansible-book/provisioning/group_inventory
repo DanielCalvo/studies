@@ -1,0 +1,7 @@
+[web]
+host1.example.com
+host2.example.com
+
+[db]
+db1.example.com
+db1.dev.example.com
