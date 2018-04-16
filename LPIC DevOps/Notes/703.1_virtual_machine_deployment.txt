@@ -19,8 +19,43 @@ The following is a partial list of the used files, terms and utilities:
 - vagrant
 - Vagrantfile
 
-
+--- NOTES ---
 Stopped right about here:
 https://www.vagrantup.com/intro/getting-started/synced_folders.html
 
-Didn't get synced folders to work, revisit
+Synced folders: By default, vagrant shares your project directory (where the Vagrant file is) to /vagrant in the virtual machine
+--- NOTES ---
+
+
+--- VAGRANT COMMANDS ---
+vagrant up
+vagrant suspend: Will suspend the current running state of the virtual machine and stop it. Running vagrant up will have it resumed from where you last stopped. Stores all the vm data (disk, ram) on disk.
+vagrant halt: Gracefully shuts down the guest operating system and powers off the machine. Contents of the virtual machine's disk are preserved on your physical machine. Vagrant up allows you to start (aka boot) the machine again.
+vagrant destroy: Removes all traces of the VM from your machine. Stops it, powers it down and removes all of the guest hard disks. The Vagrantfile stays there. Running vagrant up will have to re-import and reprovision your machine to bring it back up again.
+vagrant provision
+vagrant reload
+
+vagrant share: Didn't work on vagrant 2.0.3 :o. Requires ngrok to be used, though listing all vagrant commands, share didn't show up.
+--- VAGRANT COMMANDS ---
+
+
+
+Config settings:
+
+-- BOX ---
+config.vm.box: "hashicorp/precise64" <- Defines which box to use from the vagrant archives.
+config.vm.box_version: "1.1.0" <- Defines a specific version of the box to get
+config.vm.box_url: "http://files.vagrantup.com/precise64.box" <- URL of the box to get. I can see a costom image/url here!
+-- BOX ---
+
+-- PROVISIONING ---
+config.vm.provision:shell, path: "bootstrap.sh" -> Tells vagrant to run a shellscript for provisioning, named "bootstrap.sh". The path is relative to the vagrant directory (the one with the Vagrantfile)
+-- PROVISIONING ---
+
+-- NETWORK ---
+config.vm.network: forwarded_port, guest: 80, host: 4567 <- Sets up port forwarding for your vm! Syntax is rather self explanatory
+- Follow up on advanced networking! https://www.vagrantup.com/docs/virtualbox/networking.html
+-- NETWORK ---
+
+
+For complex provisioning, they suggest custom boxes! Ruh-roh, I want to create a custom box!
