@@ -6,47 +6,26 @@ Description: Candidates should be able to automate the deployment of a virtual m
 
 Key Knowledge Areas:
 
-- Understand Vagrant architecture and concepts, including storage and networking
-- Retrieve and use boxes from Atlas
-- Create and run Vagrantfiles
-- Access Vagrant virtual machines
-- Share and synchronize folder between a Vagrant virtual machine and the host system
-- Understand Vagrant provisioning, including File, Shell, Ansible and Docker
-- Understand multi-machine setup
+- Understand Vagrant architecture and concepts, including storage and networking <- 1 ------ VAGRANT ARCHITECTURE AND CONCEPTS -----
+- Retrieve and use boxes from Atlas <- 2 ----- BOXES -----
+- Create and run Vagrantfiles <- 3 ----- VAGRANTFILE -----
+- Access Vagrant virtual machines <- 4 ---- VM ACCESS -----
+- Share and synchronize folder between a Vagrant virtual machine and the host system <- 5 ---- FOLDER SYNC -----
+- Understand Vagrant provisioning, including File, Shell, Ansible and Docker <- 6 ----- PROVISIONING -----
+- Understand multi-machine setup <- 7 ----- MULTI-MACHINE -----
 
 The following is a partial list of the used files, terms and utilities:
 
-- vagrant
-- Vagrantfile
+- vagrant <- 8 ----- VAGRANT CMD -----
+- Vagrantfile <- 3 ----- VAGRANTFILE ----- (same as #3 above)
 
---- NOTES ---
-Stopped right about here:
-https://www.vagrantup.com/intro/getting-started/synced_folders.html
+====================================================================================================
 
-Synced folders: By default, vagrant shares your project directory (where the Vagrant file is) to /vagrant in the virtual machine
---- NOTES ---
+========== YOUR NOTES ==========
+For complex provisioning, they suggest custom boxes! Ruh-roh, I'd like to create a custom box! And host it somewhere.
 
 
---- VAGRANT COMMANDS ---
-vagrant up
-vagrant suspend: Will suspend the current running state of the virtual machine and stop it. Running vagrant up will have it resumed from where you last stopped. Stores all the vm data (disk, ram) on disk.
-vagrant halt: Gracefully shuts down the guest operating system and powers off the machine. Contents of the virtual machine's disk are preserved on your physical machine. Vagrant up allows you to start (aka boot) the machine again.
-vagrant destroy: Removes all traces of the VM from your machine. Stops it, powers it down and removes all of the guest hard disks. The Vagrantfile stays there. Running vagrant up will have to re-import and reprovision your machine to bring it back up again.
-vagrant provision
-vagrant reload
-
-vagrant share: Didn't work on vagrant 2.0.3 :o. Requires ngrok to be used, though listing all vagrant commands, share didn't show up.
---- VAGRANT COMMANDS ---
-
-
-
-Config settings:
-
--- BOX ---
-config.vm.box: "hashicorp/precise64" <- Defines which box to use from the vagrant archives.
-config.vm.box_version: "1.1.0" <- Defines a specific version of the box to get
-config.vm.box_url: "http://files.vagrantup.com/precise64.box" <- URL of the box to get. I can see a costom image/url here!
--- BOX ---
+Process this stuff:
 
 -- PROVISIONING ---
 config.vm.provision:shell, path: "bootstrap.sh" -> Tells vagrant to run a shellscript for provisioning, named "bootstrap.sh". The path is relative to the vagrant directory (the one with the Vagrantfile)
@@ -58,4 +37,67 @@ config.vm.network: forwarded_port, guest: 80, host: 4567 <- Sets up port forward
 -- NETWORK ---
 
 
-For complex provisioning, they suggest custom boxes! Ruh-roh, I want to create a custom box!
+==========YOUR NOTES ==========
+
+
+1 ------ VAGRANT ARCHITECTURE AND CONCEPTS -----
+1 ------ VAGRANT ARCHITECTURE AND CONCEPTS -----
+
+
+2 ----- BOXES -----
+config.vm.box: "hashicorp/precise64" <- Defines which box to use from the vagrant archives.
+config.vm.box_version: "1.1.0" <- Defines a specific version of the box to get
+config.vm.box_url: "http://files.vagrantup.com/precise64.box" <- URL of the box to get. I can see a costom image/url here!
+
+Don't forge the "from Atlas" part!
+2 ----- BOXES -----
+
+
+3 ----- VAGRANTFILE -----
+What is the general syntax on the Vagrant file? Some fields appear to be a value followed by options (such as the config.vm.network) while others are a single key value pair, while the config.vm.provision looks completely different!
+
+NETWORKING:
+
+Configuring networking on a public (bridged) interface:
+config.vm.network "public_network", bridge: "wlxe894f6138b06", use_dhcp_assigned_default_route: true
+3 ----- VAGRANTFILE -----
+
+
+4 ---- VM ACCESS -----
+4 ---- VM ACCESS -----
+
+
+5 ---- FOLDER SYNC -----
+Synced folders: By default, vagrant shares your project directory (where the Vagrant file is) to /vagrant in the virtual machine
+But there's more to it. How to sync several folders and which options are supported?
+5 ---- FOLDER SYNC -----
+
+
+6 ----- PROVISIONING -----
+6 ----- PROVISIONING -----
+
+
+7 ----- MULTI-MACHINE -----
+This part looks interesting! Perhaps it'll be useful to learn more about ansible and docker
+7 ----- MULTI-MACHINE -----
+
+
+8 ---- VAGRANT CMD -----
+vagrant up
+vagrant suspend: Will suspend the current running state of the virtual machine and stop it. Running vagrant up will have it resumed from where you last stopped. Stores all the vm data (disk, ram) on disk.
+vagrant halt: Gracefully shuts down the guest operating system and powers off the machine. Contents of the virtual machine's disk are preserved on your physical machine. Vagrant up allows you to start (aka boot) the machine again.
+vagrant destroy: Removes all traces of the VM from your machine. Stops it, powers it down and removes all of the guest hard disks. The Vagrantfile stays there. Running vagrant up will have to re-import and reprovision your machine to bring it back up again.
+vagrant provision
+vagrant reload
+
+vagrant share: Didn't work on vagrant 2.0.3 :o. Requires ngrok to be used, though listing all vagrant commands, share didn't show up.
+8 ---- VAGRANT CMD -----
+
+
+
+
+
+
+
+
+
