@@ -37,6 +37,8 @@ config.vm.network: forwarded_port, guest: 80, host: 4567 <- Sets up port forward
 -- NETWORK ---
 
 
+Is there a way to run commands on all vagrant machines?
+
 ==========YOUR NOTES ==========
 
 
@@ -79,6 +81,13 @@ But there's more to it. How to sync several folders and which options are suppor
 
 7 ----- MULTI-MACHINE -----
 This part looks interesting! Perhaps it'll be useful to learn more about ansible and docker
+
+https://www.vagrantup.com/docs/multi-machine/
+
+Neat! Check the multi_machine vagrant directory. Now we have an ubuntu and debian boxes.
+
+Is it possible to make 3 debian instances go up without repeating the config over and over, using wildcards? The documentation seems to hint at this. You should investigate.
+
 7 ----- MULTI-MACHINE -----
 
 
