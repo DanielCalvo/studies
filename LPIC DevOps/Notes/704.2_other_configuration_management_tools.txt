@@ -1,0 +1,20 @@
+704.2 Other Configuration Management Tools (weight: 2)
+
+Weight: 2
+
+Description: Candidates should understand the main features and principles of important configuration management tools other than Ansible.
+
+Key Knowledge Areas:
+
+- Basic feature and architecture knowledge of Puppet.
+- Basic feature and architecture knowledge of Chef.
+
+The following is a partial list of the used files, terms and utilities:
+
+- Manifest, Class, Recipe, Cookbook
+- puppet
+- chef
+- chef-solo
+- chef-client
+- chef-server-ctl
+- knife

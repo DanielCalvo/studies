@@ -1,0 +1,11 @@
+703.2 Cloud Deployment (weight: 2)
+
+Weight: 2
+
+Description: Candidates should be able to configure IaaS cloud instances and adjust them to match their available hardware resources, specifically, disk space and volumes. Additionally, candidates should be able to configure instances to allow secure SSH logins and prepare the instances to be ready for a configuration management tool such as Ansible.
+
+Key Knowledge Areas:
+
+- Understanding the features and concepts of cloud-init, including user-data and initializing and configuring cloud-init
+- Use cloud-init to create, resize and mount file systems, configure user accounts, including login credentials such as SSH keys and install software packages from the distribution’s repository
+- Understand the features and implications of IaaS clouds and virtualization for a computing instance, such as snapshotting, pausing, cloning and resource limits.

@@ -1,0 +1,104 @@
+701.3 Source Code Management (weight: 5)
+
+Weight: 5
+
+Description: Candidates should be able to use Git to manage and share source code. This includes creating and contributing to a repository as well as the usage of tags, branches and remote repositories. Furthermore, the candidate should be able to merge files and resolve merging conflicts.
+
+Key Knowledge Areas:
+
+- Understand Git concepts and repository structure
+- Manage files within a Git repository
+- Manage branches and tags
+- Work with remote repositories and branches as well as submodules
+- Merge files and branches
+- Awareness of SVN and CVS, including concepts of centralized and distributed SCM solutions
+
+The following is a partial list of the used files, terms and utilities:
+
+- git
+- .gitignore
+
+
+========== YOUR NOTES ==========
+
+========== YOUR NOTES ==========
+
+
+
+You should read up on .gitignore and ignore a bunch of vagrant files
+google "which vagrant files gitignore"
+
+git commands
+
+git add
+git clone
+git rm
+git tag
+git branch
+git commit
+git push
+git status
+
+
+========== YOUR OLD NOTES ==========
+
+I'm merely following Atlassian's page on git (https://www.atlassian.com/git/tutorials/learn-git-with-bitbucket-cloud) and writing stuff here so I assimilate it better.
+
+THE ABSOLUTE BASICS
+
+Cloning a repo
+git clone git@github.com:DanielCalvo/studies.git
+
+To tell git to track a file or diretocty you just created:
+git add Learnings
+
+Once things have been added, removed or moved, you can commit them:
+git commit  -m "adding my Learnings folder"
+
+To push these changes:
+git push origin master
+
+The above pushes the changes to the master branch on origin. You can see your git urls with
+git remote -v
+
+To get changes from the repo, pull all:
+git pull --all
+Or simply pull:
+git pull
+
+
+BRANCHING
+
+Lets create a branch on our project. The below command creates a branch, but does not switch to it:
+git branch mytestbranch
+
+Lets then switch to our branch:
+git checkout mytestbranch
+
+While doing this whole branch thing, I edited git.txt (this document). I'm then going to add this file to the new branch:
+git add git.txt
+
+We can then commit the stuff on our test branch:
+git commit -m "adding stuff to my test branch"
+
+Then you can do a fast forward merge:
+git checkout master
+git merge mytestbranch
+git branch -d mytestbranch
+
+If you do a git status, you should be ahead of master by 1 commit:
+git status
+
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+
+We can then push our changes:
+git push
+
+
+
+To change your push/pull method to SSH:
+What I think this actually does is that it overwrites the origin remote URL to be the ssh one over the https one.
+git remote set-url origin git@github.com:DanielCalvo/studies.git

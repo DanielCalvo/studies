@@ -1,0 +1,22 @@
+701.2 Standard Components and Platforms for Software (weight: 2)
+
+Weight: 2
+
+Description: Candidates should understand services offered by common cloud platforms. They should be able to include these services in their application architectures and deployment toolchains and understand the required service configurations. OpenStack service components are used as a reference implementation.
+
+Key Knowledge Areas:
+
+- Features and concepts of object storage
+- Features and concepts of relational and NoSQL databases
+- Features and concepts of message brokers and message queues
+- Features and concepts of big data services
+- Features and concepts of application runtimes / PaaS
+- Features and concepts of content delivery networks
+
+The following is a partial list of the used files, terms and utilities:
+
+- OpenStack Swift
+- OpenStack Trove
+- OpenStack Zaqar
+- CloudFoundry
+- OpenShift
