@@ -21,15 +21,13 @@ The following is a partial list of the used files, terms and utilities:
 
 ========== YOUR NOTES ==========
 
-========== YOUR NOTES ==========
-
-
+This document appears to describe git quite well:
+https://git-scm.com/book/en/v1/Getting-Started
 
 You should read up on .gitignore and ignore a bunch of vagrant files
 google "which vagrant files gitignore"
 
 git commands
-
 git add
 git clone
 git rm
@@ -39,6 +37,7 @@ git commit
 git push
 git status
 
+========== YOUR NOTES ==========
 
 ========== YOUR OLD NOTES ==========
 
