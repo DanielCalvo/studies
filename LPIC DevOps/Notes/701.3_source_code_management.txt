@@ -21,7 +21,10 @@ The following is a partial list of the used files, terms and utilities:
 
 1 ----- GITIGNORE -----
 
-The .gitignore file resides at the top directory of a git project and allows you to list files that you want to be left untracked by git.
+The .gitignore file can reside at the top directory of a git project and allows you to list files that you want to be left untracked by git.
+You can also have it on subdirectories (and have multiple .gitignore files) in which case that .gitignore will only apply to the current directory and it's subdirectories
+
+TODO ON .GIIGNORE: Example entries!
 
 1 ----- GITIGNORE -----
 
@@ -48,6 +51,8 @@ git branch
 git commit
 git push
 git status <- Can also be ran with
+git diff
+git diff --staged
 
 
 git status --short
