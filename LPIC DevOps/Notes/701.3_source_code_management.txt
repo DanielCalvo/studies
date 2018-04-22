@@ -16,26 +16,62 @@ Key Knowledge Areas:
 The following is a partial list of the used files, terms and utilities:
 
 - git
-- .gitignore
+- .gitignore <- 1 ----- GITIGNORE -----
 
+
+1 ----- GITIGNORE -----
+
+The .gitignore file resides at the top directory of a git project and allows you to list files that you want to be left untracked by git.
+
+1 ----- GITIGNORE -----
 
 ========== YOUR NOTES ==========
 
-This document appears to describe git quite well:
-https://git-scm.com/book/en/v1/Getting-Started
+You have downloaded the git book from git-scm.com
+
+YOU ARE ON PAGE: 25
+
+Interesting files:
+/etc/gitconfig <- Didn't see this one on debian
+/home/user/.gitconfig
+.config file in the .git directory, such as /home/daniel/studies/.git/config
 
 You should read up on .gitignore and ignore a bunch of vagrant files
 google "which vagrant files gitignore"
 
 git commands
-git add
+git add <- git add is a multipurpose command. You use it to begin tracking new files, to stage files and to do other things like marking conflicted files as resolved. If you modify a file after you run git add, you have to run git add again to stage the latest version of the file
 git clone
 git rm
 git tag
 git branch
 git commit
 git push
-git status
+git status <- Can also be ran with
+
+
+git status --short
+?? <- untracked
+A <- New files added to the staging area
+M <- Modified
+MM <- Modified, staged, then modified again!
+
+
+To see your current config:
+git config --list
+
+To get help:
+git help <command>
+
+Such as: git help add, git help tag and so on
+Also:
+git add -h
+git commit -h
+
+git clone: Git clone receives a full copy of nearly all the data that the server has. If you server gets corrupted, you could use any of the clones on a client to set it back to the state when it was cloned!
+
+You can also git clone to a repository with a specific name on disk:
+git clone https://github.com/libgit2/libgit2 mylibgit
 
 ========== YOUR NOTES ==========
 
