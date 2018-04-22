@@ -32,7 +32,7 @@ TODO ON .GIIGNORE: Example entries!
 
 You have downloaded the git book from git-scm.com
 
-YOU ARE ON PAGE: 25
+YOU ARE ON PAGE: 36
 
 Interesting files:
 /etc/gitconfig <- Didn't see this one on debian
@@ -45,14 +45,28 @@ google "which vagrant files gitignore"
 git commands
 git add <- git add is a multipurpose command. You use it to begin tracking new files, to stage files and to do other things like marking conflicted files as resolved. If you modify a file after you run git add, you have to run git add again to stage the latest version of the file
 git clone
-git rm
+
+git rm <- This removes the file from your tracked files (in other words, from your staging area). This ALSO removes it from your local file system (deletes the file)  so you don't see it as an untracked file.
+
+If you just do a "rm file", this will not remove the file from git, it'll be detected as a "change not staged for commit"
+
+You can also remove the file from git and have it on your hard drive (not track it anymore) by using the --cached option:
+
+git rm --cached myfile.txt
+
+
+
 git tag
 git branch
+
 git commit
+git commit -a <- makes git automatically stage every file that is already tracked before doing the commit, letting you skip the git add part
 git push
 git status <- Can also be ran with
 git diff
 git diff --staged
+
+But once you commit something, how can you see your commits?
 
 
 git status --short
