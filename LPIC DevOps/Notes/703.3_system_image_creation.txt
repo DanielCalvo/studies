@@ -15,3 +15,21 @@ packer
 
 Resources:
 https://www.packer.io/intro/index.html
+
+
+========== YOUR NOTES ==========
+
+After a quick read on the packer documentation, most of their getting started doc is based on amazon and other paid & closed source cloud services, which are beyond the scope of this certification.
+
+
+But there are useful things you can investigate:
+- What are the most commonly used sections of a packer template file? What do builders, description, post-processors, provisioners and others do?
+Answers are all here: https://www.packer.io/docs/templates/index.html
+
+- How do you create vagrant and docker images?
+
+https://www.packer.io/docs/builders/docker.html
+
+I'd like to test the docker stuff. I wonder how different (possibly better than?) from regular Dockerfiles to build images the process is. Or maybe it isn't better, but just standardized across platforms?
+
+========== YOUR NOTES ==========
