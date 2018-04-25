@@ -5,20 +5,50 @@ Description: Candidates should be able to build, share and operate Docker contai
 
 Key Knowledge Areas:
 
-- Understand the Docker architecture
-- Use existing Docker images from a Docker registry
-- Create Dockerfiles and build images from Dockerfiles
-- Upload images to a Docker registry
-- Operate and access Docker containers
-- Connect container to Docker networks
-- Use Docker volumes for shared and persistent container storage
+- Understand the Docker architecture <- 1 ----- DOCKER ARCH -----
+- Use existing Docker images from a Docker registry <- 2 ----- DOCKER REGISTRY -----
+- Create Dockerfiles and build images from Dockerfiles <- 3 ----- DOCKERFILES -----
+- Upload images to a Docker registry <- 4 ----- IMAGEUPLOAD -----
+- Operate and access Docker containers <- 5 ----- CONTAINER OPS -----
+- Connect container to Docker networks <- 6 ----- DOCKERNET -----
+- Use Docker volumes for shared and persistent container storage <- 7 ----- DOCKERVOLUMES -----
 
 The following is a partial list of the used files, terms and utilities:
-- docker
-- Dockerfile
-- .dockerignore
+- docker <- 8 ----- DOCKERCMD -----
+- Dockerfile <- 3 ----- DOCKERFILES -----
+- .dockerignore <- 9 ----- DOCKERIGNORE -----
 
 
+1 ----- DOCKER ARCH -----
+
+https://docs.docker.com/engine/docker-overview/
+https://www.docker.com/what-container
+
+
+BASIC THINGS TO CONSIDER:
+
+- Docker provides the ability to package and run an application in a loosely isolated environment called container.
+- Containers are lightweight. They are not a virtual machine and do not need a hypervisor. They run directly on the host machine's kernel.
+
+The above gives you flexibility. You can develop your application and it's supporting components by using containers. The container then becomes the unit for distributing and testing your application. When all is ready, you can deploy this container on the production environment. (Of course, that's the theory. Reality often times more complex)
+
+
+THE DOCKER ENGINE:
+
+The docker engine is a client server application with certain components.
+
+- The server. aka the docker daemon. (dockerd). This daemon creates and manages objects such as images, containers, networks and volumes.
+- The client. In this case, the docker image and container command line interface.
+- A REST API that gives an interface for programs to talk to the docker daemon (the server, aka the dockerd process) and tell it what to do.
+
+In other words: The client talks to to the server through an API. You can write your own programs/scripts to talk to the docker API and do docker things.
+
+
+You stopped on: WHAT CAN I USE DOCKER FOR On the docs.docker overview. See if maybe you can summarize some advantages on a non-salesman manner.
+
+
+
+1 ----- DOCKER ARCH -----
 
 Possible workflow:
 - Create dockerfile
