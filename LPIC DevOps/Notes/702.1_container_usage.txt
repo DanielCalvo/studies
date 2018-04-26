@@ -24,7 +24,6 @@ The following is a partial list of the used files, terms and utilities:
 https://docs.docker.com/engine/docker-overview/
 https://www.docker.com/what-container
 
-
 BASIC THINGS TO CONSIDER:
 
 - Docker provides the ability to package and run an application in a loosely isolated environment called container.
@@ -32,6 +31,11 @@ BASIC THINGS TO CONSIDER:
 
 The above gives you flexibility. You can develop your application and it's supporting components by using containers. The container then becomes the unit for distributing and testing your application. When all is ready, you can deploy this container on the production environment. (Of course, that's the theory. Reality often times more complex)
 
+DOCKER ADVANTAGES A SALESMAN WOULD TELL YOU ABOUT:
+
+Docker allows for "highly portable workflows" (woah). A given container can run containers on your laptop, on a virtual machine, on the testing environment or on the production environment, being scaled up or down depending on the workload that you have (your laptop for local development, not so much, the production environment, all of it!)
+
+Docker containers are lightweight as opposed to virtual machines. They fit high density environments well and are useful for small and medium deployments where you need efficient use of resources.
 
 THE DOCKER ENGINE:
 
@@ -43,12 +47,88 @@ The docker engine is a client server application with certain components.
 
 In other words: The client talks to to the server through an API. You can write your own programs/scripts to talk to the docker API and do docker things.
 
+The client and the system can run at the same system, or you can connect to a remote docker daemon with the client over the API.
 
-You stopped on: WHAT CAN I USE DOCKER FOR On the docs.docker overview. See if maybe you can summarize some advantages on a non-salesman manner.
+DOCKER OBJECTS:
+
+IMAGES
+
+Per the docker Doc: "read only template with instructions for creating a docker container".
+
+In other words, an image is the contents you start your docker container with. An image can be even based on another, already existing image, which is what you do when create a Dockerfile that for example: fetches the default Ubuntu image, installs apache and copies some configs into the docker container.
+
+When you change a Dockerfile and rebuild the image, only the parts that are changed are factored in into the image. This helps make docker lightweight.
+
+CONTAINERS
+
+Runable instance of an image. Can be started, stopped, moved and deleted with the API/CLI. Can connect to networks, have storage attached and make a lot of other things.
+By default, relatively isolated from it's host machine and other containers, though this can be changed.
+A container is defined by its image AND any other configuration options you provide to it when you start it. When a container is removed, any unsaved changes to it's state that are not stored in  permanent storage are lost
+
+TODO: Are containers ephemeral by default? Looks like so! Only things on the Dockerfile and volumes are somewhat permanent.
+
+This command launches an ubuntu container:
+
+docker run -i -t ubuntu /bin/bash
+
+What this does, step by step:
+
+1. If you do not have the ubuntu image stored locally, it is pulled from your configured registry. This would be the same as running docker pull ubuntu manually.
+2. Docker creates a new container, just as if you would have typed docker container create
+3. Docker creates a RW filesystem for the container. This allows the running container to modify file in it's filesystem.
+4. Docker creates a network interface and plugs it into the container. Since no options were specified, this interface is connected to the default docker network.
+5. Docker starts the container and runs /bin/bash.
+6. When you type exit and exit bash, the container stops, but is not removed.
 
 
+SERVICES
+
+Services allow you to scale containers across multiple daemons (aka machines), which all work together as a swarm with managers and workers.
+Each member of the swarm is a docker daemon (very likely a machine) and these daemons all communicate using the Docker API.
+A service allows you define a desired state of these containers, such as how many of them do you want to have.
+By default, a service is load balanced across all worker nodes. To the consumer, the service appears as a single entity.
+
+
+Not covered by the initial doc:
+VOLUMES
+NETWORKS
+LOCAL DOCKER DAEMONS
+SWARM NODES
+SWARM SERVICES
+
+
+UNDERLYING DOCKER TECH
+
+NAMESPACES
+CONTROL GROUPS
+UNION FILESYSTEMS
+CONTAINER FORMAT
 
 1 ----- DOCKER ARCH -----
+
+
+2 ----- DOCKER REGISTRY -----
+
+The docker registry stores Docker images. There are two public registries that docker is configured to use by default: Docker Hub and Docker Cloud.
+
+You can also of course, run your own registry with your own images.
+
+When you use commands such as docker pull, docker push or docker run, your images are either pulled or pushed to/from the registry, depending on what you're doing.
+
+The Docker store also allows you to buy and sell images.
+
+TODO: Set up your own registry and describe how to do it!
+
+2 ----- DOCKER REGISTRY -----
+
+
+
+
+
+
+
+
+
 
 Possible workflow:
 - Create dockerfile
