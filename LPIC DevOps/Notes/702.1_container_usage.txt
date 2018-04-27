@@ -100,9 +100,29 @@ SWARM SERVICES
 UNDERLYING DOCKER TECH
 
 NAMESPACES
+
+Docker uses a technology named namespaces to isolate containers. When you launch a container, it gets it's own namespace. The container is limited and isolated by this namespace.
+
+(assumed) There are multiple namespaces for a given container:
+
+PID: Process Isolation
+NET: Network interfaces management
+IPC: Inter process communication management
+MNT: Filesystem mounts management
+UTS: Kernel and version identifiers (sounds cryptic!)
+
 CONTROL GROUPS
+
+This is a technology used by docker to limit an application to a given set of resources. This allows docker to share hardware resources and optionally enforce limits on those. For example, you could limit memory usage for a given container.
+
+
 UNION FILESYSTEMS
+
+Docker uses UnionFS to "provide the building blocks for containers". I have a feeling this is the filesystem technology used by containers.
+
 CONTAINER FORMAT
+
+Docker combines namespaces, control groups and UnionFS in a wrapper called container format. A library named libcontainer is used for this. In the future Docker may support further container support further container technologies such as BSD Jails or Solaris Zones
 
 1 ----- DOCKER ARCH -----
 
@@ -123,12 +143,58 @@ TODO: Set up your own registry and describe how to do it!
 
 
 
+3 ----- DOCKERFILES -----
+
+Very interesting guide:
+https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+
+Docker can build images automatically by reading instructions from a Dockerfile.
+
+Available Dockerfile instructions
+
+FROM
+LABEL
+RUN
+RUN APT-GET
+CMD
+EXPOSE
+ENV
+ADD
+COPY
+ENTRYPOINT
+VOLUME
+USER
+DIR
+WORKDIR
+ONBUILD
+
+NEXT STEPS:
+- Create some simple dockerfiles to create a few basic Docker images and acquantaince yourself with the format of the file and the command necessary to create images. How about web and database servers?
+- Have a read and go through the available commands described above (might be a bit boring though)
+- Perhaps have a quick read about docker networking and bridge a few machines over your home network and see how they interact?
+- Docker and salt looks interesting too! Perhaps Dockerize a salt master and see how you can run some salt states inside of it?
+
+3 ----- DOCKERFILES -----
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+----- RANDOM NOTES TO FOLLOW UP LATER -----
 
 Possible workflow:
 - Create dockerfile

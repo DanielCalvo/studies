@@ -24,7 +24,7 @@ VAGRANT TODO:
 
 
 OTHER TODO:
-
+- This is not covered by the certification, but is very nice: https://12factor.net/
 
 
 Topics per weight:
