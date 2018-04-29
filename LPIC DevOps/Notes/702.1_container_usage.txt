@@ -19,6 +19,18 @@ The following is a partial list of the used files, terms and utilities:
 - .dockerignore <- 9 ----- DOCKERIGNORE -----
 
 
+===== YOUR NOTES =====
+
+- Mastering docker: Page 74
+TODO: Document the process of testing/creating a container image!
+
+docker run -it <image> /bin/bash
+
+docker run -d dani:salt_master
+
+
+===== YOUR NOTES =====
+
 1 ----- DOCKER ARCH -----
 
 https://docs.docker.com/engine/docker-overview/
@@ -153,14 +165,41 @@ Docker can build images automatically by reading instructions from a Dockerfile.
 Available Dockerfile instructions
 
 FROM
+The FROM command tells Docker which image you'd like to use as your base image. Examples:
+FROM debian:latest
+FROM alpine:latest
+FROM scratch
+
 LABEL
+The LABEL can be used to add additional information to an image. Anything from a version number to a description. This doesn't do anything to the container/image itself, it only helps with identification
+LABEL maintainer="Dani"
+LABEL description="This example Dockerfile installs Apache and PHP."
+
 RUN
-RUN APT-GET
+A commands to run on container creation. These commands are executed on top of the base imaged used for the container. Examples:
+RUN apt-get update && apt-get install -y apache2 && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY
+Copy files from whatever source into the container upon launch. Examples:
+COPY files/nginx.conf /etc/nginx/nginx.conf
+COPY files/default.conf /etc/nginx/conf.d/default.conf
+
+
 CMD
+According to the Docker doc: "The main purpose of the CMD is to provide defaults for an executing container"
+
+
+
+There can only be one CMD command inside a dockerfile
+
+
+
+RUN APT-GET
+
 EXPOSE
 ENV
 ADD
-COPY
+
 ENTRYPOINT
 VOLUME
 USER
@@ -177,15 +216,41 @@ NEXT STEPS:
 3 ----- DOCKERFILES -----
 
 
+6 ----- DOCKERNET -----
+
+To bridge Docker to a physical inteface, you have to use the macvlan driver>
+
+https://docs.docker.com/network/macvlan/
+
+6 ----- DOCKERNET -----
 
 
+8 ----- DOCKERCMD -----
 
+IMAGES:
+docker image build --tag local:debiantest .
 
+docker build . #Creates unnamed image!
 
+docker image inspect local:debiantest #Neat!
 
+CONTAINERS:
 
+List all containers:
+docker ps -a
 
+Remove all stopped containers:
+docker rm $(docker ps -a -q)
 
+Remove all containers regardless of status in true YOLOMAX fashion:
+docker rm $(docker ps -a -q) --force
+
+docker container run -d -p 8080:80 --name apache-php7 local/apache-php:7
+
+MISC / TO REVIEW
+docker attach $INSTANCE
+
+8 ----- DOCKERCMD -----
 
 
 
@@ -203,9 +268,9 @@ Possible workflow:
 
 
 docker build --tag local/apache-php:7 .
-docker container run -d -p 8080:80 --name apache-php7 local/apache-php:7
 
-docker image inspect local:debiantest #Neat!
+
+
 
 docker pull vioseven/docker_automated #pull image from dockerhub (created on dockerhub)
 

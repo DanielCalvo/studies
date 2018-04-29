@@ -11,7 +11,7 @@ DOCKER TODO:
 - docker run -it: What does it mean?
 - On docker, it appears changes do not persist when running images (welp, that oughta be obvious)
 - Nice (basic?) docker cheat sheet: http://blog.baudson.de/blog/stop-and-remove-all-docker-containers-and-images
-- Mastering docker: Page 74
+
 - Explain containers, services and stacks conceptually (docker architecture?)
 - How about a container to server custom vagrant boxes? That would be neat. Could be done on the orangepi even!
 
