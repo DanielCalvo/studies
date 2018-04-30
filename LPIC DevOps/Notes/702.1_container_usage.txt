@@ -29,6 +29,18 @@ docker run -it <image> /bin/bash
 docker run -d dani:salt_master
 
 
+Things you've read:
+
+
+ON WHEN DOCKER MIGHT NOT THE BEST FIT
+https://blog.abevoelker.com/why-i-dont-use-docker-much-anymore/ <- Interesting article on some shortcomings of Docker and things that it may not do well. A bit old, but useful.
+http://etherealmind.com/cattle-vs-kittens-on-cloud-platforms-no-one-hears-the-kittens-dying/ <- Short article on cattle vs kittens as far as applications go
+https://www.loggly.com/blog/top-5-docker-logging-methods-to-fit-your-container-deployment-strategy/ <- Some information on how to setup logging on containers
+https://www.linode.com/docs/applications/containers/when-and-why-to-use-docker/ <- Touches on a few points on when containers might not be the best idea also
+
+
+https://www.ctl.io/developers/blog/post/what-is-docker-and-when-to-use-it/ <- Interesting assorted info on Docker
+
 ===== YOUR NOTES =====
 
 1 ----- DOCKER ARCH -----
@@ -224,6 +236,26 @@ https://docs.docker.com/network/macvlan/
 
 6 ----- DOCKERNET -----
 
+7 ----- DOCKERVOLUMES -----
+
+https://docs.docker.com/storage/volumes
+
+Volumes are the preferred mechanism to keep data persistent in containers. Yay for persistency!
+
+docker volume create myvol
+docker volume ls
+docker volume inspect myvol
+docker volume rm my-vol #But let's not do this for now!
+
+Let's launch an instance connected to the volume!
+
+
+docker run --name danivolumetest --mount source=myvol,target=/app -d dani:salt_master
+
+
+
+7 ----- DOCKERVOLUMES -----
+
 
 8 ----- DOCKERCMD -----
 
@@ -249,6 +281,11 @@ docker container run -d -p 8080:80 --name apache-php7 local/apache-php:7
 
 MISC / TO REVIEW
 docker attach $INSTANCE
+
+DANI'S image:
+docker image build . --tag dani:salt_master
+docker run -d dani:salt_master
+
 
 8 ----- DOCKERCMD -----
 
