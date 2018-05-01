@@ -1,0 +1,30 @@
+
+
+Creating and testing your own symfony demo container:
+
+mkdir symfonydemo
+cd symfonydemo
+vim Dockerfile
+
+Put this in the Dockerfile as you know these are necessary:
+
+FROM debian:latest
+RUN apt-get update && apt-get install curl php-symfony git -y
+RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+
+To further investigate how to set up symfoiny demo, create an image from your Dockerfile and run bash into it so you can find out the next steps to have the image running:
+
+#In the same directory as the Dockerfile:
+docker image build . --tag symfonydemo:v1
+
+#Launch image and run bash:
+docker run -i -t symfonydemo:v1 /bin/bash
+
+Remember to rebuild the image every time you change the Dockerfile!
+
+When you're done with everything, how do you launch the instance again?
+
+docker exec -it sad_hugle bash
+
+docker exec --user root -it sad_hugle bash
+

@@ -23,6 +23,19 @@ The following is a partial list of the used files, terms and utilities:
 
 - Mastering docker: Page 74
 TODO: Document the process of testing/creating a container image!
+TODO: Dockerize a sample symfony project
+
+
+Symfony demo:
+
+docker image build . --tag symfonydemo:v1
+
+composer create-project symfony/symfony-demo
+
+Check out what to install
+docker exec -i -t 32cb974d0678 /bin/bash
+
+
 
 docker run -it <image> /bin/bash
 
@@ -37,9 +50,11 @@ https://blog.abevoelker.com/why-i-dont-use-docker-much-anymore/ <- Interesting a
 http://etherealmind.com/cattle-vs-kittens-on-cloud-platforms-no-one-hears-the-kittens-dying/ <- Short article on cattle vs kittens as far as applications go
 https://www.loggly.com/blog/top-5-docker-logging-methods-to-fit-your-container-deployment-strategy/ <- Some information on how to setup logging on containers
 https://www.linode.com/docs/applications/containers/when-and-why-to-use-docker/ <- Touches on a few points on when containers might not be the best idea also
-
-
 https://www.ctl.io/developers/blog/post/what-is-docker-and-when-to-use-it/ <- Interesting assorted info on Docker
+
+On Docker's relevancy:
+https://www.zdnet.com/article/what-is-docker-and-why-is-it-so-darn-popular/
+
 
 ===== YOUR NOTES =====
 
@@ -234,6 +249,12 @@ To bridge Docker to a physical inteface, you have to use the macvlan driver>
 
 https://docs.docker.com/network/macvlan/
 
+docker network create -d macvlan --subnet=192.168.1.0/24 --gateway=192.168.1.1 -o parent=wlxe894f6138b06 pub_net
+
+docker run --rm -itd --network pub_net --name my-macvlan-alpine debian:latest bash
+
+
+
 6 ----- DOCKERNET -----
 
 7 ----- DOCKERVOLUMES -----
@@ -284,7 +305,7 @@ docker attach $INSTANCE
 
 DANI'S image:
 docker image build . --tag dani:salt_master
-docker run -d dani:salt_master
+docker run -d --network pub_net dani:salt_master
 
 
 8 ----- DOCKERCMD -----
