@@ -28,3 +28,25 @@ docker exec -it sad_hugle bash
 
 docker exec --user root -it sad_hugle bash
 
+docker run -d symfonydemo:v1
+
+---- KUBECTL ----
+
+https://kubernetes.io/docs/tutorials/kubernetes-basics/
+
+---- KUBECTL ----
+
+---- DOCKER COMPOSE ----
+
+https://docs.docker.com/compose/wordpress/
+
+---- DOCKER COMPOSE ----
+
+---- MYSQL MULTIMASTER ----
+
+https://www.percona.com/blog/2016/03/30/docker-mysql-replication-101/
+https://hub.docker.com/r/mysql/mysql-cluster/
+---- MYSQL MULTIMASTER ----
+
+
+Very interesting article on running docker in production: https://blog.cloud66.com/9-crtitical-decisions-needed-to-run-docker-in-production/
