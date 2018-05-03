@@ -22,9 +22,6 @@ The following is a partial list of the used files, terms and utilities:
 ===== YOUR NOTES =====
 
 - Mastering docker: Page 74
-TODO: Document the process of testing/creating a container image!
-TODO: Dockerize a sample symfony project
-
 
 Symfony demo:
 
@@ -104,7 +101,6 @@ Runable instance of an image. Can be started, stopped, moved and deleted with th
 By default, relatively isolated from it's host machine and other containers, though this can be changed.
 A container is defined by its image AND any other configuration options you provide to it when you start it. When a container is removed, any unsaved changes to it's state that are not stored in  permanent storage are lost
 
-TODO: Are containers ephemeral by default? Looks like so! Only things on the Dockerfile and volumes are somewhat permanent.
 
 This command launches an ubuntu container:
 
@@ -176,7 +172,7 @@ When you use commands such as docker pull, docker push or docker run, your image
 
 The Docker store also allows you to buy and sell images.
 
-TODO: Set up your own registry and describe how to do it!
+
 
 2 ----- DOCKER REGISTRY -----
 

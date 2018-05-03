@@ -1,4 +1,9 @@
 
+TODO IDEAS:
+- Create container image through salt
+- Set up macvlan networking
+- Set up 3 instances: A web server with the logs on a volume, something to do queries to the webserver, and a logging container to do something with those logs on the volume
+- Set up your own registry and describe how to do it!
 
 Creating and testing your own symfony demo container:
 
@@ -46,7 +51,13 @@ https://docs.docker.com/compose/wordpress/
 
 https://www.percona.com/blog/2016/03/30/docker-mysql-replication-101/
 https://hub.docker.com/r/mysql/mysql-cluster/
+
 ---- MYSQL MULTIMASTER ----
 
-
 Very interesting article on running docker in production: https://blog.cloud66.com/9-crtitical-decisions-needed-to-run-docker-in-production/
+
+
+--- MACVLAN ---
+
+
+--- MACVLAN ---
