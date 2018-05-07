@@ -21,7 +21,19 @@ The following is a partial list of the used files, terms and utilities:
 
 ===== YOUR NOTES =====
 
-- Mastering docker: Page 74
+Suggested next action item: Continue with the mastering docker book. Many of the items that are unclear to you may become easier to understand as you expand your knowledge on the subject. You can skip parts that touch on points that are not particularly interesting for now.
+
+- Mastering docker: Page 89
+
+Once you reach an interesting part of the book, implement the things you have learned!
+
+After finishing that book, you may want to look into other books.
+
+Oooh! This one looks interesting: https://www.amazon.com/Using-Docker-Developing-Deploying-Containers/dp/1491915765/
+
+There might also be an interesting book on docker networking out there!
+
+
 
 Symfony demo:
 
@@ -52,7 +64,12 @@ https://www.ctl.io/developers/blog/post/what-is-docker-and-when-to-use-it/ <- In
 On Docker's relevancy:
 https://www.zdnet.com/article/what-is-docker-and-why-is-it-so-darn-popular/
 
-
+On running all this stuff in production:
+https://blog.cloud66.com/9-crtitical-decisions-needed-to-run-docker-in-production/
+https://searchitoperations.techtarget.com/tip/Set-up-Docker-container-networking-for-real-production-workloads
+https://searchitoperations.techtarget.com/news/450411882/Docker-storage-opens-new-frontiers-in-quest-for-enterprise-adoption
+https://searchitoperations.techtarget.com/opinion/When-working-with-container-technology-proceed-with-caution
+https://blog.docker.com/2016/12/understanding-docker-networking-drivers-use-cases/ <- Very good one explaining networks
 ===== YOUR NOTES =====
 
 1 ----- DOCKER ARCH -----
@@ -164,13 +181,35 @@ Docker combines namespaces, control groups and UnionFS in a wrapper called conta
 
 2 ----- DOCKER REGISTRY -----
 
+
+CONCEPTUALLY:
 The docker registry stores Docker images. There are two public registries that docker is configured to use by default: Docker Hub and Docker Cloud.
-
 You can also of course, run your own registry with your own images.
-
 When you use commands such as docker pull, docker push or docker run, your images are either pulled or pushed to/from the registry, depending on what you're doing.
-
 The Docker store also allows you to buy and sell images.
+
+RUNNING YOUR OWN REGISTRY
+
+Pull the registry image:
+docker image pull registry
+
+Launch it:
+docker container run -d -p 5000:5000 --name testregistry registry
+
+Upload an image to it:
+docker image pull debian
+docker image tag debian localhost:5000/danidebian
+docker image push localhost:5000/danidebian
+
+Delete your local image:
+docker image rm localhost:5000/danitest
+
+Pull it again!
+docker image pull localhost:5000/danitest
+
+Extra challenge: Set up this stuff correctly and across the network: https://docs.docker.com/registry/configuration/
+
+There are also some commercially available registries from Amazon, Redhat and Quay. These fall outside of LPIC's scope.
 
 
 

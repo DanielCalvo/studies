@@ -1,5 +1,13 @@
 
 TODO IDEAS:
+
+
+Some more usefuf information may be available here:
+https://docs.docker.com/v17.09/engine/userguide/networking/default_network/custom-docker0/
+https://docs.docker.com/v17.09/engine/userguide/networking/default_network/container-communication/#communicating-to-the-outside-world
+
+
+
 - Create container image through salt
 - Set up macvlan networking
 - Set up 3 instances: A web server with the logs on a volume, something to do queries to the webserver, and a logging container to do something with those logs on the volume
@@ -54,10 +62,26 @@ https://hub.docker.com/r/mysql/mysql-cluster/
 
 ---- MYSQL MULTIMASTER ----
 
-Very interesting article on running docker in production: https://blog.cloud66.com/9-crtitical-decisions-needed-to-run-docker-in-production/
+
 
 
 --- MACVLAN ---
 
+
+#This doesn't work:
+docker run --rm -itd --network pub_net --name macvlan-deb debian:latest bash
+docker exec macvlan-deb ip addr show eth0
+docker exec --user root -it macvlan-deb bash
+
+
+#Inside a docker machine, also doesn't work either
+docker network create -d macvlan --subnet=192.168.1.0/24 --gateway=192.168.1.1 -o parent=enp0s8 pub_net
+docker run --rm -itd --network pub_net --name macvlan-deb debian:latest bash
+docker exec --user root -it macvlan-deb bash
+
+
+#Trying a L2 bridge:
+
+docker network create -d ipvlan --subnet=192.168.1.0/24 --gateway=192.168.1.1 -o ipvlan_mode=l2 ipvlan210 #Fails
 
 --- MACVLAN ---
