@@ -343,6 +343,61 @@ docker image build . --tag dani:salt_master
 docker run -d --network pub_net dani:salt_master
 
 
+CONTAINERS FROM THE MASTERING DOCKER:
+
+Run hello world:
+docker container run hello-world
+
+List your containers:
+docker container ls -a
+
+Remove one of them:
+docker container rm a5b8567a86c5
+
+This launches a container in the background (-d flag), named nginx test, with the container's 80 port mapped to your localhost 8080 port, using the nginx image
+docker container run -d --name nginx-test -p 8080:80 nginx
+
+This does the same thing, but in foreground. You'll have to ctrl+c to get out it, and you'll the the logs on the terminal if you reach nginx on the instance through a browser:
+docker container run --name nginx-foreground -p 9090:80 nginx
+
+If you launch these two containers (one in foreground and other in background, and you exit the foreground one by pressing ctrl+c), and then run docker container ls -a, you'll that the foreground one is exited.
+
+ATTACH
+You can interact with your container by attaching to it:
+docker container attach nginx-test
+
+Ooh! nginx logs show on the terminal. Detaching (ctrl+c) terminates the container though :(
+
+Let's start that container back up:
+docker container start nginx-test
+
+Let's attach again, but this time with an extra option:
+docker container attach --sig-proxy=false nginx-test
+
+Now when you detach (ctrl+c) the container no longer stops. Neat!
+
+EXEC
+Running the attach command is useful if you want to connect to the process your container is running, but the exec one seems more interative!
+
+The exec command spawns a second process inside the container that you can interact with. Examples:
+docker container exec nginx-test whoami
+docker container exec nginx-test cat /etc/debian_version
+
+These processes run and then terminate, leaving the container as it was before it ran (unless your processes change something!)
+
+We can take it one step further and run bash inside the container!
+
+docker container exec -i -t nginx-test /bin/bash
+
+This way you can interact with the container as if you had ssh'ed into it! It is not recommended to do any modifications to the machine this way, as they'll be lost (remember, containers are ephemeral)
+
+There are two flags for this command
+-i: Shorthand for --interactive, which tells docker to keep stdin open so we can send commands to the process
+-t: Short for --tty, which allocates a pseudo-TTY to the session
+
+
+
+
 8 ----- DOCKERCMD -----
 
 
