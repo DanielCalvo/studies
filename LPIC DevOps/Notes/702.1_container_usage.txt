@@ -23,7 +23,7 @@ The following is a partial list of the used files, terms and utilities:
 
 Suggested next action item: Continue with the mastering docker book. Many of the items that are unclear to you may become easier to understand as you expand your knowledge on the subject. You can skip parts that touch on points that are not particularly interesting for now.
 
-- Mastering docker: Page 89
+- Mastering docker: Page 106
 
 Once you reach an interesting part of the book, implement the things you have learned!
 
@@ -394,6 +394,76 @@ This way you can interact with the container as if you had ssh'ed into it! It is
 There are two flags for this command
 -i: Shorthand for --interactive, which tells docker to keep stdin open so we can send commands to the process
 -t: Short for --tty, which allocates a pseudo-TTY to the session
+
+LOGS
+This one is neat: It allows you to interact with the stdout stream of your containers, which docker keeps in the background.
+
+docker container logs --tail 5 nginx-test
+
+You can also see logs in real time:
+docker container logs -f nginx-test
+
+And you filter them by time:
+docker container logs --since 2018-05-09T08:00 nginx-test
+
+TOP
+Rather simple, lists processes running inside the container
+docker container top nginx-test
+
+STATS
+Provides resource usage information for a container of an argument is passed, or all containers of no argument is passed. You can see CPU and memory usage, as well as network usage. Noice!
+
+docker container stats
+docker container stats nginx-test
+
+LIMITING RESOURCES
+By default when you launch a container, it will have no resource caps. It could use all the resources on the host!
+
+Typically you would limit resources when using the docker container run:
+docker container run -d --name nginx-test --cpu-shares 512 --memory 128M -p 8080:80 nginx
+
+However, our container is already running. According to the book, we would limit resource usage on a running container by doing:
+
+docker container update --cpu-shares 512 --memory 128M nginx-test
+
+(On the mastering docker book the author had an error when running the above command... hey it worked on my machine!(TM). I did get a message about my kernel not having the ability to limit swap, but I'm not too worried about that...
+
+Now, upon doing:
+docker container stats nginx-test
+I can see resource usage limitation in place.
+
+MISC CONTAINER STUFF
+
+PAUSE
+
+for i in {1..5}; do docker container run -d --name nginx$(printf "$i") nginx; done
+
+You can pause containers:
+docker container pause nginx1
+
+You can then unpause them:
+docker container unpause nginx1
+
+STOP, START & KILL
+STOP a container. Does the same thing as when sending ctrl+c to a container that is in the foreground. It sends a SIGTEM to the process running in the container. If the process does not terminate gracefully after a while, docker then sends a SIGKILL. This will immediately terminate the process, not giving it time to write to disk or have database queries finish or anything.
+
+docker container stop nginx2
+
+While having a container terminate ungracefully is a bad thing, docker allows you to change the default grace period for a container to exit gracefully:
+
+docker container stop -t 60 nginx3
+
+You can start containers that are stopped. start supports multiple containers as arguments:
+docker container start nginx2 nginx3
+
+The restart command is a combination of two: It stops and starts a container.
+
+docker container restart -t 60 nginx4
+
+And finally, in true YOLOMAX fashion, you can send sigkill directly to a container by doing
+
+docker container kill nginx5
+
 
 
 
