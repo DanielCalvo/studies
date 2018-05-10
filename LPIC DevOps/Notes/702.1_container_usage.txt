@@ -23,7 +23,7 @@ The following is a partial list of the used files, terms and utilities:
 
 Suggested next action item: Continue with the mastering docker book. Many of the items that are unclear to you may become easier to understand as you expand your knowledge on the subject. You can skip parts that touch on points that are not particularly interesting for now.
 
-- Mastering docker: Page 106
+- Mastering docker: Page 114
 
 Once you reach an interesting part of the book, implement the things you have learned!
 
@@ -305,8 +305,11 @@ docker volume rm my-vol #But let's not do this for now!
 
 Let's launch an instance connected to the volume!
 
-
 docker run --name danivolumetest --mount source=myvol,target=/app -d dani:salt_master
+
+From mastering docker:
+
+
 
 
 
@@ -444,7 +447,7 @@ docker container pause nginx1
 You can then unpause them:
 docker container unpause nginx1
 
-STOP, START & KILL
+STOP, START, RESTART & KILL
 STOP a container. Does the same thing as when sending ctrl+c to a container that is in the foreground. It sends a SIGTEM to the process running in the container. If the process does not terminate gracefully after a while, docker then sends a SIGKILL. This will immediately terminate the process, not giving it time to write to disk or have database queries finish or anything.
 
 docker container stop nginx2
@@ -463,6 +466,32 @@ docker container restart -t 60 nginx4
 And finally, in true YOLOMAX fashion, you can send sigkill directly to a container by doing
 
 docker container kill nginx5
+
+REMOVING CONTAINERS
+
+To remove all stopped containers:
+docker container prune
+
+But be careful running this, if all your containers are stopped, you will remove all of them!
+
+You can also remove a specific container:
+
+docker container rm nginx4
+
+If you want to go yolomax and remove a running container, you have to use rm -f:
+docker container rm -f nginx4
+
+CREATE
+Similar to the run command, prepares and configures a container, but doesn't start it.
+
+PORT
+Lists port mappings for a given container. This might be more useful than it looks!
+docker container port nginx-test
+
+DIFF
+Lists differences in the container filesystem since the container started to run. (files created, removed and changed).
+
+If this container is stopped and removed, these files will be lost (but you should be okay with that!)
 
 
 

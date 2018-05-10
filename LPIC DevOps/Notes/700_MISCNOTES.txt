@@ -85,3 +85,46 @@ docker exec --user root -it macvlan-deb bash
 docker network create -d ipvlan --subnet=192.168.1.0/24 --gateway=192.168.1.1 -o ipvlan_mode=l2 ipvlan210 #Fails
 
 --- MACVLAN ---
+
+
+--- DOCKER VOLUMES AND NETWORKS ---
+
+
+docker image pull redis:alpine
+docker image pull russmckendrick/moby-counter
+docker network create moby-counter
+
+docker network inspect moby-counter #Hmmm...
+
+docker container run -d --name redis --network moby-counter redis:alpine
+docker container run -d --name moby-counter --network moby-counter -p 8080:80 russmckendrick/moby-counter
+
+docker container ls
+
+Interesting, the redis images exposes the redit port by default (erm, that makes sense)
+
+Application should be available on localhost:8080
+
+But how did the app know the address of the redis container?
+If attempt to ping the redis application from the container, it works:
+
+docker container exec moby-counter ping -c 3 redis
+
+Does it have an entry for redis in the hosts file? :o
+docker container exec moby-counter cat /etc/hosts
+
+It doesnt. Very intriguing. What nameserver is being used?
+docker container exec moby-counter cat /etc/resolv.conf
+
+127.0.0.11, hmmm, I wonder if that's resolving our redis name?
+docker container exec moby-counter nslookup redis 127.0.0.11
+
+It is!
+
+
+
+--- DOCKER VOLUMES AND NETWORKS ---
+
+
+
+
