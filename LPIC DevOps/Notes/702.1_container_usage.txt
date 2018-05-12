@@ -307,10 +307,28 @@ Let's launch an instance connected to the volume!
 
 docker run --name danivolumetest --mount source=myvol,target=/app -d dani:salt_master
 
+
 From mastering docker:
 
+This is the part that touches on volumes on page 118 of Mastering Docker.
 
+Re-create the network for these containers if it's missing, and then start a redis and web instance:
 
+docker network create moby-counter
+docker container run -d --name redis --network moby-counter redis:alpine
+docker container run -d --name moby-counter --network moby-counter -p 8080:80 russmckendrick/moby-counter
+
+Stop and remove the redis docker container
+
+docker container stop redis
+docker container rm redis
+
+And relaunch it:
+docker container run -d --name redis --network moby-counter redis:alpine
+
+All your mobys are gone! :o
+
+This happens due to the redis instance using a container, but every time
 
 
 7 ----- DOCKERVOLUMES -----

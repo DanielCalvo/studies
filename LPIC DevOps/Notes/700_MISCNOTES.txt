@@ -121,7 +121,33 @@ docker container exec moby-counter nslookup redis 127.0.0.11
 
 It is!
 
+At this point the book creates another network and launches the applications gain:
 
+docker network create moby-counter2
+docker run -itd --name moby-counter2 --network moby-counter2 -p 9090:80 russmckendrick/moby-counter
+
+We attempt to ping redis again and it doesn't work:
+docker container exec moby-counter2 ping -c 3 redis
+ping: bad address 'redis'
+
+Another redit instance named redis2 is launched:
+docker container run -d --name redis2 --network moby-counter2 --network-alias redis redis:alpine
+
+Now the previous ping works:
+docker container exec moby-counter2 ping -c 3 redis
+
+PING redis (172.19.0.3): 56 data bytes
+64 bytes from 172.19.0.3: seq=0 ttl=64 time=0.090 ms
+
+Docker has some sort of internal, network-level name resolution that resolves names based on image names. You can see the names based on the instances that are running on a given network:
+
+docker network inspect moby-counter2
+
+To end this part of the book, stop and prune everything:
+
+docker container stop moby-counter2 redis2
+docker container prune
+docker network prune
 
 --- DOCKER VOLUMES AND NETWORKS ---
 
