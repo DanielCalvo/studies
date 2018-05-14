@@ -23,8 +23,6 @@ The following is a partial list of the used files, terms and utilities:
 
 Suggested next action item: Continue with the mastering docker book. Many of the items that are unclear to you may become easier to understand as you expand your knowledge on the subject. You can skip parts that touch on points that are not particularly interesting for now.
 
-- Mastering docker: Page 114
-
 Once you reach an interesting part of the book, implement the things you have learned!
 
 After finishing that book, you may want to look into other books.
@@ -328,7 +326,29 @@ docker container run -d --name redis --network moby-counter redis:alpine
 
 All your mobys are gone! :o
 
-This happens due to the redis instance using a container, but every time
+This happens due to the redis instance using a volume, but every time you spawn a new instance it takes on a new volume.
+
+You can stop, remove a container, and then launch another container with the volume from the old container. Don't forget to change the container ID down there.
+
+docker container stop redis
+docker container rm redis
+docker container run -d --name redis -v 0b9355ffa788bcf81645f45ff6a29e17c37bc7f9f78cadf46a4f2ae69468e255:/data --network moby-counter redis:alpine
+
+It works! I can see all my mobys from the previous container, yay! You can verify the contents of the volume directory by doing:
+
+docker container exec redis ls -laht /data
+
+You can also create your own volume. If you delete the redis container, prune volumes and start again, you can:
+
+docker container stop redis
+docker container rm redis
+
+docker volume create redis_data
+docker container run -d --name redis -v redis_data:/data --network moby-counter redis:alpine
+
+You can also inspect the volume:
+
+docker volume inspect redis_data
 
 
 7 ----- DOCKERVOLUMES -----

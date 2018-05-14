@@ -5,7 +5,7 @@ Description: Candidates should be able to run and manage multiple containers tha
 
 Key Knowledge Areas:
 
-- Understand the application model of Docker Compose
+- Understand the application model of Docker Compose <- 1 ----- DOCKER COMPOSE -----
 - Create and run Docker Compose Files (version 3 or later)
 - Understand the architecture and functionality of Docker Swarm mode
 - Run containers in a Docker Swarm, including the definition of services, stacks and the usage of secrets
@@ -16,3 +16,8 @@ The following is a partial list of the used files, terms and utilities:
 - docker-compose
 - docker
 - kubectl
+
+
+1 ----- DOCKER COMPOSE -----
+
+- Mastering docker: Page 155, take a look at and understand the voting app as presented in the book.

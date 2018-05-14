@@ -152,5 +152,9 @@ docker network prune
 --- DOCKER VOLUMES AND NETWORKS ---
 
 
+--- DOCKER MACHINE ---
+
+Not covered on the scope of LPIC Devops, but I'll roll with it as it appears to be an interesting stepping stone in the Mastering Docker book.
+
 
 
