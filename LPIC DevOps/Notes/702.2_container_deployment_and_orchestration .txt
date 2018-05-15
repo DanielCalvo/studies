@@ -27,7 +27,7 @@ How does docker handle load balacing or connectivity in this case?
 
 1 ----- DOCKER COMPOSE -----
 
-- Mastering docker: Page 167, take a look at and understand the voting app as presented in the book.
+- Mastering docker: Page 173, take a look at and understand the voting app as presented in the book.
 
 Commands:
 
