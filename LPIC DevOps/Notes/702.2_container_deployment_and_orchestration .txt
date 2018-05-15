@@ -18,6 +18,78 @@ The following is a partial list of the used files, terms and utilities:
 - kubectl
 
 
+=== YOUR NOTES ===
+
+docker-compose up -d --scale=3
+How does docker handle load balacing or connectivity in this case?
+
+=== YOUR NOTES ===
+
 1 ----- DOCKER COMPOSE -----
 
-- Mastering docker: Page 155, take a look at and understand the voting app as presented in the book.
+- Mastering docker: Page 167, take a look at and understand the voting app as presented in the book.
+
+Commands:
+
+
+docker-compose up
+Brings up all instances defined on the docker compose file
+
+docker-compose up -d
+Bring up all instances in detached mode
+
+docker-compose ps
+Returns the state of all containers relative to the docker compose file on the current directory. All other containers will be ignored
+
+docker-compose config
+Validates the syntax of your docker compose file.
+
+docker-compose pull
+Will pull all the images for the containers on your docker compose file
+
+docker-compose build
+Will execute any build commands it finds in your dockerfile (kinda confusing?)
+
+docker-compose create
+Creates, but does not launch the containers in the same way as docker container create does.
+
+The following work the same as the docker commands, except they affect everything defined in the docker-compose file:
+
+docker-compose start
+docker-compose stop
+docker-compose restart
+docker-compose pause
+docker-compose unpause
+
+docker-compose top
+Shows top processes in the containers spanwed by the docker-compose file. Very similar to docker container top
+
+docker-compose top db
+Same as above, but for a specific host
+
+docker-compose logs
+docker-compose logs db
+
+docker-compose exec redis ping -c 3 db
+
+docker-compose up -d --scale worker=3
+Scales worker containers up to a total of 3.
+
+docker-compose kill
+Will kill all containers ungracefuly. Dangerous, avoid.
+
+docker-compose rm
+Removes stopped containers
+
+docker-compose down
+Stops all containers and networks and removes them
+
+docker-compose down --rmi all --volume
+Removes all containers, networks, volumes and images. There will be an error if some other container is using an image you also use on this docker-compose file.
+(another container unrelated to what you're doing here might also be using the redis image, for example)
+
+
+
+
+
+1 ----- DOCKER COMPOSE -----
