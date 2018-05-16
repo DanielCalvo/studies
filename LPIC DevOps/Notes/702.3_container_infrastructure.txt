@@ -5,7 +5,7 @@ Description: Candidates should be able to set up a runtime environment for conta
 
 Key Knowledge Areas:
 
-- Use Docker Machine to setup a Docker host
+- Use Docker Machine to setup a Docker host <- 1 ----- DOCKER MACHINE -----
 - Understand Docker networking concepts, including overlay networks
 - Create and manage Docker networks
 - Understand Docker storage concepts
@@ -17,3 +17,37 @@ Key Knowledge Areas:
 
 The following is a partial list of the used files, terms and utilities:
 - docker-machine
+
+
+But you're currently reviewing docker machine for this section and you're at: Page
+
+- Mastering docker: Page 173, take a look at and understand the voting app as presented in the book.
+
+
+1 ----- DOCKER MACHINE -----
+
+Following up chapter 5 of Mastering Docker!
+I'll only launch hosts on virtualbox for now.
+
+docker-machine create --driver virtualbox docker-local
+Runs a bunch of checks (such as checking that virtualbox is present), downloads boot2docker, creates a vm, sets up ssh keys, does a few docker things and bam, docker machine
+
+docker-machine env docker-local
+Lists environment variables for your docker-local docker machine. This will show you how to connect to the machine.
+
+By running: eval $(docker-machine env docker-local)
+You configure your docker client to connect to the docker server on the docker machine. This way you can interact with it as if it were a normal docker install on your local.
+
+docker-machine ls
+Shows you the available docker machines. The one with the asterisk is the active one!
+
+You can also find a bunch of things about your docker-local machine:
+
+docker-machine ip docker-local
+docker-machine inspect docker-local
+docker-machine config docker-local
+docker-machine status docker-local
+docker-machine url docker-local
+
+
+1 ----- DOCKER MACHINE -----
