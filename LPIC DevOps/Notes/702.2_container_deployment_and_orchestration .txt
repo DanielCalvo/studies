@@ -6,9 +6,9 @@ Description: Candidates should be able to run and manage multiple containers tha
 Key Knowledge Areas:
 
 - Understand the application model of Docker Compose <- 1 ----- DOCKER COMPOSE -----
-- Create and run Docker Compose Files (version 3 or later)
-- Understand the architecture and functionality of Docker Swarm mode
-- Run containers in a Docker Swarm, including the definition of services, stacks and the usage of secrets
+- Create and run Docker Compose Files (version 3 or later) 2
+- Understand the architecture and functionality of Docker Swarm mode 3
+- Run containers in a Docker Swarm, including the definition of services, stacks and the usage of secrets <- 4 ----- DOCKER SWARM -----
 - Understand the architecture and application model Kubernetes
 - Define and manage a container-based application for Kubernetes, including the definition of Deployments, Services, ReplicaSets and Pods
 
@@ -23,11 +23,12 @@ The following is a partial list of the used files, terms and utilities:
 docker-compose up -d --scale=3
 How does docker handle load balacing or connectivity in this case?
 
+
+- Mastering docker: Page 178, take a look at and understand the voting app as presented in the book.
+
 === YOUR NOTES ===
 
 1 ----- DOCKER COMPOSE -----
-
-
 
 Commands:
 
@@ -89,7 +90,27 @@ Removes all containers, networks, volumes and images. There will be an error if 
 (another container unrelated to what you're doing here might also be using the redis image, for example)
 
 
-
-
-
 1 ----- DOCKER COMPOSE -----
+
+
+
+4 ----- DOCKER SWARM -----
+
+To launch a swarm, let's first launch the manager node by docker machine:
+
+docker-machine create -d virtualbox swarm-manager
+docker-machine env swarm-manager
+eval $(docker-machine env swarm-manager) #This will make swarm-manager the active docker machine
+
+Now let's create two more machines:
+
+docker-machine create -d virtualbox swarm-worker01
+docker-machine create -d virtualbox swarm-worker02
+
+Check if they're alright:
+docker-machine ls
+
+docker $(docker-machine config swarm-manager) swarm init --advertise-addr $(docker-machine ip swarm-manager):2377 --listen-addr $(docker-machine ip swarm-manager):2377
+
+
+4 ----- DOCKER SWARM -----

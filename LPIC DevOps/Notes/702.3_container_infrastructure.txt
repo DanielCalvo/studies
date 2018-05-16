@@ -6,7 +6,7 @@ Description: Candidates should be able to set up a runtime environment for conta
 Key Knowledge Areas:
 
 - Use Docker Machine to setup a Docker host <- 1 ----- DOCKER MACHINE -----
-- Understand Docker networking concepts, including overlay networks
+- Understand Docker networking concepts, including overlay networks 2
 - Create and manage Docker networks
 - Understand Docker storage concepts
 - Create and manage Docker volumes
@@ -17,12 +17,6 @@ Key Knowledge Areas:
 
 The following is a partial list of the used files, terms and utilities:
 - docker-machine
-
-
-But you're currently reviewing docker machine for this section and you're at: Page
-
-- Mastering docker: Page 173, take a look at and understand the voting app as presented in the book.
-
 
 1 ----- DOCKER MACHINE -----
 
