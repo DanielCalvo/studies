@@ -24,7 +24,7 @@ docker-compose up -d --scale=3
 How does docker handle load balacing or connectivity in this case?
 
 
-- Mastering docker: Page 178, take a look at and understand the voting app as presented in the book.
+- Mastering docker: Page 187, review why your node shows as "drained" and not "Pause" when rebooted. Maybe google it?
 
 === YOUR NOTES ===
 
@@ -110,7 +110,60 @@ docker-machine create -d virtualbox swarm-worker02
 Check if they're alright:
 docker-machine ls
 
+This "bootstraps" (what does that mean? :o) our swarm manager:
 docker $(docker-machine config swarm-manager) swarm init --advertise-addr $(docker-machine ip swarm-manager):2377 --listen-addr $(docker-machine ip swarm-manager):2377
+
+You'll receive a token from this command. It should look something like this:
+
+docker swarm join --token SWMTKN-1-4upg7xrc1c83xnyz2uh8teuivmomigy20s3thvv57u1cx9gjdu-ansoz5v1jds2e9kjc28d4byjh 192.168.99.100:2377
+
+Then, add your two worker machines to the swarm by running:
+
+docker $(docker-machine config swarm-worker01) swarm join $(docker-machine ip swarm-manager):2377 --token SWMTKN-1-4upg7xrc1c83xnyz2uh8teuivmomigy20s3thvv57u1cx9gjdu-ansoz5v1jds2e9kjc28d4byjh
+docker $(docker-machine config swarm-worker02) swarm join $(docker-machine ip swarm-manager):2377 --token SWMTKN-1-4upg7xrc1c83xnyz2uh8teuivmomigy20s3thvv57u1cx9gjdu-ansoz5v1jds2e9kjc28d4byjh
+
+Make sure you're still connected to the swarm manager:
+eval $(docker-machine env swarm-manager)
+
+And then you can check your swarm by running:
+docker node ls
+
+Since you're connected to your swarm manager, you can see information about it by running:
+
+docker info
+
+(this will tell you, among other things, how many managers and nodes are on your swarm)
+
+You can also use the docker node command to probe the swarm manager and get information from it:
+
+docker node inspect swarm-manager --pretty
+docker node inspect swarm-worker01 --pretty
+
+In case you want to perform some maintenance on your manager node, or need to bring it down for some reason, you can promote another node to manager:
+
+docker node promote swarm-worker01
+
+If you run docker node ls at this point, you will see that swarm-worker01 has the MANAGER STATUS of "Reachable". I wonder what that means...
+
+If you demote your swarm-manager node, swarm-worker01 will become the Leader:
+
+docker node demote swarm-manager
+docker node ls
+
+eval $(docker-machine env swarm-worker01)
+docker node ls
+
+To temporarely remove a node from our swarm, we need to set the node status to drain:
+
+docker node update --availability drain swarm-manager
+
+Once you've set the availability status to drain, you can then for instance, restart the swarm-manager machine:
+docker machine ssh swarm-manager
+sudo reboot
+
+
+
+
 
 
 4 ----- DOCKER SWARM -----
