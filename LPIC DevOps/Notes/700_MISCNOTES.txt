@@ -156,5 +156,36 @@ docker network prune
 
 Not covered on the scope of LPIC Devops, but I'll roll with it as it appears to be an interesting stepping stone in the Mastering Docker book.
 
+----- PORTAINER -----
+Not covered by LPIC, but this appears to be an interesting chapter of mastering docker regardless:
 
+Pull the portainer image:
+docker image pull portainer/portainer
+
+Or... just directly launch a container and the image will be pulled:
+
+docker container run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
+
+It's all UI based, so not much to write about. Interacted with it as described by the book!
+
+It goes along checking containers on localhost. Not that entertaining perhaps as all that info is easily accessible on the command line?
+
+PORTAINER AND DOCKER SWARM
+
+Now this looks more interesting. Launch a swarm with 1 node manager and 3 worker nodes as descrined on your notes in 702.2
+
+Then point it to the swarm manager:
+eval $(docker-machine env swarm-manager)
+
+Then run this. This will launch portainer on the manager node.
+
+docker service create \
+--name portainer \
+--publish 9000:9000 \
+--constraint 'node.role == manager' \
+--mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
+portainer/portainer \
+-H unix:///var/run/docker.sock
+
+----- PORTAINER -----
 

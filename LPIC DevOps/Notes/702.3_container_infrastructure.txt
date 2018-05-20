@@ -7,13 +7,13 @@ Key Knowledge Areas:
 
 - Use Docker Machine to setup a Docker host <- 1 ----- DOCKER MACHINE -----
 - Understand Docker networking concepts, including overlay networks 2
-- Create and manage Docker networks
-- Understand Docker storage concepts
-- Create and manage Docker volumes
-- Awareness of Flocker and flannel
-- Understand the concepts of service discovery
-- Basic feature knowledge of CoreOS Container Linux, rkt and etcd
-- Understand security risks of container virtualization and container images and how to mitigate them
+- Create and manage Docker networks 3
+- Understand Docker storage concepts 4
+- Create and manage Docker volumes 5
+- Awareness of Flocker and flannel 6
+- Understand the concepts of service discovery 7
+- Basic feature knowledge of CoreOS Container Linux, rkt and etcd 8
+- Understand security risks of container virtualization and container images and how to mitigate them <- 9 ----- CONTAINER SEC -----
 
 The following is a partial list of the used files, terms and utilities:
 - docker-machine
@@ -45,3 +45,32 @@ docker-machine url docker-local
 
 
 1 ----- DOCKER MACHINE -----
+
+
+
+9 ----- CONTAINER SEC -----
+
+Excited about this one!
+
+CONTAINER CONSIDERATIONS
+
+ADVANTAGES
+
+THE DOCKER HOST
+
+IMAGE TRUST
+
+DOCKER DIFF
+Great way to spot if something dodgy is going on.
+
+BEST PRACTICES
+
+One only application per container
+Install only what you need
+Review who has access to your docker hosts
+Use the resources
+
+- Mastering docker: Page 284. Docker security!
+
+
+9 ----- CONTAINER SEC -----

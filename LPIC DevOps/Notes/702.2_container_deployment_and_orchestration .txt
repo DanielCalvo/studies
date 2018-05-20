@@ -24,7 +24,10 @@ docker-compose up -d --scale=3
 How does docker handle load balacing or connectivity in this case?
 
 
-- Mastering docker: Page 187, review why your node shows as "drained" and not "Pause" when rebooted. Maybe google it?
+
+
+TODO: On page 196 of mastering docker there's an interesting example of an infrastructure. Can you implement that?
+I want to learn more about ingress load balacing!
 
 === YOUR NOTES ===
 
@@ -162,8 +165,103 @@ docker machine ssh swarm-manager
 sudo reboot
 
 
+DOCKER SWARM SERVICES AND STACKS (from Mastering Docker)
+
+As a shortcut, create again your swarm from scratch, assuming you deleted everything:
+
+docker-machine create -d virtualbox swarm-manager
+docker-machine create -d virtualbox swarm-worker01
+docker-machine create -d virtualbox swarm-worker02
+docker-machine create -d virtualbox swarm-worker03
+docker $(docker-machine config swarm-manager) swarm init --advertise-addr $(docker-machine ip swarm-manager):2377 --listen-addr $(docker-machine ip swarm-manager):2377
+docker $(docker-machine config swarm-worker01) swarm join $(docker-machine ip swarm-manager):2377 --token SWMTKN-1-0ttn6dvnxgo750irwhm2z98096wjynw09omwmfqv7t7mordo6c-44640z3hllqeotim99njv9efv
+docker $(docker-machine config swarm-worker02) swarm join $(docker-machine ip swarm-manager):2377 --token SWMTKN-1-0ttn6dvnxgo750irwhm2z98096wjynw09omwmfqv7t7mordo6c-44640z3hllqeotim99njv9efv
+docker $(docker-machine config swarm-worker03) swarm join $(docker-machine ip swarm-manager):2377 --token SWMTKN-1-0ttn6dvnxgo750irwhm2z98096wjynw09omwmfqv7t7mordo6c-44640z3hllqeotim99njv9efv
+
+So far we've looked at the docker swarm and docker node family of commands. The next two commands we can look at are:
+
+docker service
+docker stack
+
+These allow us to launch, scale and manage containers within the swarm cluster.
+
+DOCKER SERVICE
+
+The service command is a way of launching containers to take advantage of a swarm cluster.
+Let's create a service!
+
+docker service create --name cluster --constraint "node.role == worker" -p:80:80/tcp russmckendrick/cluster
+
+This creates a service named cluster that is made up of a single container with port 80 mapped from the container to the host machine.
+It will only run on containers that have the role of worker.
+
+You can do:
+docker-machine ls
+And open any IP of any docker machine on a web browser and that IP will have the application running on port 80.
+
+You can query the launched services by doing:
+docker service ls
+
+More detailed information can be obtained through the inspect command
+docker service inspect cluster --pretty
+
+You can probe your nodes to see which one is running the service:
+
+docker node ps swarm-worker01
+docker node ps swarm-worker02
+docker node ps swarm-worker03
+
+In my case, the container was on swarm-worker01.
+
+Let's scale our service to six instances!
+docker service scale cluster=6
+
+If you probe your instances again with docker node ps $MACHINE, you should be able to see two containers on each machine.
+
+To end this experiment, remove the service:
+
+docker service rm cluster
 
 
+DOCKER STACKS
+
+You can create complex, highly-available, multi-container applications using docker swarms.
+
+On the docker compose file you can add a deploy section. This is where everything related to the swarm element of your stack is defined. See this example:
+
+version: "3"
+services:
+
+  cluster:
+    image: russmckendrick/cluster
+    ports:
+      - "80:80"
+    deploy:
+      replicas: 6
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == worker
+
+You can then deploy your stack based on the docker-compose file:
+docker stack deploy --compose-file=docker-compose.yml cluster
+
+And look for it:
+
+Check the status of your stack:
+docker stack ls
+
+Get details from your recently created service named cluster:
+docker stack services cluster
+
+This will show you in where in the stack your containers are running:
+docker stack ps cluster
+
+To finish this experiment, delete your cluster stack:
+
+docker stack rm cluster
 
 
 4 ----- DOCKER SWARM -----
+
