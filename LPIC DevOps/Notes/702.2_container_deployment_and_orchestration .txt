@@ -27,6 +27,8 @@ How does docker handle load balacing or connectivity in this case?
 
 
 TODO: On page 196 of mastering docker there's an interesting example of an infrastructure. Can you implement that?
+TODO: Take another look at creating a network for an application in docker swarm. Does it behave consistently?
+
 I want to learn more about ingress load balacing!
 
 === YOUR NOTES ===

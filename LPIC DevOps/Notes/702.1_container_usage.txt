@@ -31,7 +31,7 @@ Oooh! This one looks interesting: https://www.amazon.com/Using-Docker-Developing
 
 There might also be an interesting book on docker networking out there!
 
-
+TODO: Can you make volumes work on a container-independent basis? Launch and delete a few databases or docker registries while remounting the same volumes, see what you get out of it!
 
 Symfony demo:
 

@@ -18,6 +18,14 @@ Key Knowledge Areas:
 The following is a partial list of the used files, terms and utilities:
 - docker-machine
 
+=== YOUR NOTES ===
+
+- Mastering docker: Page 287. Docker security!
+Curious to see how launching containers in read-only mode goes.
+
+=== YOUR NOTES ===
+
+
 1 ----- DOCKER MACHINE -----
 
 Following up chapter 5 of Mastering Docker!
@@ -54,11 +62,39 @@ Excited about this one!
 
 CONTAINER CONSIDERATIONS
 
+Docker containers are not virtual machines! Remember to adhere to container specific best practices.
+Put everything in your Dockerfiles, don't install packages you don't need, run a single process, and don't install/configure stuff in ad-hoc manners.
+
 ADVANTAGES
+
+Everytime you start a container, docker sets up a namespace and a control group.
+By setting up a namespace, docker keeps the process isolated in each container. Processes are not only isolated from each other, but also from the host system.
+Control groups ensure that each container gets it's own share of CPU, memory, disk and that they don't use all the resources on a docker host.
+
+Docker supports easy network separation, so all of applications A containers can be easily isolated from containers used by application B.
+Network isolation can run on a single docker host or be spawned across multiple ones using docker swarm
+
+One of the advantages presened by the author of Mastering Docker is that "you shouldn't have to log in into the container". I believe this is more of a paradigm shift instead of something that could be counted as an advantage.
+Docker has functionalities to keep you from having to run additional processes inside a container, such as docker container exec, docker container top, docker container logs, docker container stats and so on.
+You should be able to do everything you need without exposing more services than you need to.
 
 THE DOCKER HOST
 
+When dealing with virtual machines, you can control who accesses a given VM and who doesn't. User1 can only have access to VM1, while user2 could only have access to vm2.
+In docker this isn't possible. Whoever has access to the docker engine on a docker host has access to every single docker command. Be careful with who gets access to the docker host!
+On a docker host, it is recommended to keep docker hosts just for docker.
+
 IMAGE TRUST
+
+Onl get images from official mirrors and trusted sources.
+It is not recommended to download or publish images that are not created using dockerfiles.
+Do not publish images with custom changes and/or passwords.
+
+DOCKER COMMANDS THAT CAN HELP WITH SECURITY
+
+
+
+
 
 DOCKER DIFF
 Great way to spot if something dodgy is going on.
@@ -69,8 +105,5 @@ One only application per container
 Install only what you need
 Review who has access to your docker hosts
 Use the resources
-
-- Mastering docker: Page 284. Docker security!
-
 
 9 ----- CONTAINER SEC -----
