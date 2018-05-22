@@ -20,7 +20,7 @@ The following is a partial list of the used files, terms and utilities:
 
 === YOUR NOTES ===
 
-- Mastering docker: Page 287. Docker security!
+- Mastering docker: Page 292. Docker security!
 Curious to see how launching containers in read-only mode goes.
 
 === YOUR NOTES ===
@@ -92,18 +92,44 @@ Do not publish images with custom changes and/or passwords.
 
 DOCKER COMMANDS THAT CAN HELP WITH SECURITY
 
+There are a few commands that can help you with image security, as well as to double check a few security related things.
 
+RUN
 
+There's an option on the docker run command that allows you to set everything inside a container as read only:
 
+docker container run -d --name mysql --read-only -v /var/lib/mysql -v /tmp -v /var/run/mysqld -e MYSQL_ROOT_PASSWORD=banana mysql
+
+This sets up the entire container as read only, except the volumes with the -v flag before them. Anything else in the container won't be writeable:
+
+docker container exec mysql touch /trying_to_write_a_file #fails
+
+However, I can see this being difficult to set up in the real world as you never know exactly where applications will end up writing, especially as releases happen and so on.
+Test this thoroughly if you plan on using it!
+
+You can also have a normal container in which things are read-write, but then mount a volume as read only:
+
+docker container run -d -v /local/path/to/html:/var/www/html:ro nginx
 
 DOCKER DIFF
 Great way to spot if something dodgy is going on.
 
-BEST PRACTICES
+The docker container diff <container> command returns differences in the filesystem that are in place since the container launched.
+It compares the files in the default image for that container and files that have been changed since the container launched.
 
-One only application per container
-Install only what you need
-Review who has access to your docker hosts
+BEST PRACTICES (which are security relatable!)
+
+One only application per container - Docker was built for this. Split things up between containers, this will make everything easier to manage, and it is the docker way(TM) of doing things.
+Install only what you need - You shouldn't need vim and ssh inside a container, or unused libraries. This keeps your image small and reduces attack vectors.
+Review who has access to your docker hosts - Remember that whoever has root access to your docker hosts can do whatever he/she wants. Be careful with this access!
+Have the latest version of docker installed - This makes sure you have receive security updates as they come out.
+Use the resources: The author encourages you to do proper research and read the docker forums/community posts, as well as the official documentation. In my other words: Google it my child.
+
+The book points you to the CIS security benchmark for Docker: https://www.cisecurity.org/benchmark/docker/
+
+That may be a faily lenghty guide. The book then describes how we can run the Docker Bench Security Application!
+
+
 Use the resources
 
 9 ----- CONTAINER SEC -----
