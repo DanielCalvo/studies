@@ -129,7 +129,34 @@ The book points you to the CIS security benchmark for Docker: https://www.cisecu
 
 That may be a faily lenghty guide. The book then describes how we can run the Docker Bench Security Application!
 
+TESTING FOR VULNERABILITIES:
 
-Use the resources
+Let's spawn some instances with some bad practices regarding security:
+
+
+docker container run -d --name root-nginx -v /:/mnt nginx
+docker container run -d --name priv-nginx --privileged=true nginx
+docker container run -d -P --name sshd eg_sshd
+
+To run a security scan on your system, do:
+
+docker run -it --net host --pid host --cap-add audit_control \
+-e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
+-v /var/lib:/var/lib \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v /usr/lib/systemd:/usr/lib/systemd \
+-v /etc:/etc --label docker_bench_security \
+docker/docker-bench-security
+
+This is very nice! It gives you a through security check.
+
+You'll get 3 types of output:
+PASS: All good!
+INFO: Items you should review if you feel they're pertinent to your setup
+WARN: Items that need to be fixed. You don't want to see those!
+NOTE: Best practice advice
+
+From the default install, there's quite a bit to fix. It checks, among other things: Host configuration, docker daemon configuration, docker images and build files, container run time, docker security ops (best practices) and docker swarm config.
+
 
 9 ----- CONTAINER SEC -----
