@@ -189,3 +189,13 @@ portainer/portainer \
 
 ----- PORTAINER -----
 
+----- DOCKER FOR LOCAL DEV -----
+
+This is from chapter 12 on the mastering docker book.
+
+It starts describing local development with docker. To start things off, get the docker compose file located here:
+https://raw.githubusercontent.com/russmckendrick/mastering-docker/master/chapter12/docker-wordpress/docker-compose.yml
+
+Before going forward, let's visualize the docker-compose file with docker-compose-viz:
+
+docker run --rm -it --name dcv -v $(pwd):/input pmsipilot/docker-compose-viz render -m image docker-compose.yml

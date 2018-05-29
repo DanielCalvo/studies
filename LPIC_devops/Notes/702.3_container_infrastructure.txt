@@ -20,7 +20,7 @@ The following is a partial list of the used files, terms and utilities:
 
 === YOUR NOTES ===
 
-- Mastering docker: Page 292. Docker security!
+- Mastering docker: Page 309. Docker workflows!
 Curious to see how launching containers in read-only mode goes.
 
 === YOUR NOTES ===
