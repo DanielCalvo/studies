@@ -196,6 +196,70 @@ This is from chapter 12 on the mastering docker book.
 It starts describing local development with docker. To start things off, get the docker compose file located here:
 https://raw.githubusercontent.com/russmckendrick/mastering-docker/master/chapter12/docker-wordpress/docker-compose.yml
 
+I was (am) initially a bit confused regarding docker-compose file. Let's analyze it to improve our knowledge of docker-compose:
+
+     1	version: "3"
+     2
+     3	services:
+     4	  web:
+     5	    image: nginx:alpine
+     6	    ports:
+     7	      - "8080:80"
+     8	    volumes:
+     9	      - "./wordpress/web:/var/www/html"
+    10	      - "./wordpress/nginx.conf:/etc/nginx/conf.d/default.conf"
+    11	    depends_on:
+    12	      - wordpress
+    13	  wordpress:
+    14	    image: wordpress:php7.1-fpm-alpine
+    15	    volumes:
+    16	      - "./wordpress/web:/var/www/html"
+    17	    depends_on:
+    18	      - mysql
+    19	  mysql:
+    20	      image: mysql:8
+    21	      environment:
+    22	        MYSQL_ROOT_PASSWORD: "wordpress"
+    23	        MYSQL_USER: "wordpress"
+    24	        MYSQL_PASSWORD: "wordpress"
+    25	        MYSQL_DATABASE: "wordpress"
+    26	      volumes:
+    27	        - "./wordpress/mysql:/var/lib/mysql"
+    28	  wp:
+    29	    image: wordpress:cli-php7.1
+    30	    volumes:
+    31	      - "./wordpress/web:/var/www/html"
+    32	      - "./wordpress/export:/export"
+
+
+There are three services here: web, wordpress, mysql and wp.
+
+THE WEB CONTAINER:
+- Regular nginx:alpine image
+- Port 80 on the container gets exposed to port 8080 on the local host
+- On the host machine, $LOCALDIR/wordpress/web gets mounted to /var/www/html inside the container.
+- On the host machine, $LOCALDIR/wordpress/nginx.conf gets mounted to /etc/nginx/conf.d/default.conf inside the container
+- It depends on the wordpress container.
+- No explicit process is launched? Hmmm
+
+THE WORDPRESS CONTAINER:
+- Wordpress image.
+- On the host machine, $LOCALDIR/wordpress/web gets mounted to /var/www/html inside the container
+- This container runs php-fpm. It appears to serve php outside the web docker container? Ruh-roh.
+- It depends on the mysql container
+
+THE MYSQL CONTAINER:
+- MySQL image
+- Has a few environment variables to set up MYSQL settings
+- $LOCALDIR/wordpress/mysql gets mounted to /var/lib/mysql in the container
+
+THE WP CONTAINER
+- This container just gets wordpress files and populates /var/www/html with them. It then doesn't stay running after it populates the volume.
+
+
+
+
+
 Before going forward, let's visualize the docker-compose file with docker-compose-viz:
 
 docker run --rm -it --name dcv -v $(pwd):/input pmsipilot/docker-compose-viz render -m image docker-compose.yml
