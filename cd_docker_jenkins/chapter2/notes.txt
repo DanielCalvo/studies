@@ -1,0 +1,9 @@
+
+Book index: 56
+
+Assorted commands:
+
+docker run -d tomcat
+docker logs musing_raman
+docker container stop musing_raman
+docker run -d -p 8080:8080 tomcat
