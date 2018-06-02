@@ -1,0 +1,8 @@
+
+Book index: 71
+
+Installing Jenkins from Docker:
+
+
+
+docker run -p <host_port>:8080 -v <host_volume>:/var/jenkins_home jenkins:2.60.1
