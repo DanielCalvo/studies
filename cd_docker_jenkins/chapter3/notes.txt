@@ -1,8 +1,63 @@
 
 Book index: 71
 
-Installing Jenkins from Docker:
+JENKINS FROM DOCKER
+
+mkdir $HOME/jenkins_home
+chmod 777 $HOME/jenkins_home
+docker run -d -p 49001:8080 -v $HOME/jenkins_home:/var/jenkins_home --name jenkins_dani2 jenkins
+
+docker run -d -p 49001:8080 --name jenkins_dani2 jenkins
+
+Open jenkins on your browser: localhost:49001
+
+Create a new pipeline job:
+
+pipeline {
+    agent any
+    stages {
+        stage("Hello") {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+}
+
+Bam, works as intended.
+
+The book then describes some Jenkins architectures with master/slaves and how they can connect to each other. ssh is the most used method.
+
+There are four common strategies on how to configure Jenkins agents:
+
+TODO: Write a clear distinction for every agent type, I'm confused!
+
+PERMANENT AGENTS
+
+Permanent agents are the ones you configure manually through the Jenkins UI. These are usually physical servers or virtual machines with plenty of resources.
+These are the ones you have at the office.
+
+PERMANENT DOCKER AGENTS
+
+Configuration is static, so it's done the same way as permanent agents.
+I could google this one and set it up but I'm interested in exploring the more dynamic possibilities!
+
+JENKINS SWARM AGENTS
+
+This is my jam! Let's set it up.
+
+First step is to install on the master the Self-Organizing Swarm Plugin Modules plugin in jenkins through the UI. Do that!
+
+The on a jenkins slave do this:
+
+But how do you launch this machine?
+
+--- To confirm ---
+docker run -d -p 49002:8080 --name jenkins_slave1 jenkins
+docker exec jenkins_slave1 "ls"
+java -jar swarm-client.jar -master 172.17.0.3 -username dani -password dani -name jenkins_slave1
 
 
+DYNAMICALLY PROVISIONED DOCKER AGENTS
 
-docker run -p <host_port>:8080 -v <host_volume>:/var/jenkins_home jenkins:2.60.1
+Launches one slave for every build?

@@ -1,0 +1,63 @@
+
+
+TODO: Create/fork a sample symfony project and do the pipeline steps for that project (but is that even worth it though?)
+
+Pipelines!
+
+Here-s a pipeline with two steps
+
+
+pipeline {
+    agent any
+    stages {
+        stage('First Stage') {
+            steps {
+                echo 'Step 1. Hello World'
+            }
+        }
+        stage('Second Stage') {
+            steps {
+                echo 'Step 2. Second time Hello'
+                echo 'Step 3. Third time Hello'
+            }
+        }
+    }
+}
+
+
+
+pipeline {
+    agent any
+    triggers { cron('* * * * *') }
+    options { timeout(time: 5) }
+    parameters {
+        booleanParam(name: 'DEBUG_BUILD', defaultValue: true,
+        description: 'Is it the debug build?')
+    }
+    stages {
+        stage('Example') {
+            environment { NAME = 'Rafal' }
+            when { expression { return params.DEBUG_BUILD } }
+            steps {
+                echo "Hello from $NAME"
+                script {
+                    def browsers = ['chrome', 'firefox']
+                    for (int i = 0; i < browsers.size(); ++i) {
+                        echo "Testing the ${browsers[i]} browser."
+                    }
+                }
+            }
+        }
+    }
+    post { always { echo 'I will always say Hello again!' } }
+}
+
+All good so far.
+
+A COMMIT PIPELINE:
+
+Runs every time a commit is pushed to the repo. It usually has three steps.
+
+Checkout - Gets the code.
+Compile - Compiles the source code (or installs dependencies I imagine in case of php and javascript)
+Unit test - Runs a series of unit tests
