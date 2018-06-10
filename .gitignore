@@ -5,3 +5,4 @@ private_key
 !/.gitignore
 .vagrant
 LPIC_devops/vagrant/.vagrant
+OFFLINE_NOTES.TXT
