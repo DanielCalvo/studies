@@ -33,3 +33,17 @@ OTHER TODO:
 
 Topics per weight:
 a
+
+
+ON DOCKER VOLUMES, from the jenkins/docker CD book:
+
+A very common approach to data management with Docker is to
+introduce an additional layer in the form of data volume containers. A
+data volume container is a Docker container whose only purpose is to
+declare the volume. Then, other containers can use it (with the --
+volumes-from <container> option) instead of declaring the volume
+directly. Read more at https:/​ / ​ docs.​ docker.​ com/​ engine/​ tutorials/
+dockervolumes/​ #creating-​ and-​ mounting-​ a-​ data-​ volume-​ container .
+
+
+/\ Investigate this container for volumes thing.
