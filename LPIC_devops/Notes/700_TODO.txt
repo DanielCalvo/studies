@@ -9,27 +9,20 @@ DOCKER TODO:
 - Do a workflow for docker things (create image, upload to docker hub, deploy swarm?)
 - Note: Images can have depending child images! (such as a debian image)
 - docker run -it: What does it mean?
-- Revisit the docker container log thing you saw on mastering docker -- can you make that happen on apache too?
 - On docker, it appears changes do not persist when running images (welp, that oughta be obvious)
 - Nice (basic?) docker cheat sheet: http://blog.baudson.de/blog/stop-and-remove-all-docker-containers-and-images
-- A topic for later: How do you monitor docker container resource usage? :o (with historical data, think nagios)
-- How do you limit the size of a volume, and monitor usage? :o
-- Revisit docker machine and use it to launch an amazon instance
-
+- Mastering docker: Page 74
 - Explain containers, services and stacks conceptually (docker architecture?)
-- How about a container to server custom vagrant boxes? That would be neat. Could be done on the orangepi even!
 
 
 ANSIBLE TODO:
 - Get a docker instance with ansible installed on it
 
 VAGRANT TODO:
-- Find a way to launch multiple, different machines at the same time!
+- Get it going with VMware Workstation and see if it is any different from Virtualbox?
 
 
 OTHER TODO:
-- This is not covered by the certification, but is very nice: https://12factor.net/
 
 
-Topics per weight:
-a
+Index on Continuous delivery with Docker and Jenkins: 54
