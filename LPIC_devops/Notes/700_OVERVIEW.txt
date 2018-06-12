@@ -1,0 +1,56 @@
+
+701.1 Modern Software Development (weight: 6)
+JSON, REST, MICROSERVICES, APIS
+PROGRESS: 0/10
+
+701.2 Standard Components and Platforms for Software (weight: 2)
+OPENSTACK, COULDFOUNTRY, OPENSHIFT
+PROGRESS: 0
+
+701.3 Source Code Management (weight: 5)
+GIT
+PROGRESS: 3/10
+
+701.4 Continuous Integration and Continuous Delivery (weight: 5)
+CI/CD, JENKINS PIPELINES/JENKINSFILES, DEPLOYMENTS
+PROGRESS: 3/10
+
+702.1 Container Usage (weight: 7)
+BASIC DOCKER
+PROGRESS: 7/10
+
+702.2 Container Deployment and Orchestration (weight: 5)
+DOCKER COMPOSE, DOCKER SWARM, AND KUBERNETES
+PROGRESS: 5/10
+
+702.3 Container Infrastructure (weight: 4)
+DOCKER (ADVANCED), DOCKER MACHINE, FLOCKER/FLANNEL
+PROGRESS: 5/10
+
+703.1 Virtual Machine Deployment (weight: 4)
+VAGRANT
+PROGRESS: 4/10
+
+703.2 Cloud Deployment (weight: 2)
+CLOUD INIT & CLOUD CONCEPTS
+PROGRESS: 0
+
+703.3 System Image Creation (weight: 2)
+PACKER
+PROGRESS: 0
+
+704.1 Ansible (weight: 8)
+ANSIBLE
+PROGRESS: 2/10
+
+704.2 Other Configuration Management Tools (weight: 2)
+CHEF, PUPPET, KNIFE
+PROGRESS: 0/10
+
+705.1 IT Operations and Monitoring (weight: 4)
+PROMETHEUS, PUSHGATEWAY, ALERTMANAGER, GRAFANA, SEC/MISC TOPICS
+PROGRESS: 1/10
+
+705.2 Log Management and Analysis (weight: 4)
+LOGSTASH, FILEBEAT, SYSLOG, GROK
+PROGRESS: 1/10
