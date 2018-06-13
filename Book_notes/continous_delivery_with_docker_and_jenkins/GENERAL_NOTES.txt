@@ -1,6 +1,8 @@
 
-As the book wasn't interesting enough for a per-chapter note breakdown, I'm going to take a few general notes here:
 
+TODO: General book review
+
+As the book wasn't interesting enough for a per-chapter note breakdown, I'm going to take a few general notes here:
 
 CHAPTER 2: INTRODUCING DOCKER
 Book goes over a few docker basics (what is docker?) and concepts (images, networks, volumes).
