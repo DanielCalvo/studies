@@ -1,6 +1,6 @@
 
 
-BOOK INDEX: PAGE 23
+----- STOPPED ON PAGE 30
 
 CHAPTER 1
 
@@ -133,4 +133,48 @@ The book then goes off on a tangent about CI/CD workflow/environments and how Ku
 
 
 CHAPTER 2
+Creating kubernetes clusters.
+
+Install VirtualBox (had that one already)
+Install kubectl. Steps described here worked for xubuntu 16.04: https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl
+Googled "install minikube". Endeded up with this:
+
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.28.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+
+Let's see the versions of Kubernetes we have available:
+minikube get-k8s-versions
+
+For practicity, create an alias:
+alias mk='minikube'
+
+As of this writing, v1.10.0 seems to be the latest stable version.
+
+mk start --kubernetes-version="v1.10.0"
+
+This create a minukube cluster! Launches vbox vm with boot2docker, creates certificates, sets up networking and runs the local kubernetes cluster on the vm
+
+This kubectl command displays information about the cluster:
+kubectl cluster-info
+
+List nodes in the cluster
+kubectl get nodes
+
+Let's start up a pod:
+kubectl run echo --image=gcr.io/google_containers/echoserver:1.4 --port=8080 deployment "echo" created
+
+Is it there?
+kubectl get pods
+
+To expose it as a service
+kubectl expose deployment echo --type=NodePort
+
+According to the book, "ports get mapped in the cluster"
+
+To see which IP and port the echo service is using:
+minikube ip #Ok, I get the node if my only node in the cluster...
+
+kubectl get service echo
+
+So it'll be the IP from minikube plus the port from the echo service as outputted by kubectl... messy.
+
 
