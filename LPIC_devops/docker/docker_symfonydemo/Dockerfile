@@ -1,5 +1,5 @@
 FROM debian:latest
-RUN apt-get update && apt-get install dialog
+RUN apt-get update && apt-get install dialog -y
 RUN apt-get install curl php-symfony php-xml git php-zip php-sqlite3 apache2 libapache2-mod-php vim wget -y
 COPY demovhost.conf /etc/apache2/sites-available/demovhost.conf
 RUN a2ensite demovhost
