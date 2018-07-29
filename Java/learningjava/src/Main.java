@@ -66,6 +66,8 @@ public class Main {
 
         System.out.println(daniBicycle.getFrameMaterial());*/
 
+
+        // introduction to conditional statements
         int age = 4;
 
         if (age >= 0 && age <= 5) {
