@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args){
@@ -68,7 +69,7 @@ public class Main {
 
 
         // introduction to conditional statements
-        int age = 4;
+/*        int age = 4;
 
         if (age >= 0 && age <= 5) {
             System.out.println("Between 0 and 5");
@@ -76,7 +77,61 @@ public class Main {
             System.out.println("Other value");
         }
 
-        // You stopped on chapter 20 of Lynda's learning Java tutorial
+        // Loops:
+        int x = 3;
+        while (x > 0){
+            System.out.println("x is: " + x);
+            x--;
+        }
+
+        int y = 4;
+        do {
+            System.out.println("Current y: " + y);
+            y--;
+        } while (y > 0);
+
+        for (int i = 3; i > 0; i--){
+        System.out.println("i is: " + i);
+        }*/
+
+        // Libraries
+
+/*        double power = Math.pow(5, 3);
+        System.out.println(power);
+
+        Random rand = new Random();
+        int randomNumber = rand.nextInt();
+        int randomNumberWithBound = rand.nextInt(10);
+        System.out.println(randomNumberWithBound + " " + randomNumber);*/
+
+        //Debugging with print statements
+
+/*
+        Coin c = new Coin();
+        System.out.println("Initial coin status: " + c.getFaceUp());
+
+        for (int i = 0; i < 5; i++){
+            c.flip();
+            System.out.println("Coin status: " + c.getFaceUp());
+        }
+
+        System.out.println("message on break point!");
+        System.out.println("message after break point!");
+*/
+
+        //Debugging with the IDE is cool! Clicking the "Debug main" icon in intellij brings up the debugger
+
+        // Dice roll challenge
+/*
+        Dice d = new Dice();
+
+        for (int i = 0; i < 5; i++) {
+            System.out.println("Previous roll: " + d.previousRoll); //erm, didn't work as expected
+            System.out.println("Current roll: " + d.roll());
+
+        }*/
+
+
 
     }
 }
