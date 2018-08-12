@@ -3,7 +3,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Random;
 
-public class Main {
+public class Main_lyndalearningjava {
     public static void main(String[] args){
    /*
         // String and an introduction to classes:
