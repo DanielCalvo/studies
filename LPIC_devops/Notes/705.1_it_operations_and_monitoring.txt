@@ -19,3 +19,8 @@ The following is a partial list of the used files, terms and utilities:
 - Service exploits, brute force attacks, and denial of service attacks
 - Security updates, packet filtering and application gateways
 - Virtualization hosts, DNS and load balancers
+
+
+Assorted prometheus notes:
+
+apt-get install prometheus #/shrug
