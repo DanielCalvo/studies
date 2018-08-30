@@ -13,16 +13,15 @@ Vagrant.configure("2") do |config|
   config.vm.define "prom_server" do |prom_server|
     prom_server.vm.box = "debian/stretch64"
     prom_server.vm.hostname = "promserver"
-    prom_server.vm.provision:shell, path: "hello.sh"
     prom_server.vm.provision:shell, path: "files/server.sh"
-    prom_server.vm.network "public_network", bridge: "wlxe894f6138b06", use_dhcp_assigned_default_route: true
+    prom_server.vm.network "public_network", bridge: "enp3s0", use_dhcp_assigned_default_route: true
   end
 
   config.vm.define "prom_client" do |prom_client|
    prom_client.vm.box = "debian/stretch64"
    prom_client.vm.hostname = "promclient"
    prom_client.vm.provision:shell, path: "files/client.sh"
-   prom_client.vm.network "public_network", bridge: "wlxe894f6138b06", use_dhcp_assigned_default_route: true
+   prom_client.vm.network "public_network", bridge: "enp3s0", use_dhcp_assigned_default_route: true
   end
 end
 

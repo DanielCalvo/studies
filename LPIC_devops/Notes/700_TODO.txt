@@ -1,6 +1,9 @@
 
-TODO for 27/Aug:
-- Configure vagrant with a prometheus server and an apache instance and have it working out of the box :ok_hand_emoji:
+TODO for 29/Aug:
+- Configura logstash with Kibana
+
+TODO for 28/Aug:
+- Configure vagrant with a prometheus server and an apache instance and have it working out of the box :ok_hand_emoji: (We got that, sorta)
 
 
 Intredasting: https://www.cncf.io/
