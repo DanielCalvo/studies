@@ -13,6 +13,8 @@ try:
 except FileNotFoundError:
     os.mkdir(resized_image_directory)
 
+image_list.reverse()
+
 for image_file in image_list:
     try:
         os.stat(resized_image_directory+'\\'+image_file)
