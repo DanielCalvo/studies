@@ -1,4 +1,15 @@
 
+TODO for 29/Aug:
+- Configura logstash with Kibana
+
+TODO for 28/Aug:
+- Configure vagrant with a prometheus server and an apache instance and have it working out of the box :ok_hand_emoji: (We got that, sorta)
+
+
+Intredasting: https://www.cncf.io/
+
+
+
 GIT TODO:
 - Move the git.txt in learnings to a LPIC text file in it's corresponding section and get rid of that folder
 

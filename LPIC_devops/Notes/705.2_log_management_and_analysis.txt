@@ -21,3 +21,7 @@ The following is a partial list of the used files, terms and utilities:
 - syslog.conf
 - /etc/logstash/logstash.yml
 - /etc/filebeat/filebeat.yml
+
+
+Some interesting info on the ELK stack:
+https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-logstash-and-kibana-elk-stack-on-ubuntu-14-04
