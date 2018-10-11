@@ -1,17 +1,13 @@
 
-TODO for 29/Aug:
-- Configura logstash with Kibana
-
-TODO for 28/Aug:
-- Configure vagrant with a prometheus server and an apache instance and have it working out of the box :ok_hand_emoji: (We got that, sorta)
+TODO for 1/Sept:
+- Regain a basic understanding of single docker instances (ok!)
+- Regain a basic understanding of instances launched with docker compose (let's go back to learning docker)
 
 
-Intredasting: https://www.cncf.io/
+General interesting stuff:
+https://www.cncf.io/
+https://12factor.net/
 
-
-
-GIT TODO:
-- Move the git.txt in learnings to a LPIC text file in it's corresponding section and get rid of that folder
 
 DOCKER TODO:
 - Study docker machine to launch an ansible server (full fledged vm with apt-get and so on)
@@ -37,13 +33,6 @@ ANSIBLE TODO:
 VAGRANT TODO:
 - Find a way to launch multiple, different machines at the same time!
 
-
-OTHER TODO:
-- This is not covered by the certification, but is very nice: https://12factor.net/
-
-
-Topics per weight:
-a
 
 
 ON DOCKER VOLUMES, from the jenkins/docker CD book:

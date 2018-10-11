@@ -1,0 +1,77 @@
+
+
+
+--- VOLUME ---
+docker volume create myvol
+docker volume ls
+docker volume inspect myvol
+docker volume rm my-vol
+
+
+--- NETWORK ---
+docker network create moby-counter
+
+--- IMAGE ---
+docker image build --tag local:debiantest .
+docker build . #Creates unnamed image!
+docker image inspect local:debiantest #Neat!
+docker image build . --tag dani:salt_master
+
+--- CONTAINER ---
+docker container run -d --name redis --network moby-counter redis:alpine
+docker container run -d --name moby-counter --network moby-counter -p 8080:80 russmckendrick/moby-counter
+docker container stop redis
+docker container rm redis
+docker container run -d --name redis --network moby-counter redis:alpine
+docker container stop redis
+docker container rm redis
+docker container run -d --name redis -v 0b9355ffa788bcf81645f45ff6a29e17c37bc7f9f78cadf46a4f2ae69468e255:/data --network moby-counter redis:alpine
+docker container run hello-world
+docker container ls -a
+docker container rm a5b8567a86c5
+docker container run -d --name nginx-test -p 8080:80 nginx
+docker container run --name nginx-foreground -p 9090:80 nginx
+docker container attach nginx-test
+docker container attach --sig-proxy=false nginx-test
+docker container exec nginx-test whoami
+docker container exec nginx-test cat /etc/debian_version
+docker container exec -i -t nginx-test /bin/bash
+docker container logs --tail 5 nginx-test
+docker container logs -f nginx-test
+docker container logs --since 2018-05-09T08:00 nginx-test
+docker container top nginx-test
+docker container run -d --name nginx-test --cpu-shares 512 --memory 128M -p 8080:80 nginx
+docker container update --cpu-shares 512 --memory 128M nginx-test
+docker container stats nginx-test
+docker container run -d -p 8080:80 --name apache-php7 local/apache-php:7
+docker run -d --network pub_net dani:salt_master
+docker container pause nginx1
+docker container unpause nginx1
+docker container stop nginx2
+docker container stop -t 60 nginx3
+docker container restart -t 60 nginx4
+docker container kill nginx5
+docker container prune
+docker container rm nginx4
+docker container rm -f nginx4
+docker container port nginx-test
+
+
+
+--- RM ---
+docker rm $(docker ps -a -q)
+docker rm $(docker ps -a -q) --force
+
+
+--- PS ---
+docker ps -a
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1 @@
+RUN echo "hello" > /root/hello

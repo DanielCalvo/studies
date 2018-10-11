@@ -1,0 +1,35 @@
+
+
+enp3s0
+
+docker network create -d macvlan \
+  --subnet=172.16.86.0/24 \
+  --gateway=172.16.86.1  \
+  -o parent=eth0 pub_net
+
+
+
+docker network create -d macvlan \
+  --subnet=192.168.1.0/24 \
+  --gateway=192.168.1.0 \
+  -o parent=enp3s0 \
+  my-macvlan-net222
+
+
+
+Let's try this first:
+
+docker network create -d macvlan  \
+  --subnet=192.168.1.0/24  \
+  --ip-range=192.168.1.128/25 \
+  --gateway=192.168.1.1  \
+  -o parent=enp3s0 macnet42
+
+
+docker run --rm -itd \
+  --network macnet42 \
+  --name my-macvlan-alpine \
+  alpine:latest \
+  ash
+
+
