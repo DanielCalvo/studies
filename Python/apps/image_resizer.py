@@ -27,7 +27,40 @@ for image_file in image_list:
     except OSError:
         print('Could not open'+image_directory+'\\'+image_file+'. Is it a valid image?')
         continue
-    if im.size == ((4864, 2736)) or im.size == ((2592, 1456)): #I'm only interested in resizing images that match these two sizes.
+    if im.size == ((4864, 2736)) or im.size == ((2592, 1456)):
         im_resized = im.resize((1920,1080))
         im_resized.save(resized_image_directory+'\\'+image_file)
         print(image_file+' was resized')
+    if im.size == ((4048, 3036)):
+        im_resized = im.resize((2080,1542))
+        im_resized.save(resized_image_directory+'\\'+image_file)
+        print(image_file+' was resized')
+    if im.size == ((3036, 4048)):
+        im_resized = im.resize((1542, 2080))
+        im_resized.save(resized_image_directory+'\\'+image_file)
+        print(image_file+' was resized')
+
+
+# Maybe I'll get around finishing this later. This is a function to get rid of that horrendous copying and pasting up above
+# def get_resized_size(x, y):
+#
+#     if x > y:
+#         print("This is an image in landscape mode")
+#         #4040, 3036
+#
+#     print(x / y)
+#
+#     if y > x:
+#         print("This is an image in portrait mode")
+#
+# get_resized_size(4040, 3036)
+#
+# get_resized_size(1920, 1080)
+
+#if image size is part of the sizes that we want to resize
+    #resize the image
+#else
+    #do nothing
+
+#What images size do you want to resize?
+
