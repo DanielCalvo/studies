@@ -1,0 +1,41 @@
+#5.47 App overview
+#Multiple node apps connecting to a redis instance. Neat!
+#But it looks like we're going for a simple approach now
+
+#5.48 and 5.49 were about Javascript
+
+#5.50 Assembling a Dockerfile
+#Put the Dockerfile together
+#docker build .
+#docker build -t vioseven/visits:latest .
+
+#5.51 Introducing Docker compose
+docker run vioseven/visits
+#No redis! :(
+docker run redis
+#To set up network connections between two containers, there are two options:
+#Use the docker CLI's network features
+#Use docker compose
+#Docker compose is a much better alternative!
+
+#Docker compose is:
+#A separate command that comes installed with Docker
+#Used to start up multiple containers at the same time
+#Automates many of the long arguments we were passing to docker previously
+#The pupose of docker compose is to function as docker cli, but allow you issue multiple commands much quicker!
+
+#5.52 Docker Compose Files
+#Just built the docker compose on this one
+
+#5.53 Networking with Docker compose
+#By the defining two services inside a docker compose file, docker will create the two services on the same network
+#By creating a service, docker makes the name of that service available for containers inside the docker compose
+
+#5.54 Docker compose commands
+#To launch everything: docker-compose up --build
+#docker run myimage == docker-compose up
+#docker build . && docker run myimage == docker-compose up --build
+
+
+
+

@@ -1,0 +1,54 @@
+#3.27 Creating docker images
+#Creating a dockerfile:
+# - Specify a base image
+# - Run some commands to install additional programs
+# - Specify a command to run on container startup
+
+#3.28 Building a Dockerfile
+#Create the dockerfile as described on the video and:
+
+cd Section3/redis-image
+docker build .
+docker run 936f0b884b18
+
+#3.29 Dockerfile teardown
+FROM alpine
+RUN apk add --update redis
+CMD ["redis-server"]
+
+#3.30 What's a base image?
+#An operating system that is useful for you!
+
+#3.31 The build process in detail
+#The build command is what is used to take a Dockerfile and generate an image out of it
+#Docker creates intermediate containers for every step of the build process.
+#A snapshot of the filesystem of the intermediate container is then passed on to the next build step as an image
+#The next build steps creates an intermediate container from this image, runs a command, modifies the image, and then passes it to the next step until the build process is complete.
+#Cool chapter!
+#3.32 A brief recap
+#Autho re-iterates that every step on the Dockerfile is done through a temporary container, and each steps of the Dockerfile iterates over a snapshot of the filesystem that each step on the Dockerfile modifies.
+
+#3.33 Rebuilds with cache
+#Docker caches the images from build steps, in order make the build process faster
+#If a line on the Dockerfile is modified, from that point onwards the cache will no longer be used (from the changed line on down)
+
+#3.34 #Building an image
+docker build .
+docker run 9097dd0aec3e
+docker build -t vioseven/redis:latest .
+#Above: <your docker id>/<project name>:<version>
+docker run vioseven/redis
+
+#3.35 Manual image generation with Docker commit
+docker run -it alpine sh
+docker ps
+docker commit -c 'CMD ["redis-server"]' aa3a5898a13e
+#sha256:6dd0a132a4c7d603ce9e193842ab49fd52a23e740c0f2a91cf18f2fca43e5d38
+docker run 6dd0
+#Usually shouldn't use docker commit to modify images. Use Dockerfiles instead
+
+
+
+
+
+

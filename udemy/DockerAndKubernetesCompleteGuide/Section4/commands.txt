@@ -1,0 +1,61 @@
+#4.36 Project outline
+#I don't know any Javascript, but that's fine apparently, ha!
+
+#4.37 Node server setup
+#4.38 Server code
+#It was all code!
+
+#4.39 A few planned errors
+docker build .
+
+#4.40 Base image issues
+#In the docker world, alpine is a term for an image that is as small and compact as possible. There is a node image with an alpine tag, which indicates it's a small version of the node image.
+
+#4.41 A few missing files
+#package.json is missing from the container filesystem
+#When building an image, none of the files on your project directory are available inside the container by default
+
+#4.42 Copying build files
+#The syntax for the COPY statement is:
+#COPY <path on your machine> <path inside the container>
+#Path on your machine is relative to the build directory
+#This was added to the dockerfile:
+#COPY ./ ./
+docker build .
+#Lets run the build command again, but this time tag the image
+docker build -t vioseven/simpleweb .
+docker run vioseven/simpleweb
+
+#4.43 Container port mapping
+#Port forwarding is not set up in the dockerfile. It is set up when you launch the container:
+#docker run -p <localhost port>:<port inside container> <image id>
+docker run -p 8080:8080 vioseven/simpleweb
+
+#4.44 Specifying a working directory
+#Specifying a WORKDIR directory in the Dockerfile makes all the commands inside the container be executed relative to that directory
+#After changing the Dockerfile, remember to rebuild the container
+docker build -t vioseven/simpleweb .
+docker run -p 8080:8080 vioseven/simpleweb
+docker exec -it e42a672bb7db sh
+#oh cool, we're in /usr/app by default!
+
+#4.45 Unnecessary rebuilds
+#When you change a file on your local (not container) filesystem that usually gets copied to inside the container with a COPY statement on the Dockerfile, it will not reflect inside a running container.
+
+#4.46 Minimizing cache busting and rebuilds
+#If you have a COPY statement on the Dockerfile and you change a file you're copying, docker will re-run that step and all steps after that when creating the image.
+#Since npm install depends on package.json only, the author suggests copying package.json, then running npm install, then copying the rest of the project.
+#That way, if you modify a file that is not package.json, npm install does not have to run again. If you do modify package.json, then docker runs npm install again.
+
+
+
+
+
+
+
+
+
+
+
+
+

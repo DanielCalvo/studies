@@ -1,0 +1,73 @@
+
+#2.14:
+docker run <image name> command
+docker run busybox echo hi there
+docker run busybox ls
+
+#2.15
+docker ps
+docker ps --all
+
+#2.16
+#docker run = docker create + docker start
+docker create <image name>
+docker start <image name>
+
+#2.17
+docker ps --all
+docker run busybox echo hi there
+docker start f792132b20c1
+docker start -a f792132b20c1
+#The default command on a container cannot be replaced
+
+#2.18 Removing stopped containers
+docker ps --all
+docker system prune
+
+#2.19 Retrieving log outputs
+docker create busybox echo hi there
+docker start a100f32f1364c1dd2df9f8568307633cd46bdb59403576294cb3575f0e7367f2
+docker logs a100f32f1364c1dd2df9f8568307633cd46bdb59403576294cb3575f0e7367f2
+
+#2.20 Stopping containers
+docker create busybox ping google.com
+docker start 5737a2302fda72d3698c229e1dbf8f941330fc0473f3627001203e23cd9110b0
+docker logs 5737a2302fda72d3698c229e1dbf8f941330fc0473f3627001203e23cd9110b0
+docker stop 5737a2302fda72d3698c229e1dbf8f941330fc0473f3627001203e23cd9110b0
+docker kill
+#docker stop: SIGTERM is sent
+#docker kill: SIGKILL is sent
+
+#2.21 Multi-command containers
+docker run redis
+#Redis is running only inside the container
+#We need to start another program inside the redis contianer
+
+#2.22 Executing commands in a running container
+#docker exec -it <container id> <command>
+docker ps 4894b5e49740
+docker exec -it 4894b5e49740 redis-cli
+
+#2.23 The purpose of the IT flag
+#The -i means when we execute this command inside the container, we want to attach our terminal to the STDIN channel of that process.
+#The -t flag appears to be relate do formatting in/output related to the container
+docker ps
+docker exec -i 4894b5e49740 redis-cli
+#Output is missing on the above, though it still works
+
+#2.24 Getting a command prompt into a container
+docker ps
+docker exec -it 4894b5e49740 bash
+
+#2.25 Starting with a shell
+docker run -it busybox sh
+
+#2.26 Container isolation
+#Between two containers, they do not automatically share their filesystems
+
+
+
+
+
+
+

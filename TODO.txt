@@ -1,3 +1,7 @@
+Reorganize your files! Should you go by topic (python, docker, Java) or by book? Or by learning platform (udemy?).
+I currently have no idea and have a mix of all those in place, ehehe.
+
+
 The DevOps page from Atlassian seems to have some very interesting items
 https://www.atlassian.com/devops
 
