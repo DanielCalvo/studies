@@ -1,0 +1,29 @@
+#7.82 Services overview
+#Theoretical chapter explaining the services used (github, travis ci and aws)
+
+#7.83 Github setup
+#Created: https://github.com/DanielCalvo/docker-react
+#PLEASE NOTE: The frontend folder and the dockerfiles for this chapter will be on the docker-react repo!
+cd frontend
+git init
+git add .
+git commit -m "initial commit"
+git remote add origin https://github.com/DanielCalvo/docker-react.git
+
+#7.84 Travis CI setup
+#Travis watches for pushes into github. Github probably fires a hook to travis CI every time something is pushed or some other event happens
+#Enabled docker-react through the travis CI ui
+#Travis does stuff depending on what we specify on the travis.yml file
+
+#7.85 Travis YML file configuration
+#Created .travis.yml on the docker-react project
+
+#7.86 A touch more travis setup
+#Added more things to .travis.yml
+
+#7.87 Automatic build creating
+#did a commit and push to master of all the changes
+#opened travis-ci and it ran successfully!
+
+#7.88 AWS Elastic beanstalk
+#Signed up for AWS

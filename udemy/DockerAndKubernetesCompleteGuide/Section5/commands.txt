@@ -36,6 +36,21 @@ docker run redis
 #docker run myimage == docker-compose up
 #docker build . && docker run myimage == docker-compose up --build
 
+#5.55 Docker compose containers
+docker run -d redis
+docker ps
+docker stop 245b4a515de9
+#To start a group of containers:
+docker-compose up -d
+#To stop:
+docker-compose down
 
+#5.56
+#Theoretical chapter showing that once a container crashes, it does not automatically come back up
+#You can specify several 'restart' conditions in docker-compose.yml to make a container restart
 
-
+#5.57 Container status with docker compose
+docker-compose up
+docker-compose ps
+#The docker-compose ps command is meant to run in the same directory as your docker-compose.yml file is located
+#As a matter of fact, most docker-compose commands need to be run from the appropriate directory
