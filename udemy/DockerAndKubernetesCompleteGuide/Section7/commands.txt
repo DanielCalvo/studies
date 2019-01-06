@@ -27,3 +27,38 @@ git remote add origin https://github.com/DanielCalvo/docker-react.git
 
 #7.88 AWS Elastic beanstalk
 #Signed up for AWS
+#Elabstic beanstalk (EBS) is by far the easiest way to get started with production Docker instances
+#EBS is most appropriate when you're running one container at a time
+#Create new application, then create new environment, select Docker as application type
+
+#7.89 More on Elasticbeanstalk
+#EBS monitors traffic coming in, and it scales up additional VMs to handle traffic if needed.
+
+#7.90 Travis config for deployment
+#Added configuration for travis to deploy to EBS (more to come)
+
+#7.91 Automated deployments
+#Created an user on IAM on Amazon with full permissions for EBS. Copied the access and secret keys.
+#Go on travis ci, on your repo and click More Options. Add the keys as environment variables.
+#Added API keys to travis.yml
+
+#7.92 Exposing ports through the Dockerfile
+#Deploy to EBS falied
+#Added the EXPOSE entry to the Dockerfile
+
+#7.93 Build still failing?
+#My dockerfile had some incorrect COPY entries which I fixed. It now works, yay!
+
+#7.94 Workflow with Github
+#Created a branch named "feature", modified code on it, commited and pushed
+#Went on github and created a PR. Tests on travis were triggered
+
+#7.95 Redeploy on pull request merge
+#Just merged a PR on github
+
+#7.96 Deployment wrap up
+#Merging the PR on github triggered a deploy on travis CI, which in course triggered a deploy in amazon AWS.
+#All worked, neat!
+
+#7.98 Environment clean up
+#Go to the EBS dashboard and delete the application so we don't get charged by AWS.
