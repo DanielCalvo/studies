@@ -7,3 +7,7 @@
 #8.99 Application overview
 #We're going to create an application that uses multiple containers
 #Ruh-roh! We're going to calculate fibonacci numbers in a fancy way
+
+#8.101 to 8.110
+#This is all Javascript classes. I watched the first 3 or 4 but then it was just too much Javascript to implement
+#I'll get the code and switch back to Linux
