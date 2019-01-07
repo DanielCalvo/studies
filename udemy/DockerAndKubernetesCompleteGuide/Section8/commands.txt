@@ -1,0 +1,9 @@
+#8.98 Single container deployment issues
+#The previous section may not illustrate reality very well
+#The app was simple -- no outside dependencies
+#The image was rebuild multiple times (wasteful)
+#How do we connect to a database from a container?
+
+#8.99 Application overview
+#We're going to create an application that uses multiple containers
+#Ruh-roh! We're going to calculate fibonacci numbers in a fancy way
