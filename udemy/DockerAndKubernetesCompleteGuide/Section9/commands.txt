@@ -1,3 +1,33 @@
-
 #9.112 Checkpoint catchup
-#mkdir complex
+#Just downloaded everything
+
+#9.113
+#Make dev Dockefiles for each subsection of the app
+#Created Dockerfile.dev for client
+docker build -f Dockerfile.dev .
+docker run 6c43536f3dd0
+
+#9.114 Dockerizing generic node apps
+#Created near identical dockerfiles for subsections of the project
+
+#9.115 Adding postgres as a service
+#We have Dockerfiles for the client, server and worker projects. Let's set up a Docker compose file!
+
+#9.116 Docker-compose config
+#Aded redis as a service on the dockerfile. Added the server subpart in the dockerfile
+
+#9.117 Environment variables with Docker compose
+#variableName = value <- Sets a variable in the container at run time
+#variableName <- Sets a variable in the container at run time, but the value is taken from your computer
+#Remember that every time that you want to access a service that has been defined in a docker compose file, you just specify the name of the service
+#Added environment variables successfully! And did
+docker-compose up
+
+#9.118
+#9.119
+#9.120
+#9.121
+#9.122
+#9.123
+#9.124
+#9.125
