@@ -23,11 +23,29 @@ docker run 6c43536f3dd0
 #Added environment variables successfully! And did
 docker-compose up
 
-#9.118
-#9.119
-#9.120
-#9.121
-#9.122
-#9.123
-#9.124
-#9.125
+#9.118 The worker and client services
+#Added client and worker parts to docker-compose.yml
+
+#9.119 Nginx path routing
+#The nginx server is going to look at different requests, and decide to which backend service it gets routed
+
+#9.120 Routing with nginx
+#Created the defaul.conf for nginx
+
+#9.121 Building a custom nginx image
+#We'll use the nginx docker image from docker hub
+#Remember: If you do not specify/replace a command for a given image, the command for the parent image will automatically run/take precedence
+
+#9.122 Starting up docker compose
+#It's possible that the first time we run docker compose things fail, as some images might require other images that will take longer than normal to boot up
+#docker-compose worked but the app does nothing when I put a number in and put submit :(
+
+#9.123 text only note lecture
+
+
+#9.124 Troubleshooting startup buts
+#Ah, the app is just buggy, I have to put a number in and then hit refresh
+
+#9.125 Opening websockets connection
+#Changed the default.conf file of nginx. Let's rebuild the nginx container
+docker-compose up --build
