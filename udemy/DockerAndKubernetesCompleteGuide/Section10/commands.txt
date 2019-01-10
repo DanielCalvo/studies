@@ -1,0 +1,36 @@
+
+#10.126 Production multi container deployment
+
+#The flow is:
+#Push Github
+#Send hook to Travis, Travis pulls
+#Travis builds a test image and runs tests
+#If tests pass, Travis builds a prod image
+#Travis pushes built prod images to Dockerhub
+#Travis pushes project to AWS EBS (?, probably just sends a webhook)
+#EBS pulls images from dockerhub, deploys (?)
+
+#Question marks indicate sections that I'm not sure why they're there or how they work. I guess we'll find out!
+
+#10.127 Production Dockefiles
+#Just copied and pasted Dockerfiles around
+
+#10.128 Multiple nginx instances
+#The nginx we had in Section9 was just responsble for routing! (certain parts of the app go to certain containers, getting to the correct backend)
+#This time we're gonna have 2 nginx servers. One to do the app routing and another one to serve the react files. See diagram on lecture.
+
+#10.129 Altering Nginx's listen port
+#Created a default.conf for nginx on the client folder
+#Wrote a production dockerfile for the client folder which is very similar to the docker-react project used in previous chapters. This one listens on port 3000 though, and has a different nginx default.conf file.
+
+#10.130 A quick fix
+#Added a line on nginx's default.conf to fix a bug from the instructor :o
+
+#10.131 Cleaning up tests
+#Edited App.test.js and removed everything to make a test that passes 100% of the time, ha!
+
+#10.132 Github and travis setup
+
+#10.133
+#10.134
+#10.135
