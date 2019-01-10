@@ -30,7 +30,19 @@
 #Edited App.test.js and removed everything to make a test that passes 100% of the time, ha!
 
 #10.132 Github and travis setup
+#Pushed to repo, enabled repo on travis ci. No builds for travis yet though
 
-#10.133
-#10.134
+#10.133 Travis configuration setup
+#What we're going to do is on the travis ci is:
+#Specify docker as a dependency
+#Build test version of project
+#run tests
+#build prod version of projects
+#push to dockerhub
+#deploy on ebs (update?)
+#And then started populating .travis.yml with instructions
+
+#10.134 Pushing images to dockerhub
+
+
 #10.135
