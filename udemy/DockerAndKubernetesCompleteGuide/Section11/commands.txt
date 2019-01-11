@@ -1,0 +1,52 @@
+#11.136 Multi-container definition files
+#Now every time we commit to github, travis ci pulls our repo and builds a set of production images and push them to dockerhub
+#We're going to create a file named Dockerrun.aws.json. It has instructions for AWS EBS on how to handle the multiple containers
+#Dockerrun.aws.json resembles docker-compose.yml but for production on AWS.
+
+#11.137 Finding docs on container definitions
+#EBS doesn't really know how to run containers. It delegates that to ECS (Elastic container service)
+#You work with ECS by creating task definition files. These instruct how to run a single container.
+#Googled: amazon ecs task definition
+https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definitions.html
+https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html
+https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#container_definitions
+
+#11.138 Adding container definitions to DockerRun
+#Created Dockerrun.aws.json in the project root and added some configuration to it
+#The only truly essential container we have in this docker project is the nginx routing server
+#At least one container needs to have "essentia": true
+
+#11.139 More container definitions
+
+#11.140 Formating container links
+
+#11.141 Creating the EB environment
+
+#11.142 Managed data service providers
+
+#11.143 Overview of AWS VPCs and security groups
+
+#11.144 RDS Database creation
+
+#11.145 Elasticache Redis creation
+
+#11.146 Creating a custom security group
+
+#11.147 Applying security group to resources
+
+#11.148 Setting environment variables
+
+#11.149 IAM keys for deployment
+
+#11.150 Travis deploy script
+
+#11.151 Container memory allocations
+
+#11.152 Verifying deployment
+
+#11.153 A quick app change
+
+#11.154 Making changes
+
+#11.155 Cleaning up AWS resources
+
