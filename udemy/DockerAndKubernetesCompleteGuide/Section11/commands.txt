@@ -17,30 +17,114 @@ https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_para
 #At least one container needs to have "essentia": true
 
 #11.139 More container definitions
+#Populated Dockerrun.aws.json
 
-#11.140 Formating container links
+#11.140 Forming container links
+#Hostname is optional on dockerrun.aws.json
+#On the nginx service, we need to expose a port on dockerrun.aws.json. Just like in docker-compose.yml
+#On AWS it appears we need to be more explicit as to which container is going to talk to which
+#Links are unidirectional. As in: Form a connection from nginx to the client.
+#Don't forget to validate your json!
 
 #11.141 Creating the EB environment
+#Went on AWS and on elasticbeanstalk, created a project and an environment
+#On environment creation, make sure the platform type is multi-container docker
 
 #11.142 Managed data service providers
+#The routing nginx, the nginx with prod files, the worker and the express server will still run inside EBS
+#Redis and Postgres will not be inside AWS. We'll rely in two external services from amaazon. RDS and AWS Elastic cache. They're generic and can be used with any other amazon app.
+#Reasons for elastic cache: Automatically creates instance Redis, easy to scale, built in logging and maintenance, secure and easier to migrate off of EBS, as it's decoupled to EBS.
+#AWS has specialists on how to manage these services (RDS, elastic cache)
+#The same sale points appply to amazon RDS (automatically creates instances, easy to scale, built in logging and maintenance, security, backups, easy migration...)
+#RDS makes backups very easy.
+#Author claims he's not the biggest AWS fan at all, and in fact thinks many aspects of the platform are challenging to work with. But he does see benefits to have these external services.
+#Having said all that, author still reiterates you might want to know how to run your own postgres/redis in a container in production.
+#Looks like we'll see more about that on a later chapter!
+#Digital ocean does not have automated db/redis
 
 #11.143 Overview of AWS VPCs and security groups
+#RDS = Relational database service
+#EC = Elastic Cache
+#By default, EBS won't be able to reach RDS and EC
+#You get a default VPC when you create an instance of EBS. You also get a different default VPC per amazon region
+#When you create your EBS environment, it gets assigned a security group. You can click on it and see it's inbound rules. They can have outbound rules as well. Default is for everything outbound to be allowed.
+#To allow EBS to connect to RDS and EC, we'll create a new security group. This traffic will say: Let any traffic reach this instance, if the origin of the traffic is within the security group. We'll attach all our services to this common security group.
 
 #11.144 RDS Database creation
+#Went on AWS and created a RDS instance
+#Make sure the master username and password match to what you have on docker-compose?
+#Instance identifier: multi-docker-postgres
+#Username: postgrespassword
+#On next page, database name: fibvalues
+#Defaults for everything else
+#Click on create! Yay!
 
 #11.145 Elasticache Redis creation
+#Go en elasticache, select redis and go on "Create"
+#Name: multi-docker-redis
+#Node, do no use default. Select cache.t2.micro or the smallest instance you can find, as this is just a node to study/deploy our dummy project
+#Number of replicas: 0 or none
+#subnet: redis-group
+#VPC ID: Select the default one. If you haven't messed with VPCs before, you should only be able to see the default one
+#Select all subnets
 
 #11.146 Creating a custom security group
+#Search for VPC and click on it
+#All your instances should be on the same VPC, but they might be in different security groups.
+#Click on create new security group. Create a new one with the name multi-docker. Description can be whatever you like. Make sure to select the default vpc.
+#You should have a security group!
+#Go on the security group dashboad, click your multi-docker one. Click on edit rules and then add rule
+Custom TCP rule, port range 5432-6379, and then type in "sg" on source, this should make a drop-down show up with your available security groups. Choose the docker one. Save!
 
 #11.147 Applying security group to resources
+#Go on elasticache dashboard, select your redis instance from the list and click on "modify" at the top
+#Click on the pencil on VPC Security groups and add your multi-docker security group to the security group list
+#Click on modify!
+#Let's go to RDS now. Go on the services tab, find RDS, find your instance, click on your instance.
+#Scroll down, under details click on modify
+#Add your multi-docker to the list of security groups. Click Continue! Apply immediately! YOLO!
+#Go on EBS, select your application, select your environment. Click configuration and on instance click modify. Add your security group there.
 
 #11.148 Setting environment variables
+#EBS, multi-docker, MultiDocker-env, Software, modify, environment properties
+#We need to add all the environment variables from the docker-compose.yml file here
+#The variable properties on EBS do not get hidden, other people logged in on AWS may be able to see them.
+#You need to open another browser tab, go on Elasticache, click your instance name to see all details and find your endpoint. It should look something like this:
+multi-docker-redis.darzno.0001.euw1.cache.amazonaws.com:6379
+You want to copy it, except the port:
+multi-docker-redis.darzno.0001.euw1.cache.amazonaws.com
+#And add that as REDIS_HOST on the EBS variablel setup
+#Then add REDIS_PORT as 6379
+#See notes on 11.144 for these values
+#I'll copy and paste the values here for reference, it's easy enough to figure out how to get them
+REDIS_HOST multi-docker-redis.darzno.0001.euw1.cache.amazonaws.com
+REDIS_PORT 6379
+PGUSER postgres
+PGPASSWORD postgrespassword
+PGHOST multi-docker-postgres.cypilqhknofb.eu-west-1.rds.amazonaws.com
+PGPORT 5432
+#Author emphasizes: The most common mistake he sees is people entering environment variables incorrectly. Make sure to enter your environment variables correctly!
 
 #11.149 IAM keys for deployment
+#We're going to send the entire project to EBS, but in reality the only file we really needed to send was Dockerrun.aws.json
+#Go to services, IAM, users, add user
+#Username: multi-docker-deployer
+#Access time: Programmatic access
+#Next
+#Attach exsting policies directly
+#Search for beanstalk
+#Click everything!11!one (all rights)
+#Next and then create user
+#Remember to get the Access key ID and the Secret access key and store/copy them somewhere secure!
+#Let's open travis-ci, go to multi-docker, more options, settings. You should see your docker id and password under variables. Let's set up more variables
+#Set up AWS_ACCESS_KEY and AWS_SECRET_KEY as environment variables with their respective values from AWS
 
 #11.150 Travis deploy script
+#Edited travis.yml to deploy to amazon, all changes in this chapter are there
+#Bucket name is S3 bucket that is created by default whenever you create an EBS application
 
 #11.151 Container memory allocations
+#It appears the author forgot to include the commit and push part on the last chapter. He says his stuff deployed successfully! Well, I'll guess I'll commit and push and see if my stuff deploys too...
 
 #11.152 Verifying deployment
 
