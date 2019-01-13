@@ -127,6 +127,9 @@ PGPORT 5432
 #It appears the author forgot to include the commit and push part on the last chapter. He says his stuff deployed successfully! Well, I'll guess I'll commit and push and see if my stuff deploys too...
 
 #11.152 Verifying deployment
+#Looks like it worked first try?
+#on travis-ci everything is fine, on amazon there's a message about "invalid setting for container client"
+#We're missing the memory option on Dockerrun.aws.json.
 
 #11.153 A quick app change
 
