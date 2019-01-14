@@ -130,6 +130,14 @@ PGPORT 5432
 #Looks like it worked first try?
 #on travis-ci everything is fine, on amazon there's a message about "invalid setting for container client"
 #We're missing the memory option on Dockerrun.aws.json.
+#Also my deployment failed afterwards with EBS telling me
+2019-01-13T14:24:35Z worker: CannotPullContainerError: API error (404): pull access denied for vioseven/multi-worker, repository does not exist or may require '\''docker login'\'')' --severity ERROR
+#So I went ahead and made all the dockerhub repositories public for this project.
+#The deploy now worked on Amazon! But I can't access the app through a browser :(
+
+# TO TROUBLESHOOT #
+#I think I messed up something with the security groups, might've assigned a wrong security group somewhere and that's why I can't open the app.
+
 
 #11.153 A quick app change
 

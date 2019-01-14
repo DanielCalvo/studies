@@ -1,0 +1,12 @@
+
+#12.157
+#Kubernetes is a system to run different types of containers over multiple machines
+#If you have an app with just a single container, you usually don't need it
+#In production, you use Amazon EKS or Google GKE. Or you host it yourself. Hey hosting it yourself looks like an interesting learning oportunity
+#In development however, you use minikube!
+#We're going to be using kubectl to interact with your kubernetes cluster, and the minikube command to manage the development VMs
+#Remember that minikube is only for your local and for learning!
+#You need to install kubectl, virtualbox with a driver and minikube.
+
+
+#I believe the course won't cover how to install minikube on Linux, so you'll have to google that one.
