@@ -8,5 +8,58 @@
 #Remember that minikube is only for your local and for learning!
 #You need to install kubectl, virtualbox with a driver and minikube.
 
+#12.158 Setup on MacOX
+#kubectl was available through apt-get on ubuntu 18.04
+#Downloaded and installed virtualbox from Oracle's website
+#Downloaded the minikube binary from the kubernetes website
 
-#I believe the course won't cover how to install minikube on Linux, so you'll have to google that one.
+#12.159 Mapping existing knowledge
+minikube status
+kubectl cluster-info
+#Everything is ok!
+#Goal: make the multi-client image running on our local Kubernetes cluster
+#With docker compose, we specified how to build the images, pointing to a dockerfile as well as specifying context (on the build section!)
+
+services:
+  nginx:
+    build
+    ports
+  worker:
+    build
+    ports
+  client:
+    build
+    ports
+
+#Each entry can optionally get docker-compose do build an image
+#Each entry represents a container we want to create
+#Each entry defines the networking requirements (ports)
+#Author states, to keep in mind: We only created containers with docker compose
+
+#Mapping this knowledge to Kubernetes:
+
+#1 Each entry can optionally get docker-compose do build an image -> Kubernetes expects all images to be already built
+#2 Each entry represents a container we want to create -> One config file per object we want to create (multiple config files, an object might not necessarily be a container)
+#3 Each entry defines the networking requirements -> We have to manually set up all the networking
+
+Actions we're going to take:
+#1 Make sure our image is hosted in dockerhub
+#2 Make one config file to create the container
+#3 Make one config file to set up networking
+
+#12.160 Adding configuration files
+#Checked all my images on dockerhub, yep, it's all there
+#Created simplek8s directory and client-pod.yaml
+#Typed a lot of stuff, author claims he'll walk us through it later
+
+#12.161 Object types and API versions
+#A config file is used to create objects
+#Some examples of objects are: Pod, Service, ReplicaController and Statefulset
+
+#The entry "kind" inside the yml definitions we just wrote is meant to indicate the object type that we want to make
+#The object type "Pod" is used to run a container
+#Other types of objects might monitor containers or set up networks
+
+#The apiVersion scopes or limits the type of objects that you can create with a given config file. In other words: Each API version defines a different set of objects we can use
+#Using the type v1 grants access to a predefined set of object types such as componentStatus, configMap, Endpoints, Event, Namespace and Pod
+#If we had used a different apiVersion, such as "apps/v1", we would've gotten access to a different set of object types, such as ControllerRevision and StatefulSet
