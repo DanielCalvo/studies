@@ -63,3 +63,16 @@ Actions we're going to take:
 #The apiVersion scopes or limits the type of objects that you can create with a given config file. In other words: Each API version defines a different set of objects we can use
 #Using the type v1 grants access to a predefined set of object types such as componentStatus, configMap, Endpoints, Event, Namespace and Pod
 #If we had used a different apiVersion, such as "apps/v1", we would've gotten access to a different set of object types, such as ControllerRevision and StatefulSet
+
+#12.162 Running containers in pods
+#The smallest thing you can have in kubernetes, as far as containers go, is a pod. You will always be running containers inside a pod. A pod runs inside a node. A node can be a physical or virtual machine
+#In kubernetes, you cannot deploy containers individually (not without a pod)
+#The purpose of a pod is to allow the grouping of containers with a very similar purpose.
+#Example of a pod: Postgres container, logger container, backup manager container.
+
+#12.163 Service config files in depth
+#Pods --> Runs one or more closely related containers
+#Services --> Sets up networking in a Kubernetes cluster
+#Both of these are object types!
+
+#To be continued
