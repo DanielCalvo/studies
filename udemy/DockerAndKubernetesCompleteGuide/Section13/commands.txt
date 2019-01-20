@@ -1,0 +1,84 @@
+#13.167 Updating exising objects
+#Old goal: Get the multi-client image running on our local Kubernetes cluster running as a container
+#New goal: Update our existing pod to use the multi-worker image
+
+#Imperative: Run a command to list out current pods -> Run a command to update the current pod to use a new image
+#Declarative: Update our config file that originally created the pod -> Throw the updated config file into kubectl
+#Updated config file -> kubectl -> master -> VM -> Pod -> multi-client container
+#If you want to update an object and not create a new one, remember to leave the name and type of the object the same!
+
+#13.168 Declarative updates in action
+#We just want to update the image, not too concerned with getting the pod successfully running
+minikube start
+kubectl apply -f client-pod.yaml
+kubectl apply -f client-node-port.yaml
+
+#Lets inspect our pod and make sure it's running the correct image
+#To do that, we need to use the desribe command, as in:
+kubectl describe <object type> <object name>
+#You can ommit the object name in the end, in which case you'll get info about everything with a given object type. But it can be a ton of information!
+kubectl describe pods
+kubectl describe pods client-pod
+
+#13.169 Limitations in config updates
+#Changed port on client-pod.yaml to containerPort: 9990
+#Looks like that is forbidden! We can't update certa in things
+#In other words, we can only update the image, deadlineseconds and tolerations, whatever those mean.
+#Looks like we have to use another object type to be able to change the port...
+
+#13.170 Running containers with deployments
+#Looks like we can update the image, but not the port, name or number of containers :o
+#To be able to do these changes, we need to use a new type of object. We're going to use a deployment type object!
+#Object type recap:
+#Pods: Runs one or more closely related containers
+#Services: Sets up networking in a Kubernetes cluster
+#Deployment: Maintains a set of identical pods, ensuring that they have the correct config and that the right number exists
+
+#Deployment is similar to pods! We can use either deployments or pods. Let's see a list of differences:
+#Pods: Runs a single set of containers
+#Pods: Good for one-off dev purposes
+#Pods: Rarely used directly in production
+#Deployment: Runs a set of identical pods (one or more)
+#Deployment: Monitors the state of each pod, updating as necessary
+#Deployment: Good for dev and production
+
+#13.171 Deployment configuration files
+#Let's create a deployment file!
+#Created client-deployment.yaml
+
+#13.172 Walking through the deployment config
+#How
+
+#13.173 Applying a deployment
+#Let's remove some old objects first:
+kubectl delete -f client-node-port.yaml
+kubectl delete -f client-pod.yaml
+
+#To see if our stuff id deployed, we run:
+kubectl get deployments
+#NAME                DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+#client-deployment   1         1         1            1           9m32s
+
+#The columns mean:
+#Desired: A reference to the number of pods that this deployment wants to eventually have
+#Current: The number of pods up and running
+#UP-TO-DATE: If you make a configuration change to your deployment, the deployment would automatically mark the existing pods as out of date
+#AVAILABLE: Number of pods controlled by this deployment that are ready to accept traffic or successfully running their containers.
+
+#13.174 Why use services?
+minikube ip
+kubectl get pods -o wide
+#Every single pod that we create, gets an IP address. That's an IP address that is internal to the virtual machine. We can't visit that ip, at least not easily.
+#If this pod changes in any way, it's possible that it will get a brand new ip address
+#The service object watches for every pod that matches it's selector, and then automatically route traffic over to that pod
+
+#13.175 Scaling and changing deployments
+
+
+#13.176
+#13.177
+#13.178
+#13.179
+#13.180
+#13.181
+#13.182

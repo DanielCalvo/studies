@@ -75,4 +75,54 @@ Actions we're going to take:
 #Services --> Sets up networking in a Kubernetes cluster
 #Both of these are object types!
 
-#To be continued
+#In the world of pods, we have pretty much just pods.
+#In the world of services, we have four commonly used types:
+#ClusterIP
+#NodePort
+#LoadBalancer
+#Ingress
+
+#Inside our file, we specified a subtype of NodePort. The purpose of a NodePort service is to expose a container to the outside world. Only good for dev purposes!
+#This lecture is really dense, it's difficult to watch all of it here. Watch again if you must!
+#The pod and service a are linked by the label inside the pod config, and the selector inside the service
+
+#12.164
+#Feed a config file to kubectl
+#kubectl apply -f <filename>
+minikube start
+kubectl apply -f client-pod.yaml
+kubectl apply -f client-node-port.yaml
+kubectl get services
+
+#Last command gives out:
+NAME               TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+client-node-port   NodePort    10.107.194.65   <none>        3050:31515/TCP   5h17m
+kubernetes         ClusterIP   10.96.0.1       <none>        443/TCP          2d14h
+
+#The kubernetes service we can ignore
+#We have a nodeport service! It has the port and nodeport property, like port:nodePoert/TCP. targetPort is not reported.
+#To get the IP that minikube is using for the VM, you need to type:
+minikube ip
+#Got 192.168.99.100, so it's at http://192.168.99.100:31515/
+
+#12.165 The entire development flow
+#Author explains the kube-apiserver master and the nodes and load balancing and all that. Cool lecture!
+#You don't login into the kubernetes nodes to do work directly, you always do things through the master
+
+#12.166 Imperative vs Declarative deployments
+#Important takeaways
+#Kubernetes is a system to deploy containerized apps
+#Nodes are individual machines (physical or virtual) that run containers
+#Masters are machines (phys or virt) with a set of program to manage nodes
+#Kubernetes does not build our images -- it gets them from somewhere else
+#The Kubernetes master decides where to run each container. Nodes can run dissimilar containers
+#To deploy something, we update the desired state of the master with a config file
+#The master works constantly to meet your desired state
+
+#There appear to be two styles when it comes to deployments
+#Imperative deployments: Do exactly these steps to arrive at this container set up
+#Declarative deployments: Our container set up should look like this. Make it happen!
+
+#Declarative seems better instead of checking pods manually
+#Some resources on the internet might contain instructions to do things in an imperative way, others in a declarative way
+#Declarative way is the way to go for production
