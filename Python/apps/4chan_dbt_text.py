@@ -19,7 +19,7 @@ def get_dbt_thread():
     for pages in catalog_json:
         for threads in pages['threads']:
             try:
-                if 'dbt' in threads['sub'] or 'dbt' in threads['com']: #TODO: [1]
+                if 'dbt' in threads['sub'] or 'dbt' in threads['com']:
                     dbt_thread_urlopen = urlopen('http://a.4cdn.org/o/thread/' + str(threads['no']) + '.json')
                     dbt_thread_data = json.loads(dbt_thread_urlopen.read())
                     return dbt_thread_data
