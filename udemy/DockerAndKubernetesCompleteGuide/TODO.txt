@@ -6,3 +6,5 @@ Section 12:
 - Perhaps make sure to try Kubernetes with all the available environments - Amazon EKS, Google GKE or in your local. At least try it in your local once, it oughta be cool to see working.
 Kubernetes on p
 - Start rewatching 12.172 so you can better grasp the concepts.
+
+Read: https://github.com/hjacobs/kubernetes-failure-stories
