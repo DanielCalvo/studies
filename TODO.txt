@@ -1,3 +1,5 @@
+Write something on 13.175 and 13.176
+
 Reorganize your files! Should you go by topic (python, docker, Java) or by book? Or by learning platform (udemy?).
 I currently have no idea and have a mix of all those in place, ehehe.
 

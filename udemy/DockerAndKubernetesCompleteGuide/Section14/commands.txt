@@ -1,0 +1,40 @@
+#14.183 The path to production
+#Frick yeah moving to production!
+
+#14.184 Checkpoint files
+#All good!
+
+#14.185 A quick checkpoint
+#Deleted a bunch of stuff
+
+#14.186
+#Created the client-deployment.yaml
+
+#14.187 NodePort vs ClusterIP Services
+#ClusterIP: Exposes a set of pods to other objects in the cluster. A ClusterIP does not allow traffic from the outside world to come in!
+#NodePort: Exposes a set of pods to the outside world (only for dev!)
+#We're going to use the Ingress service to let traffic come in to inside the cluster.
+
+#14.188 The ClusterIP config
+#Wrote it down. Getting the hang of it!
+
+#14.189 Applying multiple files with kubectl
+#Delete old deployment:
+kubectl delete deployment client-deployment
+
+kubectl get services
+#Delete the client-node-port if it's still there too
+
+kubectl apply -f k8s #Applies all the config files in the directory
+
+kubect get pods
+kubectl get services
+
+
+#14.190
+
+#14.194
+kubectl get pods
+kubectl get deployments
+kubectl get services
+kubectl logs server-deployment-68cdfcf694-7f5lg

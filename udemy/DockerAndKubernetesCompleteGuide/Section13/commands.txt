@@ -76,9 +76,27 @@ kubectl get pods -o wide
 
 
 #13.176
-#13.177
-#13.178
-#13.179
-#13.180
-#13.181
-#13.182
+
+#13.177 Rebuilding the client image
+#Changed a line on src/App.js for the client
+docker build -t vioseven/multi-client .
+docker push vioseven/multi-client
+
+#13.178 Triggering deployment updates
+kubectl apply -f client-deployment.yaml
+#Says file is unchanged, does not deploy the latest version for you container
+#There is no good way to trigger a deployment update in kubernetes, only workarounds, such ash deleting pods, changing a version number on the deployment file and using an imperative command
+
+#13.179 Imperatively updating a deployment's image
+docker build -t vioseven/multi-client:v5 .
+docker push vioseven/multi-client:v5
+kubectl set image deployment/client-deployment client=vioseven/multi-client:v5
+#This will create a new pod and terminate the old one
+
+#13.180 Multi docker installations
+#Shows the theory that you docker client can connect to any server (ex: on your local or on minikube)
+
+#13.181 Reconfiguring Docker CLI
+eval $(minikube docker-env)
+
+#13.182 Why mess with Docker in the node?
