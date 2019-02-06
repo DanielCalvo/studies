@@ -38,3 +38,24 @@ kubectl get pods
 kubectl get deployments
 kubectl get services
 kubectl logs server-deployment-68cdfcf694-7f5lg
+
+#14.197
+#PVCs!
+#PVC stands for persistent volume claim
+#If you don't have a PVC and your pod goes away, you lose all the data :(
+#You don't want to have two copies of postgres accessing the same volume if they're not aware of each other (don't bump the replica number to anything higher than 1)
+
+#14.198 Kubernetes volumes
+#Volume in container terminology: Some type of mechanism that allows a container to access a filesystem outside itself
+#Voume in Kubernetes: An object that allows a container to store  data at the pod level
+
+#There are three types of volumes in Kubernetes:
+#Volume <- Not exactly a docker volume!
+#Persistent Volume <- We want these for our Postgres
+#Persisten Volume Claim <- We want these for our Postgres
+
+#In Kubernetes, a volume is tied to a pod. If the pod itself ever dies, the volume goes away with it. The volume survives containers restarts inside the pod, but it the pod gets deleted or restarted, the volume is gone.
+#With a persistent volume, the volume is not tied to any specific pod or container. Even if you restart a pod or a container, it stays alive and isn't deleted
+#Persistent volume claims are a bit more elaborate. You need to define on yaml files. There are statically provisioned persistent volumes, and dynamically provisioned persistent volumes
+
+#Next in which I couldn't do because I had to go to the office: Configure a PVC! Sounds interesting.
