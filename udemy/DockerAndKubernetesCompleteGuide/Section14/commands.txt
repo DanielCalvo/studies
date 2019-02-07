@@ -58,4 +58,16 @@ kubectl logs server-deployment-68cdfcf694-7f5lg
 #With a persistent volume, the volume is not tied to any specific pod or container. Even if you restart a pod or a container, it stays alive and isn't deleted
 #Persistent volume claims are a bit more elaborate. You need to define on yaml files. There are statically provisioned persistent volumes, and dynamically provisioned persistent volumes
 
-#Next in which I couldn't do because I had to go to the office: Configure a PVC! Sounds interesting.
+
+
+#14.202
+#Access modes:
+#ReadWriteOnce: Can be used by a single node
+#ReadOnlyMany: Multiple nodes can read from this
+#ReadWriteMany: Can be read and written by many nodes
+
+#14.203
+kubectl get storageclass
+kubectl describe storageclass
+
+#Hey let's rewatch 14.203!
