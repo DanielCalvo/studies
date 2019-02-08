@@ -8,3 +8,7 @@ Kubernetes on p
 - Start rewatching 12.172 so you can better grasp the concepts.
 
 Read: https://github.com/hjacobs/kubernetes-failure-stories
+
+Section 15:
+15.215 is heavy on the theory, maybe rewatch it
+Suggested reading on ingress nginx: https://www.joyfulbikeshedding.com/blog/2018-03-26-studying-the-kubernetes-ingress-system.html

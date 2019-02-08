@@ -1,0 +1,33 @@
+
+#15.211 Load balancer services
+#ClusterIP: Allows pods to talk to each other
+#Load Balancer: Legacy way of getting network traffic into a cluster
+#Ingress: Newer and supposedly better way to get traffic into your cluster!
+
+#A load balancer does two things:
+#A load balancer only allows access to a set of pods.
+#It would not allow access to two sets of pods (like the multi-server and the multi-client)
+#A load balancer in the background talk to your cloud provider and creates a load balancer using their configuration
+#Author doesn't encourage you to use a load balancer
+#We're going to use an ingress service!
+
+#15.212 A quick note on ingresses
+#There are many implementation of ingresses. We're going to use the nginx ingress.
+#We're going to be using ingress-nginx, a community led project
+#We're NOT going to use kubernetes-ingress, a project led by the company nginx
+#So confusing lol, god damn it nginx. Don't mistake the too!
+
+#15.213 Another quick note
+#The setup of ingress-nginx changes depending on your environment (AWS, GC, Azure, local)
+#We're going to use nginx in local and GC
+
+#15.214 Behing the scenes of Ingress
+#In Kubernetes, a controller is any type of object that constantly works to make some desired state a reality inside the cluster.
+#When we feed the ingress config in, the controller for our ingress will create a pod running nginx with a particular set of rules to make sure that the traffic gets routed correctly to the correct components inside the cluster
+#ingress config > kubectl > ingress controller > create some "thing" that takes the incoming traffic and send it off to the correct service
+#Ingress controller job: Look at the ingress config, and make that a reality
+
+#15.215 More behind the scenes of Ingress
+#The local and google cloud implementations are different
+
+#Explore the yaml and run the command on your minikube cluster!

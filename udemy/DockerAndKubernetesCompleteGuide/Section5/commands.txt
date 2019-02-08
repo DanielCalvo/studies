@@ -28,7 +28,7 @@ docker run redis
 #Just built the docker compose on this one
 
 #5.53 Networking with Docker compose
-#By the defining two services inside a docker compose file, docker will create the two services on the same network
+#By the defining two services inside a docker compose file, docker will create the two ¡services on the same network
 #By creating a service, docker makes the name of that service available for containers inside the docker compose
 
 #5.54 Docker compose commands
