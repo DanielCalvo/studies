@@ -69,5 +69,26 @@ kubectl logs server-deployment-68cdfcf694-7f5lg
 #14.203
 kubectl get storageclass
 kubectl describe storageclass
+#When using a cloud environment, you need to specify a storage option, as opposed to relying on the defaults. Oh wait, or on a cloud environment the default might be different than the default on minukube
 
-#Hey let's rewatch 14.203!
+
+
+#14.205
+kubectl apply -f k8s
+kubectl get pods
+kubectl get pv
+kubectl get pvc
+
+
+#14.208 creating and encoded secret
+#We're going to do it imperatively, as writing a secret on a .yaml plain text file and upload it to the repo defeats the purpose of a secret
+kubectl create secret generic <secret name> --from-literal key=value
+#When we eventually move to production we're also going to have to run the command :o
+kubectl create secret generic pgpassword --from-literal PGPASSWORD=mypassword123
+kubectl get secrets
+
+#14.209 Passing secrets as environment variables
+
+#14.210 Environment variables as strings
+#Kubernetes encountered an error while going through the PG port and the REDIS_PORT.
+#Whenever you provide an environment variable in Kubernetes, you have to provide it as a string
