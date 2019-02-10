@@ -1,0 +1,58 @@
+#16.221 The deployment process
+
+#To calculate how much we're going to spend on google cloud: https://cloud.google.com/products/calculator/
+#Ruh-roh, might be expensive if I'm not careful.
+
+#16.222 Google cloud vs AWS for Kubernetes
+#Opinions from the author:
+#Google created Kubernetes
+#AWS Only recently got Kubernetes support
+#Far easier to use Kubernetes on Google cloud
+#Excellent documentation for beginners!
+
+
+#16 General notes:
+Remember to clean up when you're not studying!
+https://www.udemy.com/docker-and-kubernetes-the-complete-guide/learn/v4/t/lecture/11684242?start=0
+
+Course goes on travis ci, adds the repo, creates kubernetes cluster on google cloud.
+I went for "My first cluster" setting which seems to be the most affordable one
+
+#16.234 Generating a service account
+Create service account
+Download service account credentials in a json file
+Download and install the Travis CLI
+Encrypt and upload the json file to our travis account
+In travis.yml, add code to unencrypt the json file and load it in to GCloud SDK
+
+
+#16.235 Running travis CLI in a container
+
+docker run -it -v $(pwd):/app ruby:2.3 sh
+gem install travis --no-rdoc --no-ri
+gem install travis
+travis login
+#Copy json file into the 'volumed' directory so we can use it in the container
+travis encrypt-file service-account.json
+
+
+
+#16.243 Configure the GCloud CLI on cloud console
+gcloud config set project danielcalvo
+gcloud config set compute/zone us-central1-a
+gcloud container clusters get-credentials your-first-cluster-3
+
+#16.244 Creating a secret on Google Cloud
+#On the Google shell
+kubectl get pods
+kubectl create secret generic pgpassword --from-literal PGPASSWORD=password123
+#You can now see the secret under the "Configuration" part of the Kubernetes engine. Cool!
+
+#16.245 Helm setup
+#Looks like we have to install the ingress as a separate service
+#We can use helm to install it!
+#Helm is a program to administer third party software inside our Kubernetes cluster
+#github.com/helm/helm
+#When you install helm, you actually get two pieces of software
+#You get the helm client (CLI tool) and the Tiller Server. Tiller is a server running inside the cluster, responsbiel for modifying our cluster and installing additional objects inside of it.
+#The relation ship between Helm and Tiller is analogous to the relationship between Docker Client and Docker Server running on your local machine

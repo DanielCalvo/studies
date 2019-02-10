@@ -12,3 +12,6 @@ Read: https://github.com/hjacobs/kubernetes-failure-stories
 Section 15:
 15.215 is heavy on the theory, maybe rewatch it
 Suggested reading on ingress nginx: https://www.joyfulbikeshedding.com/blog/2018-03-26-studying-the-kubernetes-ingress-system.html
+
+Section 16:
+16.241 is very heavy on the theory, rewatch it if it makes sense
