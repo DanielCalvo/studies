@@ -1,7 +1,10 @@
 
-
+Follow up:
 https://techbeacon.com/devops/8-devops-trends-watch-2018
 https://techbeacon.com/enterprise-it/7-arguments-against-noops
+https://techbeacon.com/devops/devops-trends-watch-teams-value-streams-newops
+https://dzone.com/articles/the-10-best-devops-tools-for-2018
+
 
 https://kellanem.com/notes/
 
