@@ -56,3 +56,22 @@ kubectl create secret generic pgpassword --from-literal PGPASSWORD=password123
 #When you install helm, you actually get two pieces of software
 #You get the helm client (CLI tool) and the Tiller Server. Tiller is a server running inside the cluster, responsbiel for modifying our cluster and installing additional objects inside of it.
 #The relation ship between Helm and Tiller is analogous to the relationship between Docker Client and Docker Server running on your local machine
+#https://docs.helm.sh/using_helm/#quickstart
+https://docs.helm.sh/using_helm/#from-script
+#Run the above commands on gcloud
+#Do not run helm init yet!
+
+#16.246 Kubernetes sercurity with RBAC
+#RBAC = Role based access control
+#Limits who  can access and modify objects in our cluster.
+#Enabled by Google cloud by defailt.
+#Tiller wants to change some things on our cluster, so it needs to get some permissions set
+#User accounts: Identifies a person administering our cluster. Humans.
+#Service accounts: Identifies a pod administering a cluster.
+#You create a RoleBinding and then assign them to a User account or a Service account.
+#Role bindings allow you to do things
+#ClusterRoleBindings: Authorizes an account to do a certain set of actions across the entire cluster
+#RoleBinding: Authorizes an account to do a single set of actions in a single namespace
+#We need to create a ServiceAccount and ClusterRoleBinding
+#And then tie the ClusterRoleBinding to the ServiceAccount
+
