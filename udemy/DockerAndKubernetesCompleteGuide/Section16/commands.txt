@@ -75,3 +75,45 @@ https://docs.helm.sh/using_helm/#from-script
 #We need to create a ServiceAccount and ClusterRoleBinding
 #And then tie the ClusterRoleBinding to the ServiceAccount
 
+#16.247 Assigning Tiller a service account
+kubectl create serviceaccount --namespace kube-system tiller
+#Create a new service account called tiller in the kube-system namespace
+
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+#Create a new clusterrolebinding with the role 'cluster-admin' and assign it to the service account 'tiller'
+#The name of the service account is tiller but it exists in the kube-system namespace
+
+helm init --service-account tiller --upgrade
+
+#16.248 Ingress-nginx with Helm
+https://kubernetes.github.io/ingress-nginx/deploy/#using-helm
+helm install stable/nginx-ingress --name my-nginx --set rbac.create=true
+
+#16.249 The result of Ingress-nginx
+#On the workloads tab, an ingress controller and default backend should show up!
+#On the services tab, you should also see the controller and the backend
+#Under the networking session on the left there's networking services, you'll see a google cloud load balancer.
+
+#16.250 Finally deployment!
+#If travis-ci doesn't start, check for typos
+#Uh-oh, looks like it failed
+
+#16.251 Did I really type that?
+#Oh Stephan, PASSSWORD with 3 "s".
+
+#16.252 Verifying deployment
+#Check tags on dockerhub, latest and the SHA ones should be up to date!
+#There should be a bunch of deployments on the workload tab
+#You should also be able to see the services on the service tab
+#The ingress service should contain the two routes you set up on the yaml
+#It actually worked! I want to try this!
+
+16.253 A Workflow for changing in prod
+Checkout a branch
+Make changes
+Commit changes
+Push to github branch
+Create PR
+Wait for tests to up up 'green'
+Merge PR
+See changes appear on prod
