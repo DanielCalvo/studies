@@ -9,7 +9,28 @@ https://dzone.com/articles/the-10-best-devops-tools-for-2018
 https://kellanem.com/notes/
 
 About building a portfolio: https://www.youtube.com/watch?v=ncpG-9jKBEo
+Does this guy have any further interesting videos?
 
+When you have Kubernetes, try a different release process?
+(Canary? 1%? Blue/green?)
 
 McChrystal and Peterson on Leaders: Myth & Reality
 https://www.youtube.com/watch?v=_v-NfZ1j918
+
+
+https://www.techatbloomberg.com/
+
+Debugging tool for Kubernetes which tests and displays connectivity between nodes in the cluster.
+https://github.com/bloomberg/goldpinger
+
+A powerful testing tool for Kubernetes clusters.
+https://github.com/bloomberg/powerfulseal
+
+Check out: "Kubernetes boilerplate deployment"
+(Kubernetes boilerplate deployment with Jenkins?)
+
+
+Book suggestions:
+
+https://www.amazon.de/High-Output-Management-Andrew-Grove/dp/0679762884
+https://www.amazon.de/Managers-Path-Leaders-Navigating-Growth/dp/1491973897

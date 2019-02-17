@@ -1,0 +1,69 @@
+
+1. Create repo
+2. Link to travis-ci
+
+3. Go to cloud.google.com
+
+4. Home > Kubernetes engine > Create project
+This workflow is if you don't have any projects, if already have a project you need to find out how to create an additional project.
+You can also use your existing project.
+I named my project danicloud1
+
+5. Computer > Kubernetes engine > Create cluster
+I created a cluster named "your-first-cluster-4" with the defaults for "Standard cluster" on the create window
+(3 nodes with 1vCPU and 3.75gb of memory)
+
+6. IAM > Service accounts > Create service account
+Service account name: travis-deployer
+Roles: Kubernetes Engine Admin
+Create a private key in JSON format. It will download automatically. Remember this is a private key, it's a secret!
+
+7. Get the travis CLI tool kit. Some run it on a container
+I just did apt-get install ruby-dev and gem install travis or something of that sort.
+
+8. Encrypt the service-account.json file
+You then:
+travis login
+mv danicloud1-5c5c3adb6003.json service-account.json
+travis encrypt-file service-account.json -r DanielCalvo/multi-docker
+
+You will then get a line to put on your .travis.yml file:
+openssl aes-256-cbc -K $encrypted_43ff5dcab2ba_key -iv $encrypted_43ff5dcab2ba_iv -in service-account.json.enc -out service-account.json -d
+
+Remove service-account.json!
+
+Then copy service-account.json.enc to your project root (in my multi-docker/case service-account.json.enc), commit and push it!
+
+
+9. Configure a few specific settings on travis.yml:
+Put your project ID in there (danicloud1)
+Put your region in there (Can be seen under Kubernetes > Clusters)
+Put your cluster name in there (Can be seen under Kubernetes > Clusters)
+
+  - gcloud config set project danielcalvo
+  - gcloud config set compute/zone us-central1-a
+  - gcloud container clusters get-credentials your-first-cluster-3
+
+
+10. Add the DOCKER_USERNAME and DOCKER_PASSWORD variables on travis-ci
+
+11. Open the cloud shell on gcloud
+gcloud config set project danicloud1
+gcloud config set compute/zone us-central1-a
+gcloud container clusters get-credentials standard-cluster-1
+kubectl create secret generic pgpassword --from-literal PGPASSWORD=password123
+
+
+12. Helm setup
+As described here: https://kubernetes.github.io/ingress-nginx/deploy/#using-helm
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
+chmod 700 get_helm.sh
+./get_helm.sh
+
+13. Give helm permissions
+kubectl create serviceaccount --namespace kube-system tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+helm init --service-account tiller --upgrade
+
+14. Using helm to install nginx
+helm install stable/nginx-ingress --name my-nginx --set rbac.create=true
