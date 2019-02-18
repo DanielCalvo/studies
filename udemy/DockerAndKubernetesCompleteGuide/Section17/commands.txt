@@ -1,0 +1,35 @@
+
+17.256 HTTP Setup overview
+#Author uses LetsEncrypt to get HTTPS
+#We're going to use helm to install a router handler & install a certificate
+
+#17.257 Domain purchase
+#Author buys domain from domains.google.com
+
+#17.258 Domain name set up
+#Adding records on google's ui is fairly straightforward
+
+#17.259 Cert manager install
+https://github.com/jetstack/cert-manager
+https://docs.cert-manager.io/en/latest/getting-started/install.html#installing-with-helm
+
+17.260 How to wire up cert manager
+#We'll create two objects:
+#Certificate: (config file) Object describing details about the certificate that should be obtained
+#Issuer: (config file) Object telling the cert manager where to get the certificate from
+#Cert Manager: Created by Helm
+#We'll also need to reconfigure our nginx ingress :o
+
+#17.263
+#Put certificate.yaml and issuer.yaml together
+#Did a git push
+#Once you push you should see the changes apply as per the deploy on travis-ci
+
+#17.264 Verifying the certificate
+kubectl get certificates
+kubectl describe certificates
+#Check the secret to see if the certificate is there
+kubectl get secrets
+
+#17.226
+#It worked!
