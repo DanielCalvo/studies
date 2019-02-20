@@ -1,4 +1,13 @@
 
+TODO Next:
+Kubernetes up and running -- The book. Follow up upon it!
+Also investigate how to deploy the kubernetes boilerplate application
+Also how to install kubernetes on a machine from scratch
+
+Finish your python course
+See what comes up next
+
+
 Follow up:
 https://techbeacon.com/devops/8-devops-trends-watch-2018
 https://techbeacon.com/enterprise-it/7-arguments-against-noops
@@ -9,7 +18,9 @@ https://dzone.com/articles/the-10-best-devops-tools-for-2018
 https://kellanem.com/notes/
 
 About building a portfolio: https://www.youtube.com/watch?v=ncpG-9jKBEo
+Well in a nutshell: You need a portfolio to show what you know
 Does this guy have any further interesting videos?
+Idea: Create something on your portfolio for every skill listed on your linkedin
 
 When you have Kubernetes, try a different release process?
 (Canary? 1%? Blue/green?)
@@ -17,8 +28,7 @@ When you have Kubernetes, try a different release process?
 McChrystal and Peterson on Leaders: Myth & Reality
 https://www.youtube.com/watch?v=_v-NfZ1j918
 
-
-https://www.techatbloomberg.com/
+https://www.techatbloomberg.com/ <- nothing too interesting here
 
 Debugging tool for Kubernetes which tests and displays connectivity between nodes in the cluster.
 https://github.com/bloomberg/goldpinger
@@ -33,4 +43,5 @@ Check out: "Kubernetes boilerplate deployment"
 Book suggestions:
 
 https://www.amazon.de/High-Output-Management-Andrew-Grove/dp/0679762884
-https://www.amazon.de/Managers-Path-Leaders-Navigating-Growth/dp/1491973897
+
+https://hub.packtpub.com/cloud-computing-trends-in-2019/

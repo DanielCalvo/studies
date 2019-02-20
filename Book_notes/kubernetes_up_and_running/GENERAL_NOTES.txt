@@ -7,9 +7,16 @@ Pro kubernetes:
 
 Google has a container registry of it's own: GCR (Google Countainer Registry)
 
-Page: 19
+
+docker run -d --name kuard --publish 8080:8080 gcr.io/kuar-demo/kuard-amd64:1
+docker run -d --name kuard --publish 8080:8080 --memory 200m --memory-swap 1G gcr.io/kuar-demo/kuard-amd64:1
+docker run -d --name kuard --publish 8080:8080 --memory 200m --memory-swap 1G --cpu-shares 1024 gcr.io/kuar-demo/kuard-amd64:1
+
+Oh, docker-gc is a garbage collector for Docker!
 
 General feel of the book:
 A bit heavy on the Jargon and the theory so far.
 Examples are not comprehensive, just a "to do this, run this"
 If these changes throughout the book remains to be seen
+
+Page: 24
