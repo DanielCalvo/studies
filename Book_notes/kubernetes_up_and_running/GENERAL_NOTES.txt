@@ -1,0 +1,15 @@
+
+Pro kubernetes:
+- Velocity
+- Scaling
+- Abstracting your infrastructure
+- Efficiency
+
+Google has a container registry of it's own: GCR (Google Countainer Registry)
+
+Page: 19
+
+General feel of the book:
+A bit heavy on the Jargon and the theory so far.
+Examples are not comprehensive, just a "to do this, run this"
+If these changes throughout the book remains to be seen
