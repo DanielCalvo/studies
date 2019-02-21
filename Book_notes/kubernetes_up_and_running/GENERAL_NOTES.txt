@@ -14,9 +14,60 @@ docker run -d --name kuard --publish 8080:8080 --memory 200m --memory-swap 1G --
 
 Oh, docker-gc is a garbage collector for Docker!
 
+
+gcloud config set compute/zone us-west1-a
+gcloud container clusters create kuar-cluster
+
+vioseven@cloudshell:~ (danicloud1)$ kubectl get componentstatuses
+NAME                 STATUS    MESSAGE              ERROR
+etcd-1               Healthy   {"health": "true"}
+controller-manager   Healthy   ok
+scheduler            Healthy   ok
+etcd-0               Healthy   {"health": "true"}
+
+The above:
+- Verifies that the cluster is generally healthy
+The controller-manager is responsible for running various controllers that regulate behaviour in the cluster (such as keeping track of replicas)
+The scheduler is responsible for placing different pods onto different nodes in the cluster
+The etcd server is the storage for the cluster where all of the API objects are stored
+
+
+kubectl get nodes
+vioseven@cloudshell:~ (danicloud1)$ kubectl get nodes
+NAME                                          STATUS    ROLES     AGE       VERSION
+gke-kuar-cluster-default-pool-6dd2f191-2jxb   Ready     <none>    14m       v1.11.7-gke.4
+gke-kuar-cluster-default-pool-6dd2f191-82br   Ready     <none>    14m       v1.11.7-gke.4
+gke-kuar-cluster-default-pool-6dd2f191-tbw9   Ready     <none>    14m       v1.11.7-gke.4
+
+Will show you a list of nodes. Can't see the master node though :o
+
+kubectl describe nodes gke-kuar-cluster-default-pool-6dd2f191-2jxb
+(A lot of output is issued)
+Node general information, conditions, addresses, capacity, events and a bunch of other things.
+There's also information about the pods that are running on this node!
+
+There are some cluster components that you can see with kubectl describe nodes. The components are:
+
+Kubernetes Proxy: Responsible for routing network traffic to load-balanced services in the kubernetes cluster.
+Kubernetes DNS: Provides naming and discovery for the cluster
+Kubernetes UI: GUI with something for Kubernetes, probably system info and graphs. Couldn't open this one, I think it doesn't come enabled by default on GKE.
+
+kubectl get daemonSets --namespace=kube-system kube-proxy
+Not found. I think it might not be enabled by default...
+
+kubectl get deployments --namespace=kube-system kube-dns
+Works! There's a deployment for kube-dns
+
+kubectl get services --namespace=kube-system kube-dns
+You can see that kube-dns is deployed as a service
+
+kubectl get deployments --namespace=kube-system kubernetes-dashboard
+kubectl get services --namespace=kube-system kubernetes-dashboard
+Looks like the kubernetes-dashboard is not enabled by default on GKE.
+
 General feel of the book:
 A bit heavy on the Jargon and the theory so far.
 Examples are not comprehensive, just a "to do this, run this"
-If these changes throughout the book remains to be seen
+Page 30 edit: I think the authors meant to keep the book short by not using too many words.
 
-Page: 24
+Page: 30
