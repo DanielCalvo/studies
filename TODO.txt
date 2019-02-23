@@ -11,3 +11,50 @@ Learn git: https://www.atlassian.com/git
 Learn CD: https://www.atlassian.com/continuous-delivery
 Learn about agile: https://www.atlassian.com/agile
 Browser their assorted articles to see what else can you find: https://www.atlassian.com/it-unplugged
+
+
+
+Follow up on everything kubectl?
+
+vioseven@cloudshell:~ (danicloud1)$ kubectl get
+You must specify the type of resource to get. Valid resource types include:
+
+  * all
+  * certificatesigningrequests (aka 'csr')
+  * clusterrolebindings
+  * clusterroles
+  * componentstatuses (aka 'cs')
+  * configmaps (aka 'cm')
+  * controllerrevisions
+  * cronjobs
+  * customresourcedefinition (aka 'crd')
+  * daemonsets (aka 'ds')
+  * deployments (aka 'deploy')
+  * endpoints (aka 'ep')
+  * events (aka 'ev')
+  * horizontalpodautoscalers (aka 'hpa')
+  * ingresses (aka 'ing')
+  * jobs
+  * limitranges (aka 'limits')
+  * namespaces (aka 'ns')
+  * networkpolicies (aka 'netpol')
+  * nodes (aka 'no')
+  * persistentvolumeclaims (aka 'pvc')
+  * persistentvolumes (aka 'pv')
+  * poddisruptionbudgets (aka 'pdb')
+  * podpreset
+  * pods (aka 'po')
+  * podsecuritypolicies (aka 'psp')
+  * podtemplates
+  * replicasets (aka 'rs')
+  * replicationcontrollers (aka 'rc')
+  * resourcequotas (aka 'quota')
+  * rolebindings
+  * roles
+  * secrets
+  * serviceaccounts (aka 'sa')
+  * services (aka 'svc')
+  * statefulsets (aka 'sts')
+  * storageclasses (aka 'sc')error: Required resource not specified.
+Use "kubectl explain <resource>" for a detailed description of that resource (e.g. kubectl explain pods).
+See 'kubectl get -h' for help and examples.
