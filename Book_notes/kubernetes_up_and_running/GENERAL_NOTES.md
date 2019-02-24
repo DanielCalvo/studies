@@ -1,7 +1,7 @@
 
-###CHAPTER 1: Introductions
+### CHAPTER 1: Introductions
 
-####How Kubernetes can improve things:
+#### How Kubernetes can improve things:
 
 - **Velocity**: It's fast and you can deploy a bunch of things fast without breaking everything
 - **Immutable**:
@@ -12,7 +12,7 @@
 - **Abstracting your infrastructure**:
 - **Efficiency**:
 
-###CHAPTER 2: Creating and Running containers
+### CHAPTER 2: Creating and Running containers
 
 - **Container Images** Docker container image is the de facto standard. Images are made of layers.
 - **Building Application Images with Docker**: Docker build, etc etc
@@ -33,9 +33,9 @@ Google has a container registry of it's own: GCR (Google Countainer Registry)
 Oh, docker-gc is a garbage collector for Docker!  
 - **Summary**: Docker images are easy to use and pretty cool!
 
-###CHAPTER 3: Deploying a Kubernetes Cluster
+### CHAPTER 3: Deploying a Kubernetes Cluster
 
-####Installing Kubernetes on a Public Cloud Provider
+#### Installing Kubernetes on a Public Cloud Provider
 
 I'll do it on Google Cloud because that's what all the cool kids are using.  
 Login into Google Cloud, launch their shell and run:
@@ -44,7 +44,7 @@ gcloud config set compute/zone us-west1-a
 gcloud container clusters create danitest-cluster
 gcloud auth application-default login
 ```
-####Checking Cluster Status
+#### Checking Cluster Status
 ```
 kubectl version
 kubectl get componentstatuses
@@ -59,18 +59,18 @@ kubectl describe nodes
 ```
 The above will give you information about nodes / a given node.
 
-####Cluster Components
+#### Cluster Components
 All these run in the kube-system namespace.
 
 - **Kubernetes Proxy**:
 - **Kubernetes DNS**:
 - **Kubernetes UI**:
 
-###CHAPTER 4: Common kubectl Commands
+### CHAPTER 4: Common kubectl Commands
 - **Namespaces**:
 - **Contexts**:
 
-####Viewing Kubernetes API Objects
+#### Viewing Kubernetes API Objects
 
 Each object in Kubernetes exists at a unique HTTP path! Like:  
 https://your-k8s.com/api/v1/namespaces/default/pods/my-pod  
@@ -80,16 +80,16 @@ You can also use JSONPath to extract certain atributes using the `kubectl get` c
 ```
 kubectl get pods my-pod -o jsonpath --template={.status.podIP}
 ```
-####Creating, Updating, and Destroying Kubernetes Objects
+#### Creating, Updating, and Destroying Kubernetes Objects
 In a nutshell:
 ```
 kubectl apply -f obj.yaml
 kubectl delete -f obj.yaml
 ```
-####Labels and anotations
+#### Labels and anotations
 Well looks like you can label things. Nice. Skipping this one for now.
 
-####Debugging Commands
+#### Debugging Commands
 ```
 kubectl logs <pod-name> #Has a few interesting flags, like -c and -f
 kubectl exec -it <pod-name> -- bash
@@ -100,7 +100,7 @@ Oh and don't forget:
 kubectl help
 kubectl help <command-name>
 ```
-###CHAPTER 5: Pods
+### CHAPTER 5: Pods
 
 
 ###CHAPTER 6: Labels and Annotations
