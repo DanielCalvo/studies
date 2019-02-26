@@ -102,16 +102,87 @@ kubectl help <command-name>
 ```
 ### CHAPTER 5: Pods
 
+Now before you go any further, this is the first part in which you actually run things. I'm using Google cloud to try things out, so you need that:
+```
+#From: https://cloud.google.com/sdk/docs/quickstarts
+export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
+echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+apt-get update && apt-get install google-cloud-sdk
 
-###CHAPTER 6: Labels and Annotations
-###CHAPTER 7: Service Discovery
-###CHAPTER 8: ReplicaSets
-###CHAPTER 9: DaemonSets
-###CHAPTER 10: Jobs
-###CHAPTER 11: ConfigMaps and Secrets
-###CHAPTER 12: Deployments
-###CHAPTER 13: Integrating Storage Solutions and Kubernetes
-###CHAPTER 14: Deploying Real-World Applications
+
+    #Start here again tomorrow!
+
+
+gcloud init
+apt-get install kubectl
+```
+- **Pods**: The smallest unit of anything in Kubernetes. A group of containers.
+All containers on a pod are always on the same node. They share the same IP Adress, hostname and port space.
+Containers in different pods are strongly isolated.  
+The question to ask your self when creating pods: "Will these containers work correctly if they land on different machines?" If the answer is no, put them together in a pod.
+
+#### Creating a pod imperatively: 
+
+
+Containers running on different pods are strongly separated
+What 
+
+
+### CHAPTER 6: Labels and Annotations
+
+Labels: Labels are pretty cool, they allow you to define characteristics to a given object.
+Much like grains in salt stack.
+
+"Labels are used to identify and optionally group objects in a Kubernetes cluster"
+(environment, app version, deploy date, anything really)
+
+"Anotations provide object scoped key/value storage of metadata"
+
+
+### CHAPTER 7: Service Discovery
+
+Chapter 7: Service Discovery
+Confusing as fuck
+
+### CHAPTER 8: ReplicaSets
+ReplicaSet: A clusterwide pod manager, ensuring that the right types and numbers of pods are running at all times.
+ReplicaSets use labels to identify the set of pods they should be managing
+It's a pod manager, man.
+Some people even default to replicasets instead of pods.
+Good for stateless applications.
+
+
+
+### CHAPTER 9: DaemonSets
+Chapter 9: DaemonSets  
+ReplicaSets are for creating a service with multiple replicas for redundancy.  
+DaemonSets are used to deploy system daemons such as log collects and monitoring agents, that must be present in every node.  
+ReplicaSets should be used when your app is completely decoupled from the node and you can run multiple copies on a given node without further consideration.  
+DaemonSets should be used when a single copy of your application must run on all or a subset of nodes in the cluster (think prometheus exporters and filebeat)  
+DaemonSets will create pods on every node by default, unless a node selector is used.  
+Deleting a DaemonSet will also delete all the pods managed by that DaemonSet
+
+### CHAPTER 10: Jobs
+Jobs: Made to handle short lived, one off tasks. Ruh-roh, I wonder if these are anything like cron jobs.  
+A job creates Pods that run until the job finishes  
+By default a job runs on a single pod until termination. Jobs support parallelism well.  
+Pods spawned by Jobs and stay in "CrashLoopBackOff" status (?) it the job fails.
+
+
+### CHAPTER 11: ConfigMaps and Secrets
+You should strive to make images as reusable as possible (same image for dev, test and prod).  
+Testing can get riskier and more complicated if images are different for each environment.
+ConfigMaps are used to provide configuration information.
+Secrets are similar to ConfigMaps but focused on making sensitive information available to the workload.  
+ConfigMap: A set of variables that can be used when defining the environment for your containers.  
+
+
+
+
+### CHAPTER 12: Deployments
+### CHAPTER 13: Integrating Storage Solutions and Kubernetes
+### CHAPTER 14: Deploying Real-World Applications
 
 
 
