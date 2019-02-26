@@ -22,6 +22,10 @@ Well in a nutshell: You need a portfolio to show what you know
 Does this guy have any further interesting videos?
 Idea: Create something on your portfolio for every skill listed on your linkedin
 
+Investigate how to build things in the cloud? (maybe this is a personal one for you)
+NoSQL (personal for you too)
+
+
 When you have Kubernetes, try a different release process?
 (Canary? 1%? Blue/green?)
 
