@@ -152,8 +152,6 @@ It's a pod manager, man.
 Some people even default to replicasets instead of pods.
 Good for stateless applications.
 
-
-
 ### CHAPTER 9: DaemonSets
 Chapter 9: DaemonSets  
 ReplicaSets are for creating a service with multiple replicas for redundancy.  
@@ -177,11 +175,36 @@ ConfigMaps are used to provide configuration information.
 Secrets are similar to ConfigMaps but focused on making sensitive information available to the workload.  
 ConfigMap: A set of variables that can be used when defining the environment for your containers.  
 
-
-
+#### Secrets
+Secrets enable container images to be created without bundling sensitive data.  
+Careful: Anyone with root access to a node can see the secrets.  
+Secrets are created using the kubectl command line tool.  
+You can also expose secrets to pods using the secret volume type.  
 
 ### CHAPTER 12: Deployments
+The deployment object exists to manage the release of new applications  
+Deployments represent deployed applications  
+Deployments allow you to carefully move from one version to another of your code.  
+The Deployment yaml structure is very similar to that of the replicaset, but there's a strategy part which describes how to roll out new software.  
+
 ### CHAPTER 13: Integrating Storage Solutions and Kubernetes
+
+**Good chapter, follow up thoroughly later**
+
+At some point, you need to have data stored somewhere. Integrating this data with container orchestration is oftentimes the most difficult aspect of building a distributed system.  
+Author advises: Moving a database is not wise as a first step.
+The author also echoes what I think: For live, you can remain using the legacy database, but for continous testing, you may use a test database as a transient container.  
+
+You can create a service named ExternalName, which makes the cluster add a name entry pointing to something outside the cluster (handy to connect to a legacy db for instance)  
+You may also run just a single pod that runs the database or other storage solution. It is not less reliable than running it on a VM or physical machine.  
+
+The chapter then describes how to run a MySQL singleton (reliably!) **investigate later more**
+
+Persistent Volume: Has a lifetime independent of any pod or container.  
+Book then decouples storage definition from pod definition (write the yamls here)  
+Author then uses a ReplicaSet with a single pod, to ensure the pod is rescheduled somewhere else in case of node failure.
+
+
 ### CHAPTER 14: Deploying Real-World Applications
 
 
