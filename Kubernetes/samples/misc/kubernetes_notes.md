@@ -80,6 +80,7 @@ spec:
 ```
 
 Let's configure an Ingress to reach that deployment:
+
 ```yaml
 apiVersion: extensions/v1beta1
 kind: Ingress
