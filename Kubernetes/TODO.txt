@@ -1,1 +1,0 @@
-Just read the whole thing: https://cloud.google.com/kubernetes-engine/docs/concepts/service#services_of_type_clusterip

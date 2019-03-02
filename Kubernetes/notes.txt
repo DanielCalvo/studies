@@ -1,0 +1,21 @@
+The good stuff:
+https://cloud.google.com/kubernetes-engine/docs/
+
+Some interesting info may be available here:
+https://cloud.google.com/solutions/continuous-delivery-jenkins-kubernetes-engine
+
+Just read the whole thing: https://cloud.google.com/kubernetes-engine/docs/concepts/service#services_of_type_clusterip
+- Detail your CI process and see how you would go about reproducing it
+- Do you get a dump in your database once it's running or do you have a db image with the dump inside of it already?
+
+
+
+The tutorials on google cloud seem really good!
+
+https://www.operatorhub.io/
+
+- You still need to deploy Kubernetes locally to learn about etcd and networking things
+
+Challenges for you to figure out for now:
+- How to automatically set up DNS entries once a service goes up
+- How to deploy a python script that will connect to Redis and MySQL, with persistent data

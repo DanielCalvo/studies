@@ -1,0 +1,15 @@
+
+#Open: https://docs.helm.sh/using_helm/#from-script
+
+kubectl create serviceaccount --namespace kube-system tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+
+helm init --service-account tiller --upgrade
+
+#Open: https://kubernetes.github.io/ingress-nginx/deploy/#using-helm
+helm install stable/nginx-ingress --name my-nginx --set rbac.create=true
+
+#16.249 The result of Ingress-nginx
+#On the workloads tab, an ingress controller and default backend should show up!
+#On the services tab, you should also see the controller and the backend
+#Under the networking session on the left there's networking services, you'll see a google cloud load balancer.
