@@ -1,0 +1,23 @@
+
+Deep Dive: Operator Framework BoF - Diane Mueller & Sebastian Pahl, Red Hat
+https://www.youtube.com/watch?v=fu7ecA2rXmc&feature=youtu.be
+
+You gotta read the SRE books man.
+
+https://github.com/kamranahmedse/developer-roadmap
+
+https://istio.io/
+https://helm.sh/
+
+https://kellanem.com/notes/
+
+https://www.ted.com/playlists/237/11_talks_to_watch_when_you_re
+https://www.ted.com/talks/tim_ferriss_smash_fear_learn_anything?referrer=playlist-11_talks_to_watch_when_you_re
+
+https://www.reddit.com/r/devops/comments/abcyl2/sorry_having_a_midlife_tech_crisis/eczhsu1/
+https://www.reddit.com/r/devops/comments/aqc8cj/interested_in_getting_into_devops_start_here/
+
+Good intro here:
+
+Book: Make your bed
+Book: The DevOps handbook

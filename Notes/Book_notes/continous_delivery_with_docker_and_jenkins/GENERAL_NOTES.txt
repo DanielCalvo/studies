@@ -1,6 +1,7 @@
 
 
-TODO: General book review
+Genereal review: Weak book. Tried to cover a lot of ground while being blurry on the details. Somewhat outdated technically (no one uses docker swarm nowadays)
+A few things were interesting by the end, they're at the end of this .txt file
 
 As the book wasn't interesting enough for a per-chapter note breakdown, I'm going to take a few general notes here:
 

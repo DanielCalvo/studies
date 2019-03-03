@@ -1,0 +1,2 @@
+Cloud Native Foundation landscape: https://github.com/cncf/landscape
+Zalando tech radar: https://opensource.zalando.com/tech-radar/
