@@ -117,7 +117,7 @@ apt-get update && apt-get install google-cloud-sdk
 gcloud init
 apt-get install kubectl
 ```
-- **Pods**: The smallest unit of anything in Kubernetes. A group of containers.
+- **Pods**: The smallest unit of anything in Kubernetes. A group of containers or a single container.
 All containers on a pod are always on the same node. They share the same IP Adress, hostname and port space.
 Containers in different pods are strongly isolated.  
 The question to ask your self when creating pods: "Will these containers work correctly if they land on different machines?" If the answer is no, put them together in a pod.
@@ -137,8 +137,13 @@ Much like grains in salt stack.
 "Labels are used to identify and optionally group objects in a Kubernetes cluster"
 (environment, app version, deploy date, anything really)
 
-"Anotations provide object scoped key/value storage of metadata"
+"Anotations provide object scoped key/value storage of metadata"  
 
+TLDR: Labels is what you use to apply `selector: MatchLabel` to.
+
+#### Anotations
+These are elaborate, it appears they can be used for a multitude of things.  
+They're strings and provide key/value storage of metadata to "automation tooling and client libraries"
 
 ### CHAPTER 7: Service Discovery
 
@@ -147,13 +152,16 @@ Confusing as fuck
 
 ### CHAPTER 8: ReplicaSets
 ReplicaSet: A clusterwide pod manager, ensuring that the right types and numbers of pods are running at all times.
-ReplicaSets use labels to identify the set of pods they should be managing
-It's a pod manager, man.
+ReplicaSets use labels to identify the set of pods they should be managing.
+It's a pod manager, man.  
+To find out if a pod has been created by a ReplicaSet, do a:  
+```kubectl get pods <pod-name> -o yaml```  
+There is an annotation named `kubernetes.io/created-by` that should contain this information.
+You can also add auto-scaling functionality to ReplicaSets
 Some people even default to replicasets instead of pods.
 Good for stateless applications.
 
 ### CHAPTER 9: DaemonSets
-Chapter 9: DaemonSets  
 ReplicaSets are for creating a service with multiple replicas for redundancy.  
 DaemonSets are used to deploy system daemons such as log collects and monitoring agents, that must be present in every node.  
 ReplicaSets should be used when your app is completely decoupled from the node and you can run multiple copies on a given node without further consideration.  
@@ -162,7 +170,8 @@ DaemonSets will create pods on every node by default, unless a node selector is 
 Deleting a DaemonSet will also delete all the pods managed by that DaemonSet
 
 ### CHAPTER 10: Jobs
-Jobs: Made to handle short lived, one off tasks. Ruh-roh, I wonder if these are anything like cron jobs.  
+Jobs: Made to handle short lived, one off tasks. Cronjobs are a different object in Kubernetes  
+They are handy for things that you only want to run once, such as database migration or some ad-hoc batch job or some one-off Symfony command to run something... Though I wonder, couldn't you just fire up a pod, run a job and then kill the pod? 
 A job creates Pods that run until the job finishes  
 By default a job runs on a single pod until termination. Jobs support parallelism well.  
 Pods spawned by Jobs and stay in "CrashLoopBackOff" status (?) it the job fails.
