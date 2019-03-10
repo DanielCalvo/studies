@@ -183,6 +183,7 @@ Testing can get riskier and more complicated if images are different for each en
 ConfigMaps are used to provide configuration information.
 Secrets are similar to ConfigMaps but focused on making sensitive information available to the workload.  
 ConfigMap: A set of variables that can be used when defining the environment for your containers.  
+These are pretty cool, but I suppose they only really start making since when you use them in practice.  
 
 #### Secrets
 Secrets enable container images to be created without bundling sensitive data.  
@@ -195,8 +196,13 @@ The deployment object exists to manage the release of new applications
 Deployments represent deployed applications  
 Deployments allow you to carefully move from one version to another of your code.  
 The Deployment yaml structure is very similar to that of the replicaset, but there's a strategy part which describes how to roll out new software.  
+Pods and ReplicaSets are expected to be tied to specific container images that don't change  
+Deployments keep a rollout history and have rollback functionality. This can be useful to understand your previous deployment states as well to rollback to a previous version  
+There are a bunch of deployment strategies/settings in the book which are cool  
 
 ### CHAPTER 13: Integrating Storage Solutions and Kubernetes
+
+Continue on page 142
 
 **Good chapter, follow up thoroughly later**
 
@@ -213,11 +219,12 @@ Persistent Volume: Has a lifetime independent of any pod or container.
 Book then decouples storage definition from pod definition (write the yamls here)  
 Author then uses a ReplicaSet with a single pod, to ensure the pod is rescheduled somewhere else in case of node failure.
 
+#### Stateful set
+Continue on page 146
 
 ### CHAPTER 14: Deploying Real-World Applications
 
-
-
+You need to at least review this part!
 
 
 

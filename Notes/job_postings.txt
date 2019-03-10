@@ -1,0 +1,53 @@
+
+-- Retrieved on March/2019
+
+Senior Operations Engineer
+at CloudBees (View all jobs)
+Remote - Western Europe
+Our Customers Develop Software at the Speed of Ideas
+
+CloudBees is the hub of enterprise Jenkins and DevOps, providing companies with smarter solutions for accelerating the development and delivery of the software that fuels their business.
+
+We’ve taken Jenkins – the most popular, trusted platform for automated software delivery in use by over 1,000,000 DevOps professionals around the world – and added enterprise-grade security, scalability, manageability and expert-level support. With CloudBees Jenkins Enterprise, our customers build, test and deploy business-critical software with confidence. By making the development and delivery process more productive, manageable and hassle-free, CloudBees puts companies on the fastest path to transforming their great ideas into great software, so it can start making an impact sooner.
+
+To support the delivery of the CloudBees engineering projects - the Operations team designs, deploys and manages a variety of software systems and the related AWS infrastructure that underpins this software.
+
+CloudBees has an Operations team that is available around the clock (in their respective time zones!) to deliver a highly available service to our growing engineering teams.
+
+One of your first tasks will be to integrate with the engineering teams to deliver the infrastructure required to deploy their projects - “Embedded Ops” - this role helps deliver infrastructure that meets the Engineering project’s needs while conforming to Operations guidelines for long term maintenance and reliability.
+
+What You'll Do
+
+Collaborate with existing project operations and CloudBees operations team members to ensure solutions fit into exists patterns.
+Design, development, integration, testing and delivery of infrastructure for engineering teams.
+Ongoing operational design and implementation work CloudBees infrastructure
+Handle operational incidents from initiation to resolution
+Drive architecture for major feature areas and drive decisions regarding key technologies
+Troubleshoot and debug software and infrastructural components including application of root cause analysis to find faults.
+Contribute fixes and enhancements to the open source projects
+Tuning of monitoring, system design and alerting to reduce alert quantity, increase alert quality and ultimately eliminate alert fatigue.
+Assist with escalated support incidents
+Report to the CloudBees IT Operations Manager on status of system faults and deliverables
+Ability to follow processes and complete work within a change controlled environment
+
+What the Role Requires
+
+Self-motivated and driven personality
+Excellent problem solving and communication skills
+Ability to operate independently and ask questions when stuck
+Well-rounded experience programming in various languages and domains
+Linux systems administration experience
+Experience with cloud-based operations (e.g. AWS,  Azure, GCP)
+Familiarity with the "modern Ops stack", e.g. monitoring, alerting, cloud-based provisioning, Docker.
+Experience/understanding of configuration management tools
+Experience/familiarity with modern software engineering practices: code reviews, unit/acceptance testing, source control, etc.
+Experience with cluster orchestration tools (e.g. Cloud Formation / k8s / ECS / Terraform / etc)
+Experience with continuous integration / continuous delivery tools (Jenkins / Bamboo / TeamCity etc)
+
+What You’ll Get
+
+A highly competitive benefits and vacation package
+The opportunity to work for one of the fastest growing companies with some of the most talented people in the industry
+Cool team outings (To Málaga for instance!)
+Fun, Hardworking, and Casual Environment
+Endless Growth Opportunities
