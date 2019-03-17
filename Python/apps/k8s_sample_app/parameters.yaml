@@ -1,0 +1,8 @@
+parameters:
+  database:
+    host: "127.0.0.1"
+    user: "dani"
+    name: "dummydb"
+    password: "mysecretpassword"
+  logs:
+    location: /tmp/app.log

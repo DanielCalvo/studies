@@ -1,5 +1,6 @@
 
 #Open: https://docs.helm.sh/using_helm/#from-script
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash #I want to live on the edge
 
 kubectl create serviceaccount --namespace kube-system tiller
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
