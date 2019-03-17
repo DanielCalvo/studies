@@ -1,5 +1,9 @@
 
 TODO Next:
+
+Do a git pull and then: Your python script should use a filesystem path to store random files (thing of it as a /tmp directory)
+ElasticSearch seems to be a nice cloud-native/new/trendy database technology you can have a look at!
+
 Kubernetes up and running -- The book. Follow up upon it!
 Also investigate how to deploy the kubernetes boilerplate application
 Also how to install kubernetes on a machine from scratch
