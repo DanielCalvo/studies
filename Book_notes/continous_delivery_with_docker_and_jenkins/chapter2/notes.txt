@@ -1,0 +1,197 @@
+
+Assorted commands:
+
+docker run -d tomcat
+docker logs musing_raman
+docker container stop musing_raman
+docker run -d -p 8080:8080 tomcat
+
+Let's expose tomcat to our machine's physical interface:
+docker run -d -p 192.168.1.59:8080:8080 tomcat
+
+CONTAINER NETWORKS
+
+ifconfig docker0
+
+The docker inspect command is generic and returns low-lever information on Docker objects.
+
+docker inspect 27b986b1f810 #Inspect the bridge network
+docker inspect a058a340c8e4 #Inspect the tomcat container
+
+If you launch multiple tomcats cointainers attempting to exposde the 8080 port, docker will automatically publish them to a random port
+docker port db2b89059a8d
+
+
+DOCKER VOLUMES
+
+General syntax on the command line:
+-v <host_path>:<container_path>
+
+docker run -i -t -v ~/docker_ubuntu:/host_directory ubuntu /bin/bash
+
+-i: Interactive
+-t: Allocate pseudo tty
+-v: Volume settings
+
+root@cd41538ac710:/# cd /host_directory/
+root@cd41538ac710:/host_directory# touch hey
+root@cd41538ac710:/host_directory# exit
+
+root@aargh:~/docker_ubuntu# ls
+hey
+
+Neat. You can then start a new container and the files will have persisted. Let's start a debian one just for kicks:
+
+docker run -i -t -v ~/docker_ubuntu:/host_directory debian /bin/bash
+
+root@aargh:~/docker_ubuntu# docker run -i -t -v ~/docker_ubuntu:/host_directory debian /bin/bash
+root@15a576120df5:/# cd /host_directory/
+root@15a576120df5:/host_directory# touch file_from_debian
+root@15a576120df5:/host_directory# exit
+exit
+root@aargh:~/docker_ubuntu# ls
+file_from_debian  hey
+
+NAMING CONTAINERS
+
+The book recommends you to name your containers.
+It adds convenience (it's easier to remember a name than a container in hex numbers) and it also assists in automation.
+
+To name a container, you use the --name parameter.
+
+docker run -d --name tomcat tomcat
+docker logs tomcat #Hey, we can use the name!
+
+TAGGING IMAGES
+
+When building an image, you can add a tag to it.
+docker build -t hello-world_python .
+
+If we don't build an image with a tag, we would have to refer to it by it's ID (hash)
+
+An image can have multiple tags, and should follow the convention:
+
+registry_address/image_name:version
+
+Of an image is hosted on the Docker Hub registry, we can skip the registry address. If you don't add a version to an image, it is always tagged/assume to be the latest one.
+
+REMOVING CONTAINERS
+
+Studying and playing around with containers, images, networks and what not, you'll end up with a large amount of unused objects.
+
+You can remove a single container by doing:
+docker rm $CONTAINER_ID
+
+If you want to remove all the stopped containers:
+docker rm $(docker ps --no-trunc -aq)
+
+This also removes all stopped containers:
+docker container prune
+
+You can also ask for a container to remove itself when it stops:
+docker run --rm hello-world
+
+REMOVING IMAGES
+
+Playing around you can also end up with a lot of images on disk.
+
+You can remove an individual image by doing
+docker rmi $IMAGE_ID
+
+You can remove old and unused images by doing:
+docker rmi $(docker images -q)
+
+You can also do this to remove unused images:
+docker image prune
+
+COMMAND OVERVIEW
+
+docker build - Builds an image from a dockerfile
+docker commit - Creates an image from a container
+docker diff - Shows changes in the container (relative to the image)
+docker images  - Lists images (same as docker image ls)
+docker info - Displays informaton about the docker host
+docker inspect - Allows you to inspect any docker object (image, container, network, etc)
+docker logs - Shows logs for a given container
+docker network - Manages networks
+docker port - Lists port mappings for a specific container
+docker rm - Removes containers
+docker rmi - Removes images
+docker run - Runs a container from a given image
+docker search - Searches for a given docker image in the Docker Hub
+docker start/stop/pause/unpause - Manages the state of a container
+
+ADVANCED COMMAND OVERVIEW (From the docker command line)
+
+Management Commands:
+  config      Manage Docker configs
+  container   Manage containers
+  image       Manage images
+  network     Manage networks
+  node        Manage Swarm nodes
+  plugin      Manage plugins
+  secret      Manage Docker secrets
+  service     Manage services
+  swarm       Manage Swarm
+  system      Manage Docker
+  trust       Manage trust on Docker images
+  volume      Manage volumes
+
+Commands:
+  attach      Attach local standard input, output, and error streams to a running container
+  build       Build an image from a Dockerfile
+  commit      Create a new image from a container's changes
+  cp          Copy files/folders between a container and the local filesystem
+  create      Create a new container
+  diff        Inspect changes to files or directories on a container's filesystem
+  events      Get real time events from the server
+  exec        Run a command in a running container
+  export      Export a container's filesystem as a tar archive
+  history     Show the history of an image
+  images      List images
+  import      Import the contents from a tarball to create a filesystem image
+  info        Display system-wide information
+  inspect     Return low-level information on Docker objects
+  kill        Kill one or more running containers
+  load        Load an image from a tar archive or STDIN
+  login       Log in to a Docker registry
+  logout      Log out from a Docker registry
+  logs        Fetch the logs of a container
+  pause       Pause all processes within one or more containers
+  port        List port mappings or a specific mapping for the container
+  ps          List containers
+  pull        Pull an image or a repository from a registry
+  push        Push an image or a repository to a registry
+  rename      Rename a container
+  restart     Restart one or more containers
+  rm          Remove one or more containers
+  rmi         Remove one or more images
+  run         Run a command in a new container
+  save        Save one or more images to a tar archive (streamed to STDOUT by default)
+  search      Search the Docker Hub for images
+  start       Start one or more stopped containers
+  stats       Display a live stream of container(s) resource usage statistics
+  stop        Stop one or more running containers
+  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+  top         Display the running processes of a container
+  unpause     Unpause all processes within one or more containers
+  update      Update configuration of one or more containers
+  version     Show the Docker version information
+  wait        Block until one or more containers stop, then print their exit codes
+
+
+
+Exercises:
+
+1. Run CouchDB as a Docker container and publish its port:
+
+docker search couchdb
+docker run -d --name dani_couchdb -p 5984:5984 couchdb
+
+2. Create a Docker image with the REST service replying Hello World! to localhost:8080/hello . Use any language and framework you prefer.
+
+I'm gonna pass this one as it's unecessary. I'm more concerned with things running on apache or databases and I've done plenty of examples with those in other ocasions!
+
+
+
+

@@ -1,0 +1,58 @@
+
+
+Genereal review: Weak book. Tried to cover a lot of ground while being blurry on the details. Somewhat outdated technically (no one uses docker swarm nowadays)
+A few things were interesting by the end, they're at the end of this .txt file
+
+As the book wasn't interesting enough for a per-chapter note breakdown, I'm going to take a few general notes here:
+
+CHAPTER 2: INTRODUCING DOCKER
+Book goes over a few docker basics (what is docker?) and concepts (images, networks, volumes).
+Most of this stuff can be better learned by reading Mastering Docker
+
+CHAPTER 3: CONFIGURING JENKINS
+Goes over a basic Jenkins install (either on a physical machine of docker container). Does Hello world type of stuff on Jenkins pipelines
+The jenkins pipeline official doc is better for this.
+
+INTERESTING: SLAVE TYPES
+- Set up and describe the differences between slave types
+
+
+CHAPTER 4: CONTINUOS INTEGRATION PIPELINE
+Explains the idea of a pipeline and related concepts (Jenkinsfile, commit pipeline, tests, triggers, development workflows...)
+
+CHAPTER 5: AUTOMATED ACCEPTANCE TESTING
+Describes the creation of tests, setting up your docker registry and how to fit tests in your pipeline. Goes over docker-compose and a bunch of way you can launch containers to run tests. Talks about test workflows.
+Lamp stack: Have a web, db, and test container on docker-compose.
+
+CHAPTER 6: CONFIGURATION MANAGEMENT WITH ANSIBLE
+Ansible ansible ansible.
+Ansible is agentless.
+Chapter goes over ansible playbooks, roles, ansible galaxy
+Ansible Galaxy is nice, they have reusable content
+Ansible Advantages: Agentless, supports both docker and non-docker hosts, ansible galaxy
+
+CHAPTER 7: CONTINUOUS DELIVERY PIPELINE
+Describes environments (prod, staging, qa  & dev)
+Describe test types and which of them to run in each environment
+Describes versioning strategies
+Suggests releases through ansible playbooks
+
+CHAPTER 8: CLUSTERING WITH DOCKER SWARM
+Introduces Docker Swarm individually at first.
+Covers running Jenkins slave nodes on a cluster (every jenkins job would run inside a jenkins slave container, spawned dynamically per job run)
+Does not cover how to integrate this on a pipeline :o
+
+CHAPTER 9:
+Talks about database migrations. Introduces "Flyway" which is similar to Doctrine
+
+INTERESTING: Describes parallel steps
+INTERESTING: Reusing pipeline components. Suggests creating a single Jenkinsfile with parameters to different environments
+INTERESTING: Talks about shared libraries. Perhaps these should be approached with caution to avoid creating black boxes
+INTERESTING: Blue Green deployment
+INTERESTING: Automating build deployment
+VERY INTERESTING: Best practices
+
+
+Resumen: Book is good if we want to suggest how testing should be done (which is a subject that we can approach in the future?)
+
+Does not cover what I wanted in good detail (how to launch the infra for the pipeline inside docker swarm)

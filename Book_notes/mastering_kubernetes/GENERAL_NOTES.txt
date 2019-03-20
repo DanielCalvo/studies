@@ -1,0 +1,180 @@
+
+
+----- STOPPED ON PAGE 30
+
+CHAPTER 1
+
+THE MAIN PURPOSE of Kubernetes is container orchestration. It could be docker, but it could also be other container technologies. Sounds interesting!
+
+KUBERNETES CONCEPTS
+
+CLUSTER
+A collection of hosts, storage and networking resources that kubernetes uses to run workloads on.
+
+NODE
+A single host, either physical or virtual. Pods run on nodes.
+
+MASTER
+The control host for Kubernetes.
+
+POD
+A unit of work in Kubernetes. Each pod contains one or more containers.
+
+LABEL
+Key-value objects that are used to group together a set of objects. Often used on pods. Other concepts hang on the use of labels.
+
+ANNOTATION
+Text metadata that can be associated to a given object.
+
+LABEL SELECTOR
+Used to select objects based on their labels. Operators are used with these.
+
+REPLICATION CONTROLLER AND REPLICA SET
+Replication controllers and replica sets manage a group of pods identified by a label selector. These can spawn, kill or do other operations to pods.
+
+SERVICE
+Used to expose some functionality to users or other services. Usually encompasses a group of pods identified by a label.
+
+VOLUME
+Persistent storage object/unit that can be shared in between multiple pods. There are multiple volume types.
+
+STATEFULSET
+StatefulSet ensures that a given number of pods with unique identifiers are running at a given time. It sits in the middle of the pets vs cattle server analogy. TODO: Review this (Confusing!)
+
+SECRET
+Small objects that contain sensitive data such as credentials and tokens.
+
+NAME
+Object identifier, other than it's UID.
+
+NAMESPACE
+A virtual cluster. Namespaces are isolated from each other.
+
+
+KUBERNETES ARCHITECTURE
+
+DISTRIBUTED SYSTEMS PATTERN
+To function properly, distributed systems need to be designed correctly. Here are some design patterns.
+
+SIDECAR PATTERN
+This pattern is about co-locating another container in a pod in addition to our main application container. A good example is a central logging agent.
+
+AMBASSADOR PATTERN
+This pattern is about representing a remote service as if it were a local one. A good example is a redis cluster with a master for writes (remote) and a replica for read (local, in your kubernetes pod)
+
+ADAPTER PATTERN
+The book reffers to this one as a auxiliary container that standardizes the output from the main app. Or something that processes and ships data from the main app.
+
+MULTI-NODE PATTERNS
+Book says: Single-node patterns are supported by Kubernetes via pods. Multi-node patterns are not supported directly.
+TODO: This is vague. Is clarifying this possible?
+
+KUBERNETES APIS
+A list of APIs used by Kubernetes follows:
+
+KUBERTNETES API
+The main Kubernetes API. Large.
+
+AUTOSCALING API
+Lets you controll the pod autoscaler.
+
+BATCH API
+Lets you manage jobs.
+
+KUBERNETES COMPONENTS
+
+MASTER COMPONENTS
+
+API SERVER
+The kube API server that exposes the Kubernetes REST API
+
+ETCD
+Distributed data store
+
+CONTROLLER MANAGER
+Binary that contains various managers. Controls pods, services, endpoints and so on
+
+SCHEDULER
+Responsible for scheduling pods into nodes.
+
+DNS
+A DNS server is part of a kubernetes master as well.
+
+NODE COMPONENTS
+
+PROXY
+Does low level networking operations on each node
+
+KUBELET
+The Kubernetes managing software that gets installed on each node. Manages volumes, pods, containers and everything else.
+
+
+KUBERNETES RUNTIMES
+The runtime interface that interfaces with the underlying container service being used, such as docker or rkt.
+
+DOCKER
+You should know this one :D. Kubernetes was originally designed to manage Docker, but multi-runtime functionality was built into it afterwards.
+A note from the book: Docker Swarm is a direct competitor to Kubernetes. It is simpler to use, but claimed to not be as powerful and mature.
+
+RKT:
+A new container manager from CoreOS.
+
+APP CONTAINER:
+An old container manager from CoreOS. Appears to be merging into Docker.
+
+RKTNETES
+Kubernetes plus the RKT as the runtime engine. Book remarks on RKT not being advised for production usage.
+
+HYPER CONTAINERS
+HYPERNETES
+Multi-tenant Kubernetes distribution that uses Hyper containers and some OpenStack components for authentication. Looks messy.
+
+The book then goes off on a tangent about CI/CD workflow/environments and how Kubernetes can help. The whole thing is short and badly written for a proper introduction on the subject.
+
+
+CHAPTER 2
+Creating kubernetes clusters.
+
+Install VirtualBox (had that one already)
+Install kubectl. Steps described here worked for xubuntu 16.04: https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl
+Googled "install minikube". Endeded up with this:
+
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.28.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+
+Let's see the versions of Kubernetes we have available:
+minikube get-k8s-versions
+
+For practicity, create an alias:
+alias mk='minikube'
+
+As of this writing, v1.10.0 seems to be the latest stable version.
+
+mk start --kubernetes-version="v1.10.0"
+
+This create a minukube cluster! Launches vbox vm with boot2docker, creates certificates, sets up networking and runs the local kubernetes cluster on the vm
+
+This kubectl command displays information about the cluster:
+kubectl cluster-info
+
+List nodes in the cluster
+kubectl get nodes
+
+Let's start up a pod:
+kubectl run echo --image=gcr.io/google_containers/echoserver:1.4 --port=8080 deployment "echo" created
+
+Is it there?
+kubectl get pods
+
+To expose it as a service
+kubectl expose deployment echo --type=NodePort
+
+According to the book, "ports get mapped in the cluster"
+
+To see which IP and port the echo service is using:
+minikube ip #Ok, I get the node if my only node in the cluster...
+
+kubectl get service echo
+
+So it'll be the IP from minikube plus the port from the echo service as outputted by kubectl... messy.
+
+
