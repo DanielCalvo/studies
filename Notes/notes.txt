@@ -1,4 +1,8 @@
 
+Action points:
+- Finish writing a summary for the Kubernetes up and running book
+- Write a concept about serverless?
+
 TODO Next:
 
 Do a git pull and then: Your python script should use a filesystem path to store random files (thing of it as a /tmp directory)
@@ -11,12 +15,12 @@ Also how to install kubernetes on a machine from scratch
 Finish your python course
 See what comes up next
 
+- What is serverless?
+- Can you watch the recorded stuff at kubecon to see if there's anything else meaningful over there?
+
+- Kubecon / Cloud Native Con seems to have some very interesting videos! Perhaps you should watch some of them
 
 Follow up:
-https://techbeacon.com/devops/8-devops-trends-watch-2018
-https://techbeacon.com/enterprise-it/7-arguments-against-noops
-https://techbeacon.com/devops/devops-trends-watch-teams-value-streams-newops
-https://dzone.com/articles/the-10-best-devops-tools-for-2018
 Icaro has some good business/work insights. In Portuguese: https://www.facebook.com/icaro.decarvalho.7
 
 
@@ -34,7 +38,7 @@ When you have Kubernetes, try a different release process?
 McChrystal and Peterson on Leaders: Myth & Reality
 https://www.youtube.com/watch?v=_v-NfZ1j918
 
-https://www.techatbloomberg.com/ <- nothing too interesting here
+
 
 Debugging tool for Kubernetes which tests and displays connectivity between nodes in the cluster.
 https://github.com/bloomberg/goldpinger

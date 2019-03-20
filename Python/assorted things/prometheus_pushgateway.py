@@ -9,8 +9,8 @@ current_directory_filenum = prometheus_client.Gauge('dani_current_directory_file
 
 with duration.time():
     print("Hello world")
-    current_directory_filenum.set(len(os.listdir()))
+    current_directory_filenum.set(10)
 
-print(len(os.listdir()))
+
 
 prometheus_client.pushadd_to_gateway('10.1.9.75:9091', job='dani_testjob', registry=registry)
