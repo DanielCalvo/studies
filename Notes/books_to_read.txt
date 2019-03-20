@@ -1,7 +1,0 @@
-
-
-
-- The hard thing about hard things
-- The SRE books from Google
-- https://www.amazon.de/High-Output-Management-Andrew-Grove/dp/0679762884
-- Make your bed

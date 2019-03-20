@@ -1,5 +1,0 @@
-https://www.youtube.com/watch?v=ncpG-9jKBEo <- TLDR: Build a portfolio, it helps
-https://techbeacon.com/devops/8-devops-trends-watch-2018 <- Meh article, emphasizes SRE and tracking the impact of things
-https://techbeacon.com/enterprise-it/7-arguments-against-noops <- Article with 2 or 3 useful arguments against NoOps. Heavy on the buzzwords and vague
-https://techbeacon.com/devops/devops-trends-watch-teams-value-streams-newops <- New roles: Cloud ops and SRE. Article is vague, but an easy read:
-https://www.techatbloomberg.com/ <- nothing too interesting here
