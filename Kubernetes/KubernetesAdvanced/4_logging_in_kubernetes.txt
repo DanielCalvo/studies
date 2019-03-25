@@ -1,0 +1,15 @@
+4. Logging in Kubernetes
+
+When you have a single app, it's very easy to see what's going on.
+You just open the "app.log" file and take a look.
+Or use kubectl logs
+
+If you have many pods, it isn't that easy.
+
+There are some commercial options, but let's use a variation of the ELK stack!
+We'll use:
+
+- Fluentd
+- ElasticSearch
+- Kibana
+- LogTrail

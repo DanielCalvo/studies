@@ -1,0 +1,22 @@
+
+There are new 'kinds' you need to learn:
+- ServiceAccount
+- ClusterRole
+- ClusterRoleBinding
+- StatefulSet
+- StorageClass
+
+You stopped on the fluentd part of video 1.2
+
+There seems to be a pattern that for a given service, you get a ServiceAccount, ClusterRole and a ClusterRoleBinding structure set up.
+
+Maybe to the other course from this guy, perhaps he uses AWS/Kops to set all of this up
+
+(I think you saw these on StephenGrider's course but he created them imperatively)
+
+Also create some persistent volumes on your own (and create and delete a deployment to use them, and see if the files persist in the cluster)
+Can you also provision your google stuff to use any other filesystem in the cloud as a volume, such as the S3 equivalent of Amazon?
+
+Also, make your Google cloud Kubernetes instances connect to Google's SQL technology
+
+And also, spawn everything Kubernetes in AWS!
