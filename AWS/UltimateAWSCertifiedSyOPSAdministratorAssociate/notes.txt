@@ -1,0 +1,11 @@
+
+5. Launching an EC2 instance:
+Launched instance, sshed into it.
+ssh ec2-user@34.245.49.104
+
+6. Changing EC2 instance type:
+Stop the instance. You can then right click on the instance and instance settings > change instance type.
+You can log in into the instance and see that your files are there and you have more memory and what not
+
+7. EC2 Placement Groups
+You stopped here. Watch this lecture again!
