@@ -1,0 +1,32 @@
+
+O program that suffles cards, uh-oh!
+
+Go is statically typed!
+Python is dynamically typed
+
+Basic types available: bool, string, int, float64
+
+":=" is only used when definining a variable the first time!
+
+
+16. Slices and for loops
+Array = Fixed lenght list of things
+Slice = An array that can grow or shrink
+
+
+17:
+Go is not object oriented :o
+We're going to take a type (such as an array) and we're going to extend it's functionality
+
+
+19:
+func (d deck) print() {
+d: The actual copy of the deck we're working on is available in this function as a variable called 'd'
+deck: Every variable called deck can call this function on itself
+}
+
+
+23:
+Any time you see a square bracket, you wanna be thinking of a slice
+
+You stopped on lecture 27
