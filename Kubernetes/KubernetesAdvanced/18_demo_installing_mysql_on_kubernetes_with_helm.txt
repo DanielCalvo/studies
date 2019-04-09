@@ -1,0 +1,10 @@
+
+First, download helm from: https://github.com/kubernetes/helm
+
+Then initialize helm:
+helm init
+
+To install MySQL, enter:
+
+helm install --name my-mysql --set mysqlRootPassword=secretpassword,mysqlUser=my-user,mysqlPassword=my-password,mysqlDatabase=my-database stable/mysql
+

@@ -1,0 +1,12 @@
+Helm is a package manager for Kubernetes.
+Helps you manage apps.
+Maintained by the CNCF.
+
+Helm uses a packaging format named charts
+A chart is a collection of files that describe a set of Kubernetes resources
+A single chart can deploy an app or a database.
+It can have dependencies as well (ie wordpress requires mysql)
+
+Charts use templates.
+They will generate templates.
+You can think of templates as dynamic yaml files which contain logic and variables.

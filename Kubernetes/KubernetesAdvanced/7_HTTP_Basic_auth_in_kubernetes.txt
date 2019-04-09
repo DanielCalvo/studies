@@ -1,0 +1,5 @@
+
+kubectl uses x509 certificates for auth
+
+We can use http basic authentication sending a username and password to the server.
+This is very simple to do, but not as secure as using a certificate.

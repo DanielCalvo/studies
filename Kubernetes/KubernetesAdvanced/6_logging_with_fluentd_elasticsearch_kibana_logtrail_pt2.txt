@@ -1,0 +1,7 @@
+
+
+Author says:
+- May not work the first time
+- Might need some tweaking (volume size, node ammount)
+
+https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/fluentd-elasticsearch
