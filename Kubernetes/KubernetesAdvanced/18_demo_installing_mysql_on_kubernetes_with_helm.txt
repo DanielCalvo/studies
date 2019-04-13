@@ -8,3 +8,5 @@ To install MySQL, enter:
 
 helm install --name my-mysql --set mysqlRootPassword=secretpassword,mysqlUser=my-user,mysqlPassword=my-password,mysqlDatabase=my-database stable/mysql
 
+Running helm install creates a bunch of things, such as deployment, a secret, a PVC and a service. Neat!
+Helm charts are available here: https://github.com/helm/charts
