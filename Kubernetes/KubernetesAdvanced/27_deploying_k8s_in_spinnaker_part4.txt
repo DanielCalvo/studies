@@ -1,0 +1,8 @@
+Creates a pipeline through the UI
+Adds a docker registry trigger
+
+Creates and push another git branch
+Dockerhub will puck up the new branch and build it, and when the build is complete spinnaker is going to find out about it and deploy it to k8s
+
+Spinnaker seems cool, but it's use case seems a bit too specific (k8s only)
+Also where can I define some manual steps?

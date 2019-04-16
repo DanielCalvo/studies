@@ -1,0 +1,18 @@
+1: Agile, Continous Delivery and the Three ways
+
+The manufacturing value stream: The sequence of activities an organization undertakes to deliver upon a customer request.
+
+There's also the "Technology value stream", but we can call it just value stream.
+
+Lead time: Time from ticket created to thing deployed.
+Lead time needs to be short.
+Work in small batches.
+Desired: Deployment lead time of minutes. Deploy small things incrementally.
+
+Goal: Have testing and operations happening simultaneously with design/development, enabling fast flow and high quality. This method works when we work in small batches.
+
+Commit small code changes to version control, perform testing against it, deploy it to production.
+
+Commit -> Automated test -> Exploratory test -> Production deploy
+            10m                 10m                 5m
+

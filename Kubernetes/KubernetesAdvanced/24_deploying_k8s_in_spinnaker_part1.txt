@@ -1,0 +1,12 @@
+
+Demo will show:
+- Setup up Spinnaker using Helm
+- Configure Spinnaker
+- Deploy an app on K8s fron spinnaker
+
+Pipeline is:
+
+git repo -> docker build -> docker push -> Spinnaker pipeline -> Kubernetes deploy -> App live
+/\ commit       /\ trigger from github            /\ trigger from dockerhub
+
+Author installs Spinnaker using helm

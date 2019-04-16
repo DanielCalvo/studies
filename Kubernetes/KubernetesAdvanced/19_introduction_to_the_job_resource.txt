@@ -2,3 +2,5 @@
 As it turns out, you can also schedule pods as jobs, not only as part of a Deployment / ReplicaSet
 
 With a job, pods run a specific task and then exit.
+
+Author goes on and explains the different types of jobs

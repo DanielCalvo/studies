@@ -1,0 +1,32 @@
+Spinnaker is a CD platform.
+
+- Can automate deployments on a bunch of cloud providers.
+- Works only for docker-based apps.
+- Integrates with CI tools (Jenkins, Travis) with monitoring tools and provides a bunch of deployment strategies
+
+Author suggests:
+Jenkins can build and test steps (CI)
+Spinnnaker can plug into this and once your Jenkins builds succeeds, it can kick of a deployment.
+
+Spinnaker has 2 core sets of features:
+- Cluster management (view and manage cloud resources)
+- Deployment management (you can create and manage CD workflows, uh-oh!)
+
+There are deployment strategies in Spinnaker built in.
+
+Red/Black (or blue/green): LB and two groups of instances. At one point you're pointing to a group A. You then deploy the new code to group B. You then make the LB point to group B.
+
+Rolling red/black: Similar to red/black, but red black, but you start removing instances on group A and adding them on group B. It's akin to the internal process Kubernetes does when you do a rolling deployment.
+
+Canary: Deploy just a fraction of your total number of instances (say 20%) and check for a given period of time (say 1h) how they behave. If they behave correctly, you roll this version for the image for all the other containers. If they misbehave, you replace these 20% with the older image and figure out what was wrong.
+
+
+Some Spinnaker terminology:
+Account: Credentials to authenticate against k8s and a docker registry
+Instance: Kubernetes Pod
+Server group: ReplicaSet
+Cluster: Deployment
+
+Spinnaker uses it's own orchestration and it is different from the deployment on Kubernetes.
+
+Load Balancer: Maps to a k8s service.
