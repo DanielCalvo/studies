@@ -1,0 +1,8 @@
+
+Author spins up 2 clusters.
+
+Author then spins up a federated cluster using these 2 clusters.
+
+The kubefed tool is used imperatively, hmm.
+
+Deployment replicas are split evenly between 2 clusters

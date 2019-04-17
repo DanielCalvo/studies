@@ -1,0 +1,4 @@
+
+I've implemented quite a bit of Prometheus at work, so I'm taking no notes here.
+
+Author seems to overcomplicate the diagram a bit :o

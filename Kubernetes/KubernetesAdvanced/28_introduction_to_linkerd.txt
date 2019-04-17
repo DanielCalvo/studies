@@ -1,0 +1,22 @@
+
+Some issues that Linkerd attemps to solve:
+
+- It can be difficult to manage all the endpoints that make up an application within the cluster
+- Service discovery in K8s is somewhat limited
+- Routing is oftentimes in a round robin basis
+- There's is no elaborate failure handling (except removing pods that fail their health check)
+- It can be difficult to visualize the different services
+- HTTPs APIs can be very basic and there's no failure handling for APIs
+
+Linkerd can solve that apparently :o
+
+Linkerd is a transparency proxy that adds:
+
+- Service discovery
+- Routing
+- Latency aware load balancing
+- It can shift traffic to do canary deployments. It can be integrated with Jenkins
+- Failure handling! Using retries, deadlines and circuit breaking
+- And it can add visibility with a web UI
+
+Author uses Linkerd on a DaemonSet

@@ -1,0 +1,13 @@
+
+Authorization controls what a user can do.
+
+When you try to execute a command, kube-api will check to see if you have permissions to do that.
+
+Authorization modules available:
+
+Node: Special purpose authorization mode that authorizes API requests made by kubeletes
+ABAC: Atribute-based access control. Access rights are controlled by policies that combine attributes. Ex: User "Alice" can do anything in the namespace "Marketing". ABAC does not allow very granular permission control.
+
+RBAC: Role based access control. Regulates access using roles. Allows admins to dynamically configure permission policies.
+
+Webhook: Sends authorization requests to an external REST interface. Interesting if you want to write your own authorization server. You can parse the incoming payload and then reply with access granted/denied.

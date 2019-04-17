@@ -1,0 +1,13 @@
+
+Federation:
+
+- Federation can be used to manage multiple clusters
+- You can sync resources across clusters
+- The same deployment version can run on clusters A and B
+- You can do cross cluster discovery
+- You can have one virtual IP for a resource spawning multiple clusters
+- This can help to achieve high availability / fault isolation (regions on cloud services can fail)
+- Scale beyond the limitations of one cluster
+- Run clusters in a hybrid cloud environment (a cluster can be on premises with a failover to the cloud! :o)
+
+You can use a tool named Kubefed to administer your federated clusters.

@@ -1,0 +1,7 @@
+Author does a bunch of kubectl apply
+
+The linkerd UI is very very cool!
+
+There's also a grafana UI for linkerd.
+
+You can trace things and quantify requests. I like it. I should use it.

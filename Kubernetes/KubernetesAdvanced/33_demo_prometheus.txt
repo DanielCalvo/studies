@@ -1,0 +1,6 @@
+Author through kubectl, creates a bunch of service accounts and prometheus resources from his repo
+
+Prometheus deployment has the prometheus operator, might be worth taking a look
+Also monitoring.coreos.com is being used as an API version.
+
+Not sure if I'm a big fan of extending k8s for something so trivial as Prometheus
