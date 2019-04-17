@@ -1,0 +1,8 @@
+You can also create very fine-grained roles with verbs and resources defined.
+A given role can allow you to view configmaps but not delete them. On the same vein, it can allow you to delete pods.
+Very interesting!
+
+So you can give access to everything except secrets for a given user.
+
+There are some pre-defined RBAC roles: cluster-admin, admin, edit, view.
+

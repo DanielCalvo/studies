@@ -1,0 +1,14 @@
+
+Intro to RBAC:
+
+You can add RBAC resources with kubectl to grant permissions.
+You describe them in yaml format, then apply them to the cluster
+
+First you define a role, then you assign users/groups to that role.
+
+You can create roles limited to a single namespace or you can create roles that apply to all namespaces
+
+Role: Single namespace
+ClusterRole: cluster-wide
+RoleBinding: Single namespace
+ClusterRoleBinding: cluster-wide
