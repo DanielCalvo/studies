@@ -16,3 +16,82 @@ Commit small code changes to version control, perform testing against it, deploy
 Commit -> Automated test -> Exploratory test -> Production deploy
             10m                 10m                 5m
 
+Chapter 1: Flow
+MAKE OUR WORK VISIBLE
+One of the best ways of doing this is using Kanban boards or spring planning boards.
+Work is not done when development completes the implementation of a feature, rather, it is only done when our application is running successfully in production, delivering value to the customer.
+
+LIMIT WORK IN PROGRESS (WIP)
+Limit work in progress and interruptions.
+You can control queue sizes on Kanban boards for WIP.
+Author encourages to "Stop starting. Start finishing"
+
+REDUCE BATCH SIZES
+Large batch sizes result in skyrocketing levels of WIP
+Single-piece flow is better than large batches for software engineering.
+Small batch sizes results in less WIP, faster lead times, faster detection of errors and less rework.
+This validates that the larger the changes going into production, the more difficult production errors are to diagnose and fix, and they take longer to remediate.
+
+REDUCE THE NUMBER OF HANDOFFS
+Either by automating significant portions of the work or by reorganizing teams so they can deliver value to the customer themselves.
+
+CONTINOUSLY IDENTIFY AND ELEVATE OUR CONSTRAINTS
+Dr. Goldratt: In any value stream, there is always a direction of flow, and there is always one and only constraint; any improvement not made at the constraint is an illusion.
+If you improve before the constaint, you'll have a bottleneck. If you improve after the constraint, you'll have nothing to do.
+In DevOps transformations, as deployment leads become shorter and shorter, the following constraints usually appear:
+
+Environment creation: You need to have environments that are on demand and self serviced.
+Code deployment: Automate deployments as much as possible so that they can be done by any developer.
+Test set up and run: Automate your tests so you can deploy safely
+Overly tight architecture: Corporate bureaucracy (permissions for changes and what not) needs to be removed or cut to a minimum (or made efficient)
+
+After all of these constraints have been broken, your constraint will likely be in development or product ownership. You want to enable teams to code, test and deploy quickly, so this is where you want your constraint to be.
+You must help maximize developer productivity.
+
+ELIMINATE HARDSHIPS AND WASTE IN THE VALUE STREAM
+Reduce hardship and drudgery.
+Author advises to strive to eliminate:
+
+Partially done work: Any work in the value stream that has not been completed. Work that is sitting on a queue. Partially done work becomes obsolete and loses value over time.
+Extra processes: Work that is being performed that does not add value. Documentation not used, or reviews that do not add value.
+Extra features: Features added that are not needed.
+Task switching: Constantly switching context.
+Waiting: Delays
+Motion: When people who need to communicate frequently, can't. Handoffs also create motion waste and require additional comumnication to resolve ambiguities
+Defects: Incorrect, missing or unclear information (Could it apply to code as well?)
+Nonstandard or manual work: Ideally you should automate as much as possible
+Heroics: Unreasonable acts, such as fixing things as 2am
+
+
+Chapter 3: The Second Way: The Principles of Feedback
+The second way describes the principles that enable reciprocal fast and constant feedback from right to left on all the stages of the value stream
+When failures occur, we treat them as opportunities for learning rather than punishment.
+
+WORKING SAFELY WITHIN COMPLEX SYSTEMS
+As failure is inevitable, we must design a safe system of work in which we're confident that errors will be detected quickly before catastrophe, such as product defects or negative customer impact.
+
+SEE PROBLEMS AS THEY OCCUR
+Create fast feedback and feedforward loops in all processes of the technology value stream, incompassing product management, development, QA, infosec and operations.
+In the context of the value stream, author suggests automated build, integration and test processes, so we can quickly detect bad changes.
+We also need to have "pervarsive telemetry" to see when production systems are not operating as expected
+
+SWARM AND SOLVE PROBLEMS TO BUILD NEW KNOWLEDGE
+Author advises swarming: Everybody jumps on a problem as soon as it is spotted so everyone can learn from it.
+New work is not introduced until the issue is resolved.
+
+KEEP PUSHING THE QUALITY CLOSER TO THE SOURCE
+The effectiveness of approval processes decreases as we push decision-making further away from the where the work is performed.
+Examples of ineffective quality controls:
+Requiring another team to complete tedious and error prone manual tasks that could be automated by the team who needs the work performed
+Requiring approvals from busy people who are distant from the work. They'll make decisions without adequate knowledge or merely rubber stamp approvals
+Creating large volumes of documentation of questionable detail that are quickly obsolete
+Pushing batches of work for approval for special comittees and waiting their response
+
+We need everyone in our value stream to find and fix problems in their area of control.
+Gary Gruver: It's impossible for a developer to learn anything when someone yells at them for something they broke 6 months ago. We must provide feedback to everyone as quickly as possible, in minutes, not months.
+
+ENABLE OPTIMIZING FOR DOWNSTREAM WORK CENTERS
+Lean defines two types of customers we work for:
+External: Who's paying for the service
+Internal: Who receives the work and processes it
+According to Lean, our most important customer is who's next down stream. We should attempt to optimize the work for them
