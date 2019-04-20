@@ -1,0 +1,14 @@
+
+Chapter 1: Revolution in the Cloud
+
+Author says there are three revolutions going on:
+- The creation of the cloud
+- The dawn of DevOps
+- The coming of containers
+
+When you use the cloud to run your own services, what you're buying is Infrastructure as a service.
+But outsourcing hardware is only part of the story: You can outsource software too: Operating systems, databases, clustering, networking. Managed services can do most of the heavy lifting for you.
+
+You stopped on page 35
+
+Chapter 2: First steps with Kubernetes
