@@ -95,3 +95,7 @@ Lean defines two types of customers we work for:
 External: Who's paying for the service
 Internal: Who receives the work and processes it
 According to Lean, our most important customer is who's next down stream. We should attempt to optimize the work for them
+
+
+Chapter 4: The third way: The principles of Continual Learning and Experimentation
+The third way focuses on creating a culture of contious learning and experimentation.
