@@ -1,0 +1,98 @@
+7. Five important questions
+
+How do we run the code in our project?
+go run main.go
+
+But wait, there's more:
+
+go build: Compiles go source code
+go run: Compiles and executes code
+go fmt: Formats all the code in each file in the current directory
+go install: Compiles and installs a package
+go get: Downloads the source code of someone else's package
+go test: Runs any tests associated with the current project
+
+
+8. Go packages
+What does 'package main' mean?
+Package == Project == Workspace
+A package is a collection of common source files.
+Every first line of a file must declare the package that it belongs to.
+
+There are two different types of packages in Go: Executable and Reusable.
+Executable: Generates a file that we can run.
+Reusable: Code used as 'helpers'. Where you put the reusable logic. Code dependencies or libraries.
+It's the name of the package that you use that determines of you're making a executable or reusable type package.
+"main" is used to make an executable package. If we had named the package something else, we wouldn't have gotten an executable.
+Package main must have a func called main.
+
+
+9. Import statements
+The import package gives our package access to some code that is written inside another package.
+The fmt library is used to print out stuff.
+golang.org/pkg
+
+
+10. File organization
+func is short for function
+Files in go always follow a patten: package, import, func
+
+
+O program that suffles cards, uh-oh!
+
+Go is statically typed!
+Python is dynamically typed
+
+Basic types available: bool, string, int, float64
+
+":=" is only used when definining a variable the first time!
+
+15.
+You need to tell which data type you intend on returning from a function, ie:
+func mything() string {
+    return "banana"
+}
+
+16. Slices and for loops
+Array = Fixed lenght list of things
+Slice = An array that can grow or shrink
+Every element in a slice must be of the same type
+
+fruits := []string{"banana", "apple"}
+Creates a slice named fruit of type string with the strings banana and apple
+
+fruits = append(fruits, "orange")
+The append function returns a new slice, so we must re-assign it to the fruit slice
+
+When iterating through a silce, you do:
+
+for i, fruit =: range fruits {
+    fmt.Println(i, card
+}
+
+Every time yo go over an element in fruits, go throws away the i and fruit variables, which is why initialize them with := every time
+
+
+17:
+Go is not object oriented :o
+We're going to take a type (such as an array) and we're going to extend it's functionality
+
+
+19:
+func (d deck) print() {
+d: The actual copy of the deck we're working on is available in this function as a variable called 'd'
+deck: Every variable called deck can call this function on itself
+}
+The receiver sets up methods on variables that we create
+
+22: This:
+func deal(d deck, handSize int) (deck, deck) {
+
+Will receive as argument one variable of type deck, and another one of type int.
+It will then return two variables of the type deck. It can be a bit confusing at first to see those two sets of parenthesis there.
+
+
+23:
+Any time you see a square bracket, you wanna be thinking of a slice
+
+You stopped on lecture 27

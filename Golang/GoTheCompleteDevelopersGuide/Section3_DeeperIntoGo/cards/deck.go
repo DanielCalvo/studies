@@ -6,7 +6,9 @@ import (
 	"strings"
 )
 
-type deck []string
+// Create a new type of 'deck' which is a slice of strings
+// In OOP terms: This type extends all the behaviours of a string
+type deck []string // extends all the
 
 func newDeck() deck {
 	cards := deck{}

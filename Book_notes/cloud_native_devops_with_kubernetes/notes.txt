@@ -36,4 +36,14 @@ stuff that doesn’t differentiate you.
 —Justin Garrison
 
 
+Chapter 4: Kubernetes objects
+Deployment: Supervised pods to make sure they're running and/or running with certain characteristics
+Pod: One or more container
+ReplicaSet: Used by deployments. You usually don't interact with this directly
+
+
+
+
+
+
 You stopped on page 53
