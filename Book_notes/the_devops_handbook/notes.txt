@@ -99,3 +99,27 @@ According to Lean, our most important customer is who's next down stream. We sho
 
 Chapter 4: The third way: The principles of Continual Learning and Experimentation
 The third way focuses on creating a culture of contious learning and experimentation.
+
+ENABLING ORGANIZATIONAL LEARNING AND A SAFETY CULTURE
+Generative organizations are characterized by actively seeking and sharing information to better enable the organization to achieve it's mission. These organizations succeed.
+Responsabilities are shared throughout the value stream, and failures result in reflection and inquiry.
+Information is actively sought. Managers are trained. Responsabilities are shared. Bridging between teams is rewarded. Failure causes inquiry. New ideas are welcomed.
+
+INSTUTIONALIZE THE IMPROVEMENT OF DAILY WORK
+Even more important than daily work is the improvement of daily work
+In the absence of improvements, processes don't stay the same. Due to chaos and entropy, they degrade over time.
+We improve daily work by explicitly reserving time to pay down technical debt, refactor and improve problematic areas of our code.
+When we fix problems that we've worked around for months, we can fix other less obvious problems.
+
+TRANSFORM LOCAL DISCOVERIES INTO GLOBAL IMPROVEMENTS
+This part is a bit vague. Book encourages passing knowledge along so that code, libraries and configurations that embody the collective knowledge of the entire organization can be utilized.
+
+INJECT RESILIENCE PATTERNS INTO OUR DAILY WORK
+Author advises to simulate failure and plan around it. Vague chapter.
+
+LEADERS REINFORCE A LEARNING CULTURE
+The leader's role is to create the conditions so their team can discover greatness in their daily work.
+
+CONCLUSION
+Value organizational learning, enable high trust and boundary-spanning between functions, accept that failures will always happen in complex systems, make it acceptable to talk about problems so we can create a safe system of work, institutionalize the improvement of daily work, convert local learnings into global learnings, inject tension into daily work (?)
+
