@@ -96,3 +96,32 @@ It will then return two variables of the type deck. It can be a bit confusing at
 Any time you see a square bracket, you wanna be thinking of a slice
 
 You stopped on lecture 27
+
+30:
+Stephen says: A lot of learning go is learning how to navigate the documentation for the standard packages.
+
+44:
+&variable = Give me the memory address of the value this variable is pointing at
+*pointer = Give me the value this memory address is pointing at
+
+47:
+Value types: int, float, string, bool, structs. Use pointers to change these things in functions.
+Reference types: slices, maps, channels, pointers, functions. Don't worry about pointers with these
+
+48:
+In Go, a map is a collection of key-value pairs.
+Similar to a Dictionary in Python!
+The keys and values are statically type (must be exact same type, string, int, etc)
+
+51:
+Map: All keys must be of same type
+Map: All values must be of same type
+Map: Keys are indexed - we can iterate over them
+Map: Use to represent a collection of related properties (such as color names/hex values)
+Map: Don't need to know all the keys at compile time
+
+Struct: Values can be of different type
+Struct: Keys don't support indexing
+Struct: You need to know all the different fields at compile time
+Struct: Used to represent a "thing" with a lot of different properties (such all the attributes of a person)
+Struct: Value type! (uses pointers)
