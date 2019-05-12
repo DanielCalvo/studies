@@ -149,3 +149,40 @@ Interfaces are not generic types
 Interfaces are implicit
 Interfaces are a contract to help us manage types
 Interfaces are tough! Step 1 is learning how to read them
+
+
+70:
+The program checks links sequentially, which takes quite some time!
+Stephen says we can take a parallel approach to our program
+
+
+71:
+We might wanna figure out a way to fetch multiple requests at the same time.
+When you launch a program, you automatically create a Go routine
+Every time you use the "go" keyword to launch a function, you are launching a new go routine
+
+
+72:
+The Go scheduler, works with a single CPU. By default, Go attempts to use only a single CPU.
+Even though you might launch many Go routines, only one is running at any given time.
+The one-core usage setting can be changed. This way multiple routines can be assigned to multiple cores
+"Concurrency is not parallelism" - A bunch of people on the Internet.
+Concurrency: We can have multiple threads executing code. If one thread blocks, another one is picked up and worked on. These threads might still be running on the same core though!
+Parallelism: Multiple threads execute at the exact same time. Requires multiple CPUs. Multiple things, at the exact same nanosecond!
+By default, a main routine is created when we launch the program.
+All other Go routines are named "child" go routines.
+The main and child routines are treated differently. The main one appears to have more priviledges
+
+
+73:
+We only use the go keyword in front of function calls
+The main routine finishes before the child routines and we get no output :(
+We're going to use another construct in Go called channels
+Channels are used to communicate in between different go routines
+A channel has a type. A channel can only share type string, int, struct or something like that
+
+
+74:
+channel <- 5 ##Sends the value 5 into this channel
+myNumber <- channel ##Wait fora value to be sent into the channel. When we get one, assign it to the variable myNumber
+fmt.Println(<- channel) ##Wait for a value to be sent into the channel. When you get one, print it immediately
