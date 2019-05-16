@@ -1,0 +1,55 @@
+01:
+Author recommends books: Go in action, The go Programming Language, golang-book.com, go by example
+golang.org/ref/spec is written in a manner that can be difficult to understand at first
+
+
+03:
+You can tell the future by looking very closely at the seeds you plant today!
+If you have grit and persistence and work every day, you'll get there!
+
+
+12:
+mkdir mygoworkspace
+cd mygoworkspace
+mkdir bin pkg src
+
+
+13:
+GOROOT and GOPATH are the most important variables for Go
+
+
+15:
+go version
+go env
+go help
+go help fmt 
+go fmt $SOURCEFILE #Will properly format a source file (ident, new lines, etc)
+go run main.go
+go install main.go (moves executable to GOBIN?)
+go get $REPO_URL
+
+
+19:
+Every program needs a package main and a func main
+
+
+20: Packages
+Packages: Code that is already written that you can use. Import imports that package
+func Println(a .... interface{}) <- Takes any number of arguments
+The "... sometime" is how we signify a variatic parameter
+the type "interface{}" is the empty interface
+every value is also of type "interface{}" (wut?)
+The underscore charater (_) throws aways returns
+You can't have unused variables in your code
+
+
+21:
+:= is the short declaration operator. It declares a variable and assigns a value to it
+
+
+22:
+The difference between using the short declaration operator and the var keyword is that you can use the var keyword to declare a variable outside a function body
+var allows you declare a variable outside a function body
+Best practice: Limit the scope of your variable and try to use the short declaration variable
+When a variable is initialized but no value is given, the variable is given a default value
+The variable is set to the zero value of it's type: https://golang.org/ref/spec#The_zero_value
