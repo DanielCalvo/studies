@@ -53,3 +53,13 @@ var allows you declare a variable outside a function body
 Best practice: Limit the scope of your variable and try to use the short declaration variable
 When a variable is initialized but no value is given, the variable is given a default value
 The variable is set to the zero value of it's type: https://golang.org/ref/spec#The_zero_value
+
+
+23:
+Go is all about type!
+A variable of a certain type can only hold values of that type
+
+
+27:
+In Go you convert types, you don't cast them.
+Even if you don't believe, keep doing it!
