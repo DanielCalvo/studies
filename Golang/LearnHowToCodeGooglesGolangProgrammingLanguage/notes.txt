@@ -1,7 +1,7 @@
 01:
 Author recommends books: Go in action, The go Programming Language, golang-book.com, go by example
 golang.org/ref/spec is written in a manner that can be difficult to understand at first
-
+Effective go is easier to get into: https://golang.org/doc/effective_go.html
 
 03:
 You can tell the future by looking very closely at the seeds you plant today!
@@ -63,3 +63,20 @@ A variable of a certain type can only hold values of that type
 27:
 In Go you convert types, you don't cast them.
 Even if you don't believe, keep doing it!
+
+
+36:
+integers do not have decimals
+floats do have decimals
+
+
+92:
+A struct is an agregate data type. It agregates together values of different types.
+
+93:
+When embedding structs, the inner type gets promoted to the outer type
+
+
+96:
+Aliasing a type is usually not a good idea unless you want to add methods to it
+Todd recommends: Always use the field name. It's clearer!

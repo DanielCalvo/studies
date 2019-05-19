@@ -1,4 +1,4 @@
-package Section5_exercises_go
+package Section5
 
 import "fmt"
 
