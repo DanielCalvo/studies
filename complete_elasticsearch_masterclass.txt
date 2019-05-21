@@ -1,0 +1,125 @@
+
+04: Overview of elasticsearch
+Elasticsearch is a documented oriented search engine. You can save documents in elasticsearch and delete documents in elasticsearch.
+Along with insert and delete, you can also retrieve this documents.
+The biggest use case for Elasticsearch is to search! (as the name might suggest)
+Elasticsearch is built on top of Lucene
+
+In a relational database, data is stored in columns and rows, very similar to an excel spreadsheet
+In Elasticsearch things a stored in a document... much like JSON?
+
+05: Indexing, retrieving and deleting documents
+In ElasticSearch, data is stored in something called in index
+To draw a comparison between relational DBs and Elasticsearch
+
+Relational DB   Elasticsearch 6
+Table           Index
+Row             Document
+Column          Field
+
+The process of inserting data in ElasticSearch is called Indexing.
+Inserting == Indexing
+To insert a document == To index a document
+
+The syntax to index a document is as follows:
+PUT /{index}/{type}/{id}
+{
+    "field1": "value1",
+    "field2": "value2",
+}
+
+To put a document into the vehicles index, it would look like this:
+PUT /vehicles/car/123
+{
+    "make": "honda",
+    "mileage": "87000",
+    "color"; "red",
+}
+
+In ES version 6 you can only have on a type for a given index
+ES 7 does away with types entirely
+
+Each document indexed inside ES better have a unique identifier.
+If you don't specify an ID, ES will automatically generate an ID.
+When inserting cars, author suggests using a VIN number as an ID
+
+Inserted through the Kibana dev tools:
+PUT /vehicles/car/123
+{
+  "make" : "Honda",
+  "Color": "Black",
+  "HP": "250",
+  "mileage": "24000",
+  "price": "19300.97"
+}
+
+This is the JSON response from ES:
+{
+  "_index" : "vehicles",
+  "_type" : "car",
+  "_id" : "123",
+  "_version" : 1,
+  "result" : "created",
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "_seq_no" : 0,
+  "_primary_term" : 1
+}
+
+If you run the same command again, "_version" gets incremented, and _"result" is changed from "created" to "updated"
+
+You can then change the command to GET. Running on the Kibana dev dashboard: GET /vehicles/car/123
+{
+  "_index" : "vehicles",
+  "_type" : "car",
+  "_id" : "123",
+  "_version" : 12,
+  "_seq_no" : 11,
+  "_primary_term" : 1,
+  "found" : true,
+  "_source" : {
+    "make" : "Honda",
+    "Color" : "Black",
+    "HP" : "250",
+    "mileage" : "24000",
+    "price" : "19300.97"
+  }
+}
+
+We get the data back, plus some metadata. If you try to GET an ID that doesn't exist (say, GET /vehicles/car/124)
+You get a response with "found": "false".
+
+You can get a specific field:
+GET /vehicles/car/123/_source
+
+You can check if a specific vehicle exists:
+HEAD /vehicles/car/123/
+(returns a 200)
+If you reference an ID that doesn't exist, you get a 404
+
+When you update a field, it updates the entire document. Documents are immutable. When you change something, you re-index a document. To update a field:
+POST /vehicles/car/123/_update
+{
+    "doc" :{
+        "price": "19991"
+    }
+}
+ES reindexes the entire document with the new value for the updated field when you update a document
+You can also delete a document:
+DELETE /vehicles/car/123/
+
+When you delete a document, ES marks the document as deleted, but it is not immediately removed
+After a while ES grabs all the documents as deleted and then completely wipes them off the disk. You disk space will not free up immediately
+You can also delete the entire index:
+
+You can't delete a type.
+If you try to run:
+DELETE /vehicles/car/
+You can't delete all documents of type car?
+
+But you can delete the index apparently:
+DELETE /vehicles
+
