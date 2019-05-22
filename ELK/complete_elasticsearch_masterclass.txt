@@ -1,0 +1,696 @@
+
+04: Overview of elasticsearch
+Elasticsearch is a documented oriented search engine. You can save documents in elasticsearch and delete documents in elasticsearch.
+Along with insert and delete, you can also retrieve this documents.
+The biggest use case for Elasticsearch is to search! (as the name might suggest)
+Elasticsearch is built on top of Lucene
+
+In a relational database, data is stored in columns and rows, very similar to an excel spreadsheet
+In Elasticsearch things a stored in a document... much like JSON?
+
+
+05: Indexing, retrieving and deleting documents
+In ElasticSearch, data is stored in something called in index
+To draw a comparison between relational DBs and Elasticsearch
+
+Relational DB   Elasticsearch 6
+Table           Index
+Row             Document
+Column          Field
+
+The process of inserting data in ElasticSearch is called Indexing.
+Inserting == Indexing
+To insert a document == To index a document
+
+The syntax to index a document is as follows:
+PUT /{index}/{type}/{id}
+{
+    "field1": "value1",
+    "field2": "value2",
+}
+
+To put a document into the vehicles index, it would look like this:
+PUT /vehicles/car/123
+{
+    "make": "honda",
+    "mileage": "87000",
+    "color"; "red",
+}
+
+In ES version 6 you can only have on a type for a given index
+ES 7 does away with types entirely
+
+Each document indexed inside ES better have a unique identifier.
+If you don't specify an ID, ES will automatically generate an ID.
+When inserting cars, author suggests using a VIN number as an ID
+
+Inserted through the Kibana dev tools:
+PUT /vehicles/car/123
+{
+  "make" : "Honda",
+  "Color": "Black",
+  "HP": "250",
+  "mileage": "24000",
+  "price": "19300.97"
+}
+
+This is the JSON response from ES:
+{
+  "_index" : "vehicles",
+  "_type" : "car",
+  "_id" : "123",
+  "_version" : 1,
+  "result" : "created",
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "_seq_no" : 0,
+  "_primary_term" : 1
+}
+
+If you run the same command again, "_version" gets incremented, and _"result" is changed from "created" to "updated"
+
+You can then change the command to GET. Running on the Kibana dev dashboard: GET /vehicles/car/123
+{
+  "_index" : "vehicles",
+  "_type" : "car",
+  "_id" : "123",
+  "_version" : 12,
+  "_seq_no" : 11,
+  "_primary_term" : 1,
+  "found" : true,
+  "_source" : {
+    "make" : "Honda",
+    "Color" : "Black",
+    "HP" : "250",
+    "mileage" : "24000",
+    "price" : "19300.97"
+  }
+}
+
+We get the data back, plus some metadata. If you try to GET an ID that doesn't exist (say, GET /vehicles/car/124)
+You get a response with "found": "false".
+
+You can get a specific field:
+GET /vehicles/car/123/_source
+
+You can check if a specific vehicle exists:
+HEAD /vehicles/car/123/
+(returns a 200)
+If you reference an ID that doesn't exist, you get a 404
+
+When you update a field, it updates the entire document. Documents are immutable. When you change something, you re-index a document. To update a field:
+POST /vehicles/car/123/_update
+{
+    "doc" :{
+        "price": "19991"
+    }
+}
+ES reindexes the entire document with the new value for the updated field when you update a document
+You can also delete a document:
+DELETE /vehicles/car/123/
+
+When you delete a document, ES marks the document as deleted, but it is not immediately removed
+After a while ES grabs all the documents as deleted and then completely wipes them off the disk. You disk space will not free up immediately
+You can also delete the entire index:
+
+You can't delete a type.
+If you try to run:
+DELETE /vehicles/car/
+You can't delete all documents of type car?
+
+But you can delete the index apparently:
+DELETE /vehicles
+
+
+06: Components of an index
+GET /business
+Not found
+
+PUT /business/building/110
+{
+  "Address" : "57 New Dover Ln",
+  "floors" : 10,
+  "offices" : 21,
+  "loc" : {
+    "lat" : "40",
+    "lon" : "-74",
+  }
+}
+The type of the above document is building. The ID is 110
+
+GET /business
+Gives you the structure of the index that was generated when you did the PUT above
+
+Running this:
+PUT /business/employee/330
+{
+  "name": "dani",
+  "title": "Coffee machine user",
+  "salary": 3.14159
+}
+Fails. The index can support only one mapping. You can't have building and employee on the same index, you can only have one
+
+PUT /employee/_doc/331
+{
+  "name": "Dani",
+  "title": "Coffee machine user",
+  "salary": 3.14159
+}
+PUT /employee/_doc/332
+{
+  "name": "Dani clone",
+  "title": "Coffee machine user",
+  "salary": 3.14159
+}
+PUT /contracts/_doc/9987
+{
+  "name" : "Very serious coffee meeting",
+  "employees_involved": [331, 332]
+}
+
+If you go in Kibana's explore tab, you can see existing indexes
+
+GET business/building/_search
+{
+  "query" : {
+    "term" : {
+      "Address" : "Dover"
+    }
+  }
+}
+The above one didn't work :(
+
+GET business/building/_search
+{
+  "query" : {
+    "match_all": {}
+  }
+}
+On the Kibana UI on Dev tools, there's a wrench icon that gives the option "Copy as cURL"
+curl -XGET "http://10.1.11.46:9200/business/building/_search" -H 'Content-Type: application/json' -d'
+{
+  "query" : {
+    "match_all": {}
+  }
+}'
+
+
+07: Distributed Execution of Requests
+ES is distributed!
+Shards are distributed among nodes. There's a Primary shart and a replica apparently
+
+NODE 1
+1P 0R
+
+NODE 2
+0P 1R
+
+Node 1 contains the primary for shard 1. Node 2 contains the primary for shard 0
+Shards are splits of one of the indices. On the disk, the data is managed in shards
+ES implements round-robin load balancing internally
+A shard is a Lucene index. ES "basically" does Lucene, but distributed
+A shard contains segments. Each segment is an inverted index.
+A shard is a container of inverted indices, also called segments
+
+
+08: Text analysis for indexing and searching
+When you send a document into ES, it goes through an analysis step
+The object of this step is to convert the document into an inverted index and to store it into a shard
+
+
+09: Index settings and mappings
+PUT /customers
+{
+  "settings": {
+    "number_of_shards": 2,
+    "number_of_replicas": 1
+  }
+  , "mappings": {}
+}
+GET customers
+
+PUT /customers
+{
+  "mappings":{
+    "online":{
+      "properties": {
+        "gender": {
+          "type": "text",
+          "analyzer": "standard"
+        },
+        "age": {
+          "type": "integer"
+        },
+        "total_spent":{
+          "type": "float"
+        },
+        "is_new": {
+          "type": "boolean"
+        },
+        "name":{
+          "type": "text",
+          "analyzer": "standard"
+        }
+      }
+    }
+  },
+  "settings": {
+    "number_of_shards": 2,
+    "number_of_replicas": 1
+  }
+}
+Above, we're specifically telling elastic search which types we want the fields to be
+
+
+09: Index settings and mappings part 2
+Now that we have an index created in the previous lecture, let's insert something:
+PUT customers/online/124
+{
+  "name": "Mary Cranford",
+  "address": "310 Clark Ave",
+  "gender": "female",
+  "age": 34,
+  "total_spent": 550.75,
+  "is_new": false
+}
+When you have a new field, ES won't get in your way. It'll figure out what the data type for that field should be and index it appropriately
+There's a dynamic field you can change to either false or strict.
+If set to false: Indexing a field will be ignored
+If set to strct: Indexing a field will throw an error
+Setting it to strict would prevent you from creating new fields when you submit a document (if it has new fields on it)
+To change it:
+GET customers/_mapping/online
+{
+  "dynamic": false
+}
+
+10:
+ES support many language analyzers (English, Swedish, Spanish, etc)
+
+
+12:
+You can query based on query context and filter context
+Simple query to get everything:
+GET /courses/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+GET /courses/_search
+{
+  "query": {
+    "match": {
+      "name": "computer"
+    }
+  }
+}
+Different documents have different scores to show how significant they are for the search. Neat!
+The score is calculated internally by ES and it seems
+GET /courses/_search
+{
+  "query": {
+    "exists": {
+      "field": "professor.email"
+    }
+  }
+}
+GET /courses/_search
+{
+  "query" : {
+    "bool": {
+    "must": [
+      { "match" : {"name": "computer"}},
+      { "match" : {"room": "c8"}}
+      ]
+    }
+  }
+}
+
+
+13: Search DSL query context
+GET /courses/_search
+{
+  "query" : {
+    "bool": {
+    "must": [
+      { "match" : {"name": "accounting"}},
+      { "match" : {"room": "e3"}}
+      ],
+      "must_not": [
+        { "match" : {"professor.name": "bill"}}
+      ]
+    }
+  }
+}
+GET /courses/_search
+{
+  "query" : {
+    "bool": {
+    "must": [
+      { "match" : {"name": "accounting"}},
+      { "match" : {"room": "e3"}}
+      ],
+      "must_not": [
+        { "match" : {"professor.name": "bill"}}
+      ]
+      , "should": [
+        { "match" : {"name": "computer"}}
+      ]
+    }
+  }
+}
+GET /courses/_search
+{
+  "query" : {
+    "bool": {
+    "must": [
+      { "match" : {"name": "accounting"}},
+      { "match" : {"room": "e3"}}
+      ],
+      "must_not": [
+        { "match" : {"professor.name": "bill"}}
+      ]
+      , "should": [
+        { "match" : {"name": "computer"}}
+      ],
+        "minimum_should_match" : 1
+    }
+  }
+}
+GET /courses/_search
+{
+  "query" : {
+    "multi_match": {
+      "query": "accounting",
+      "fields": ["name", "professor.department"]
+    }
+  }
+}
+GET /courses/_search
+{
+  "query" : {
+  "match_phrase": {
+    "course_description": "from the business school taken by final year"
+  }
+  }
+}
+GET /courses/_search
+{
+  "query" : {
+  "match_phrase_prefix": {
+    "course_description": "from the business school taken by fin"
+  }
+  }
+}
+GET /courses/_search
+{
+  "query": {
+    "range": {
+      "students_enrolled": {
+        "gte": 10,
+        "lte": 20
+      }
+    }
+  }
+}
+GET /courses/_search
+{
+  "query": {
+    "range": {
+      "course_publish_date": {
+        "gte": "2013-08-27"
+      }
+    }
+  }
+}
+
+
+14: Search DSL filter context
+The filter does not do relevancy scoring
+Filters are cached. Queries that you've already ran will be cached by elasticsearch
+Yoi can't just have a match inside a bool. You need to have it inside a must or should or must not
+GET /courses/_search
+{
+  "query" : {
+    "bool": {
+      "filter": {
+        "bool": {
+          "must": [
+            {"match": {"professor.name": "bill"}},
+            {"match": {"name": "accounting"}}
+            ]
+        }
+      }
+    }
+  }
+}
+GET /courses/_search
+{
+  "query" : {
+    "bool": {
+      "filter": {
+        "bool": {
+          "must": [
+            {"match": {"professor.name": "bill"}},
+            {"match": {"name": "accounting"}}
+            ],
+            "must_not": [
+              {"match": {"room":"e7"}}
+              ]
+        }
+      }
+    }
+  }
+}
+We can specify a must outside of the filter context. The second must below is within the query context only. So there will be a score!
+You can't just put a filter in the query, you need to put a bool around it
+Filters do not have a relevancy score
+You can boost the relevancy (field boosting) of a given field (ie ^2) if a given field is more important to you
+If you wanna do exact matches and you don't care about the relevance of something, you just use the filter query
+If you do care about the relevancy scoring, use the query context
+GET /courses/_search
+  {
+    "query" : {
+      "bool": {
+        "filter": {
+          "bool": {
+            "must": [
+              {"match": {"professor.name": "bill"}},
+              {"match": {"name": "accounting"}}
+              ]
+
+          }
+        },
+        "must": [
+      {"match": {"room":"e7"}}
+      ]
+      }
+    }
+  }
+
+
+16: Aggregations DSL (part 1)
+GET /vehicles/cars/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+By default this will only show the top 10 (if you have thousands of entries it would consume a lot of memory on your browser!)
+GET /vehicles/cars/_search
+{
+  "size": 20,
+  "query": {
+    "match_all": {}
+  }
+}
+Now we get all of the documents since there are only 16 of them
+GET /vehicles/cars/_search
+{
+  "from": 0,
+  "size": 5,
+  "query": {
+    "match_all": {}
+  }
+}
+GET /vehicles/cars/_search
+{
+  "from": 0,
+  "size": 5,
+  "query": {
+    "match_all": {}
+  },
+  "sort":[
+    {"price": {"order":"desc"}}
+    ]
+}
+Search is about running a query to find the documents that match our search criteria
+Aggregations are about gaining insight into our data. This is done through summarization
+Similar to the GROUP BY functionality in a MySQL query, aggregations can help with grouping or bucketing of data
+Author claims ES agregates faster than a relational databse :o
+GET /vehicles/cars/_search
+{
+"query": {
+  "match": {
+    "make": "dodge"
+  }
+}
+}
+GET /vehicles/cars/_count
+{
+  "query": {
+    "match": {
+      "make": "dodge"
+    }
+  }
+}
+Babbies' first agregation, yay:
+GET /vehicles/cars/_search
+{
+  "aggs": {
+    "popular_cars": {
+      "terms": {
+        "field": "make.keyword"
+      }
+    }
+  }
+}
+This gets popular cars and their average price:
+GET /vehicles/cars/_search
+{
+  "aggs": {
+    "popular_cars": {
+      "terms": {
+        "field": "make.keyword"
+      },
+      "aggs": {
+        "average_price": {
+          "avg": {
+            "field": "price"
+          }
+        }
+      }
+    }
+  }
+}
+GET /vehicles/cars/_search
+{
+  "aggs": {
+    "popular_cars": {
+      "terms": {
+        "field": "make.keyword"
+      },
+      "aggs": {
+        "average_price": {
+          "avg": {
+            "field": "price"
+          }
+        },
+        "max_price": {
+          "max": {
+            "field": "price"
+          }
+        }
+      }
+    }
+  }
+}
+GET /vehicles/cars/_search
+{
+  "aggs": {
+    "popular_cars": {
+      "terms": {
+        "field": "make.keyword"
+      },
+      "aggs": {
+        "average_price": {
+          "avg": {
+            "field": "price"
+          }
+        },
+        "max_price": {
+          "max": {
+            "field": "price"
+          }
+        },
+        "min_price": {
+          "min": {
+            "field": "price"
+          }
+        }
+      }
+    }
+  }
+}
+We can make the agregation run within the scope of a document that matches a given query condition:
+GET /vehicles/cars/_search
+{
+  "query": {
+    "match": {
+      "color": "red"
+    }
+  },
+  "aggs": {
+    "popular_cars": {
+      "terms": {
+        "field": "make.keyword"
+      },
+      "aggs": {
+        "average_price": {
+          "avg": {
+            "field": "price"
+          }
+        },
+        "max_price": {
+          "max": {
+            "field": "price"
+          }
+        },
+        "min_price": {
+          "min": {
+            "field": "price"
+          }
+        }
+      }
+    }
+  }
+}
+This makes the hits empty and only shows the aggregation (well, mostly)
+GET /vehicles/cars/_search
+{
+  "size": 0,
+  "query": {
+    "match": {
+      "color": "red"
+    }
+  },
+  "aggs": {
+    "popular_cars": {
+      "terms": {
+        "field": "make.keyword"
+      },
+      "aggs": {
+        "average_price": {
+          "avg": {
+            "field": "price"
+          }
+        },
+        "max_price": {
+          "max": {
+            "field": "price"
+          }
+        },
+        "min_price": {
+          "min": {
+            "field": "price"
+          }
+        }
+      }
+    }
+  }
+}

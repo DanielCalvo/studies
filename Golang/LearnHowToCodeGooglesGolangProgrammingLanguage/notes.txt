@@ -80,3 +80,26 @@ When embedding structs, the inner type gets promoted to the outer type
 96:
 Aliasing a type is usually not a good idea unless you want to add methods to it
 Todd recommends: Always use the field name. It's clearer!
+
+
+101:
+Functions are all about being modular!
+Receivers are a lot like parameters but they attach to a type
+Function syntax:
+//func (r receiver) identifier (parameters) (return) { ... }
+When you define a function, you define it with parameters (if any)
+When you call a function, you call it with arguments (if any)
+Everything in Go is pass by value!
+
+
+102:
+A receiver in a function is optional
+
+
+103:
+A variadic parameter has to be the last parameter, as it's zero or move arguments
+
+
+104:
+Right when func main exits, everything that is defered then runs
+Defer is always gonna run when the containing function exits. Useful to use when opening files, you can have the open and close of files close together, and have the file close "automatically" at some later stage when the function finishes
