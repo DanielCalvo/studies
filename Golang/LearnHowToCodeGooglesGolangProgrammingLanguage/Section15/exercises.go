@@ -4,14 +4,50 @@ import (
 	"fmt"
 )
 
-func (p person) speak() {
-	fmt.Println("Hello I am", p.first, p.last, "And I am", p.age, "years old, mentally!")
-}
-
 type person struct { //The struct has to be defined outside the main function!
 	first string
 	last  string
 	age   int
+}
+
+func (p person) speak() {
+	fmt.Println("Hello I am", p.first, p.last, "And I am", p.age, "years old, mentally!")
+}
+
+type square struct {
+	side_len float64
+	area     float64
+}
+
+func (s square) calculate_area() float64 {
+	return s.side_len * s.side_len
+}
+
+type circle struct {
+	diameter float64
+	area     float64
+}
+
+func (c circle) calculate_area() float64 {
+	return 3.14159 / 4 * c.diameter * *2
+}
+
+func foo() int {
+	return 42
+}
+func bar() (int, string) {
+	return 42, "Meaning of everything"
+}
+
+func int_sum(x ...int) int {
+	sum := 0
+	for _, v := range x {
+		sum = sum + v
+	}
+	return sum
+}
+func deferred_function() {
+	fmt.Println("Dummy function to show the usage of the defer function")
 }
 
 func main() {
@@ -31,7 +67,6 @@ func main() {
 	fmt.Println("Three")
 
 	//Exercise 4
-
 	dani := person{
 		first: "dani",
 		last:  "verydani",
@@ -40,22 +75,6 @@ func main() {
 	fmt.Println(dani)
 	dani.speak()
 
-}
+	//Exercise 5
 
-func foo() int {
-	return 42
-}
-func bar() (int, string) {
-	return 42, "Meaning of everything"
-}
-
-func int_sum(x ...int) int {
-	sum := 0
-	for _, v := range x {
-		sum = sum + v
-	}
-	return sum
-}
-func deferred_function() {
-	fmt.Println("Dummy function to show the usage of the defer function")
 }
