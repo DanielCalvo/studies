@@ -28,10 +28,6 @@ type circle struct {
 	area     float64
 }
 
-func (c circle) calculate_area() float64 {
-	return 3.14159 / 4 * c.diameter * *2
-}
-
 func foo() int {
 	return 42
 }
@@ -48,6 +44,13 @@ func int_sum(x ...int) int {
 }
 func deferred_function() {
 	fmt.Println("Dummy function to show the usage of the defer function")
+}
+func intSeq() func() int {
+	i := 0
+	return func() int {
+		i++
+		return i
+	}
 }
 
 func main() {
@@ -76,5 +79,12 @@ func main() {
 	dani.speak()
 
 	//Exercise 5
+	//meh, boring
+
+	//Exercise 7: Assign func to variable, then call that func
+	ai := intSeq()
+	fmt.Println(ai())
+	fmt.Println(ai())
+	fmt.Println(ai())
 
 }
