@@ -132,3 +132,15 @@ Logical programming: Logic is hard to follow, reads messy (according to Todd!)
 
 111:
 Clojure: Limiting the scope of a variable
+
+
+124:
+Pointer: Pointing to some location in memory where a value is stored
+Asterisk: Gives value stored at an address!
+Ampersand: Gives us an address.
+
+
+125:
+When to use pointers: When you have a big chunk of data and you don't want to pass that data around, you can just pass the address of where that data is stored, with a pointer!
+Other use case to pointers: To change something at a certain location!
+Remember! Everything in Go is pass by value!
