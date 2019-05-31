@@ -103,3 +103,44 @@ A variadic parameter has to be the last parameter, as it's zero or move argument
 104:
 Right when func main exits, everything that is defered then runs
 Defer is always gonna run when the containing function exits. Useful to use when opening files, you can have the open and close of files close together, and have the file close "automatically" at some later stage when the function finishes
+
+
+105:
+When you have a receiver, it attaches a function to a type
+
+
+106:
+Interfaces allow us to do polymorphism!
+Repeat after me: Keyword, identifier type
+keyword identifier type
+keyword identifier type
+keyword identifier type
+Interface is a type
+A value can be of more than one type
+An interface walks into a bar and says: Hey baby, if got this method, you're my type
+
+We can define the pet interface.
+Anybody who has the any type that has the method pet, is also of type animal
+
+Interfaces says: If you have these methods, then you're also my type
+
+
+110:
+Callback is passing a function as argument
+Logical programming: Logic is hard to follow, reads messy (according to Todd!)
+
+
+111:
+Clojure: Limiting the scope of a variable
+
+
+124:
+Pointer: Pointing to some location in memory where a value is stored
+Asterisk: Gives value stored at an address!
+Ampersand: Gives us an address.
+
+
+125:
+When to use pointers: When you have a big chunk of data and you don't want to pass that data around, you can just pass the address of where that data is stored, with a pointer!
+Other use case to pointers: To change something at a certain location!
+Remember! Everything in Go is pass by value!
