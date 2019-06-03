@@ -1,4 +1,3 @@
-
 The good stuff:
 https://cloud.google.com/kubernetes-engine/docs/
 
@@ -10,7 +9,6 @@ Just read the whole thing: https://cloud.google.com/kubernetes-engine/docs/conce
 - Do you get a dump in your database once it's running or do you have a db image with the dump inside of it already?
 
 
-
 The tutorials on google cloud seem really good!
 
 https://www.operatorhub.io/
@@ -20,3 +18,66 @@ https://www.operatorhub.io/
 Challenges for you to figure out for now:
 - How to automatically set up DNS entries once a service goes up
 - How to deploy a python script that will connect to Redis and MySQL, with persistent data
+
+
+CKA Notes / Resources:
+
+
+https://github.com/lucassha/CKAD-resources
+Looks alrite: https://www.udemy.com/certified-kubernetes-administrator-with-practice-tests/
+
+From reddit:
+There's a lot to look at here: https://www.reddit.com/r/kubernetes/search/?q=cka&restrict_sr=1
+
+
+From https://www.reddit.com/r/kubernetes/comments/b3vew6/cka_being_better/
+"kubectl is pretty important in my opinion. Example kubectl create deployment nginx --image nginx --dry-run -o yaml > nginx.yml"
+"Look up the kubectl cheat sheet in the kubernetes docs""
+
+
+----------------------
+
+
+
+vioseven@cloudshell:~ (danicloud1)$ kubectl get
+You must specify the type of resource to get. Valid resource types include:
+
+  * all
+  * certificatesigningrequests (aka 'csr')
+  * clusterrolebindings
+  * clusterroles
+  * componentstatuses (aka 'cs')
+  * configmaps (aka 'cm')
+  * controllerrevisions
+  * cronjobs
+  * customresourcedefinition (aka 'crd')
+  * daemonsets (aka 'ds')
+  * deployments (aka 'deploy')
+  * endpoints (aka 'ep')
+  * events (aka 'ev')
+  * horizontalpodautoscalers (aka 'hpa')
+  * ingresses (aka 'ing')
+  * jobs
+  * limitranges (aka 'limits')
+  * namespaces (aka 'ns')
+  * networkpolicies (aka 'netpol')
+  * nodes (aka 'no')
+  * persistentvolumeclaims (aka 'pvc')
+  * persistentvolumes (aka 'pv')
+  * poddisruptionbudgets (aka 'pdb')
+  * podpreset
+  * pods (aka 'po')
+  * podsecuritypolicies (aka 'psp')
+  * podtemplates
+  * replicasets (aka 'rs')
+  * replicationcontrollers (aka 'rc')
+  * resourcequotas (aka 'quota')
+  * rolebindings
+  * roles
+  * secrets
+  * serviceaccounts (aka 'sa')
+  * services (aka 'svc')
+  * statefulsets (aka 'sts')
+  * storageclasses (aka 'sc')error: Required resource not specified.
+Use "kubectl explain <resource>" for a detailed description of that resource (e.g. kubectl explain pods).
+See 'kubectl get -h' for help and examples.

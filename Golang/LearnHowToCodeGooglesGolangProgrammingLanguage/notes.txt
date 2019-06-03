@@ -144,3 +144,7 @@ Ampersand: Gives us an address.
 When to use pointers: When you have a big chunk of data and you don't want to pass that data around, you can just pass the address of where that data is stored, with a pointer!
 Other use case to pointers: To change something at a certain location!
 Remember! Everything in Go is pass by value!
+
+
+131:
+Json to go, very coo.: https://mholt.github.io/json-to-go/
