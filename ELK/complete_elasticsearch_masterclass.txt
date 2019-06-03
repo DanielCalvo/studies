@@ -694,3 +694,140 @@ GET /vehicles/cars/_search
     }
   }
 }
+There's also a stats functionality that can give most of the output above but with less syntax:
+GET /vehicles/cars/_search
+{
+  "size": 0,
+  "query": {
+    "match": {
+      "color": "red"
+    }
+  },
+  "aggs": {
+    "popular_cars": {
+      "terms": {
+        "field": "make.keyword"
+      },
+      "aggs": {
+        "stats_on_price": {
+          "stats": {
+            "field": "price"
+          }
+        }
+      }
+    }
+  }
+}
+We can also get rid of the query to get more complete information on all of our data:
+GET /vehicles/cars/_search
+{
+  "size": 0,
+  "aggs": {
+    "popular_cars": {
+      "terms": {
+        "field": "make.keyword"
+      },
+      "aggs": {
+        "stats_on_price": {
+          "stats": {
+            "field": "price"
+          }
+        }
+      }
+    }
+  }
+}
+
+There are things called buckets and metrics. What we're doing in the above is creating a bucket named "popular_cars" and it's based on the field make.keyword
+And then we're defining a metric to be "stats_on_price" and specifying the fields that are involved on that
+We can also run the same operation but defining a bucket named "sold_date_ranges"
+GET /vehicles/cars/_search
+{
+  "size": 0,
+  "aggs": {
+    "popular_cars": {
+      "terms": {
+        "field": "make.keyword"
+      },
+      "aggs": {
+        "sold_date_ranges": {
+          "stats": {
+            "field": "sold"
+          }
+        }
+      }
+    }
+  }
+}
+Get the number of vehicles on a given state:
+GET /vehicles/cars/_search
+{
+  "size": 0,
+  "aggs": {
+    "car_conditions": {
+      "terms": {
+        "field": "condition.keyword"
+      }
+    }
+  }
+}
+Show the average price, grouped by vehicle condition:
+GET /vehicles/cars/_search
+{
+  "size": 0,
+  "aggs": {
+    "car_conditions": {
+      "terms": {
+        "field": "condition.keyword"
+      },
+      "aggs": {
+        "avg_price": {
+          "avg": {
+            "field": "price"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+18: Download and configure Logstash
+Logstash is an open source data processing pipeline. It's used to ingest data form a multitude of sources into Elasticsearch
+Logstash stages:
+                |      LOGSTASH PIPELINE   |
+DATA SOURCES -> INPUTS -> FILTERS -> OUTPUTS -> DATA DESTINATIONS
+
+General Logstash syntax:
+
+input
+{
+...
+}
+
+filter
+{
+...
+}
+
+output
+{
+...
+}
+
+
+19: Logstash overview and indexing Apache application logs
+In the filter section, we can put various plugins.
+In the sample config, we're using 5 plugins: grok, mutate, date, geoip and useragent
+grok is a regexp matcher. It comes with various built in variables already defined
+Relevant plugin documentation:
+https://www.elastic.co/guide/en/logstash/6.8/input-plugins.html
+https://www.elastic.co/guide/en/logstash/6.8/filter-plugins.html
+https://www.elastic.co/guide/en/logstash/6.8/output-plugins.html
+
+Author says: You can go from zero to hero on logstash by just reading the documentation on the input, filter and output filters
+
+
+21: Overview of Kibana visualizations and dashboards
+In the previous lecture I set up some logstash configs to go over apache logs and a .csv file. They now show up in Kibana, which means they have been indexed in Elasticsearch. Neat!
+http://10.1.11.46:9200/logstash-*/_count
