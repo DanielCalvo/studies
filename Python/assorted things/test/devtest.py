@@ -17,31 +17,68 @@ runes = {
 counter = 0
 
 
-im = pyautogui.screenshot()
 
-life_ring_pos = pyautogui.locateOnScreen('life_ring.png')
-empty_ring_slot_pos = pyautogui.locateOnScreen('empty_ring_slot.png')
+#im = pyautogui.screenshot()
 
-if life_ring_pos is not None:
-    life_ring_pos_list = list(life_ring_pos)
-    life_ring_x, life_ring_y = life_ring_pos_list[0], life_ring_pos_list[1]
-    print(life_ring_x, life_ring_y)
-    print("Life ring found at") #If you make a list you can count how many life rings you have!
+
+blank_rune_pos = pyautogui.locateOnScreen('blank_rune.png')
+if blank_rune_pos is None:
+    exit_button_pos = pyautogui.locateOnScreen('exit_button.png')
+    exit_button_pos_list = list(exit_button_pos)
+    exit_button_x, exit_button_y = exit_button_pos_list[0], exit_button_pos_list[1]
+    print("Found exit button at " + str(exit_button_x) + " " + str(exit_button_y))
+    pyautogui.click(exit_button_x, exit_button_y, button='left', duration=random.uniform(0.2, 1.2))
+
+    exit_yes_pos = pyautogui.locateOnScreen('exit_yes.png')
+    exit_yes_pos_list = list(exit_yes_pos)
+    exit_yes_x, exit_yes_y = exit_yes_pos_list[0], exit_yes_pos_list[1]
+    print("Found exit button at " + str(exit_yes_x) + " " + str(exit_yes_y))
+    pyautogui.click(exit_yes_x, exit_yes_y, button='left', duration=random.uniform(0.2, 1.2))
+    
 else:
-    print("Life ring not found")
+    print("A blank rune was found")
 
-if empty_ring_slot_pos is not None:
-    empty_ring_slot_pos_list = list(empty_ring_slot_pos)
-    empty_ring_slot_x, empty_ring_slot_y = empty_ring_slot_pos_list[0], empty_ring_slot_pos_list[1]
-    print(empty_ring_slot_x, empty_ring_slot_y)
-else:
-    print("Ring slot in use")
+# life_ring_pos = pyautogui.locateOnScreen('life_ring.png')
+# empty_ring_slot_pos = pyautogui.locateOnScreen('empty_ring_slot.png')
+#
+# if life_ring_pos is not None:
+#     life_ring_pos_list = list(life_ring_pos)
+#     life_ring_x, life_ring_y = life_ring_pos_list[0], life_ring_pos_list[1]
+#     print("Found a life ring at " + str(life_ring_x) + " " + str(life_ring_y))
+#
+#     if empty_ring_slot_pos is not None:
+#         empty_ring_slot_pos_list = list(empty_ring_slot_pos)
+#         empty_ring_slot_x, empty_ring_slot_y = empty_ring_slot_pos_list[0], empty_ring_slot_pos_list[1]
+#         print("Ring slot vacant at " + str(empty_ring_slot_x) + " " + str(empty_ring_slot_y) + ", moving life ring to ring slot")
+#         pyautogui.click(life_ring_x, life_ring_y, button='left', duration=random.uniform(0.2, 1.2))
+#         pyautogui.dragTo(empty_ring_slot_x, empty_ring_slot_y, duration=random.uniform(0.2, 1.2), button='left')
+#     else:
+#         print("Ring slot already in use")
+# else:
+#     print("No life ring found")
 
-if life_ring_pos is not None and empty_ring_slot_pos is not None:
-    pyautogui.click(life_ring_x, life_ring_y, button='left', duration=random.uniform(0.2, 1.2))
-    pyautogui.dragTo(empty_ring_slot_x, empty_ring_slot_y, duration=random.uniform(0.2, 1.2), button='left')
 
-    # pyautogui.dragTo()
+# if empty_ring_slot_pos is not None:
+#     empty_ring_slot_pos_list = list(empty_ring_slot_pos)
+#     empty_ring_slot_x, empty_ring_slot_y = empty_ring_slot_pos_list[0], empty_ring_slot_pos_list[1]
+#     print(empty_ring_slot_x, empty_ring_slot_y)
+# else:
+#     print("Ring slot in use")
+#
+# if life_ring_pos is not None and empty_ring_slot_pos is not None:
+#     pyautogui.click(life_ring_x, life_ring_y, button='left', duration=random.uniform(0.2, 1.2))
+#     pyautogui.dragTo(empty_ring_slot_x, empty_ring_slot_y, duration=random.uniform(0.2, 1.2), button='left')
+#
+
+
+
+
+
+
+
+
+
+
 
 # empty_ring_slot_pos = pyautogui.locateOnScreen('empty_ring_slot.png')
 # if empty_ring_slot_pos is not None:
