@@ -97,7 +97,7 @@ manabar_full_counter = 0
 try:
     while True:
         im = pyautogui.screenshot()
-        manabar_color = im.getpixel((1163, 57))
+        manabar_color = im.getpixel((1163, 57)) #Find a way to calculate a manabar percentage maybe :o
         put_life_ring_on(use_life_rings)
 
         if manabar_color == (36, 37, 36):
@@ -122,6 +122,7 @@ try:
         else:
             logging.info("Manabar did not match full or empty, Tibia not open or misaligned")
             time.sleep(60)
+            manabar_full_counter = 0
 except KeyboardInterrupt:
     logging.info("Caught KeyboardInterrupt, exiting")
 
