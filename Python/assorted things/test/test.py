@@ -7,18 +7,20 @@ import coloredlogs
 def create_rune(rune):
     logging.info("You called create rune with the following argument: " + str(rune))
 
-    # First slot of backpack on top most position: X: 3140, Y: 428
+    # First slot of backpack on top most position: X: 3140, Y: 428 -- 1770 455
+    backpack_food_x = 1770
+    backpack_food_y = 455
 
-    pyautogui.click(3140 + random.randint(-9, 9), 428 + random.randint(-9, 9), button='right', duration=random.uniform(0.1, 1.2))
+    pyautogui.click(backpack_food_x + random.randint(-9, 9), backpack_food_y + random.randint(-9, 9), button='right', duration=random.uniform(0.1, 1.2))
     time.sleep(random.uniform(0.05, 0.3))
-    pyautogui.click(3140 + random.randint(-9, 9), 428 + random.randint(-9, 9), button='right', duration=random.uniform(0.1, 1.2))
+    pyautogui.click(backpack_food_x + random.randint(-9, 9), backpack_food_y + random.randint(-9, 9), button='right', duration=random.uniform(0.1, 1.2))
     time.sleep(random.uniform(0.05, 0.3))
-    pyautogui.click(3140 + random.randint(-9, 9), 428 + random.randint(-9, 9), button='right', duration=random.uniform(0.1, 1.2))
+    pyautogui.click(backpack_food_x + random.randint(-9, 9), backpack_food_y + random.randint(-9, 9), button='right', duration=random.uniform(0.1, 1.2))
     time.sleep(random.uniform(0.05, 0.3))
-    pyautogui.click(3140 + random.randint(-9, 9), 428 + random.randint(-9, 9), button='right', duration=random.uniform(0.1, 1.2))
+    pyautogui.click(backpack_food_x + random.randint(-9, 9), backpack_food_y + random.randint(-9, 9), button='right', duration=random.uniform(0.1, 1.2))
 
     time.sleep(random.randint(1, 3))
-    pyautogui.click(2100 + (random.randint(-500, 500)), 1063 + (random.randint(-15, 15)),
+    pyautogui.click(800 + (random.randint(-500, 500)), 1063 + (random.randint(-15, 15)),
                     button='left', duration=random.uniform(0.2, 1.2))
 
     pyautogui.typewrite(rune['words'], random.uniform(0.1, 0.2))
@@ -72,11 +74,13 @@ def check_for_blank_rune():
 runes = {
             'Great Fireball':  {'words': 'adori mas flam', 'manacost': 530, 'value': 57, 'number_made': 4},
             'Explosion': {'words': 'adevo mas hur', 'manacost': 570, 'value': 31, 'number_made': 6},
-            'Sudden Death': {'words': 'adori gran mort', 'manacost': 570, 'value': 135, 'number_made': 3},
+            'Sudden Death': {'words': 'adori gran mort', 'manacost': 0, 'value': 0, 'number_made': 0},
+            'Thunderstorm': {'words': 'adori mas vis', 'manacost': 430, 'value': 47, 'number_made': 4},
+            'Heavy Magic Missile': {'words': 'adori vis', 'manacost': 350, 'value': 12, 'number_made': 10},
         }
 
 # # # # # # # # # # # # # #
-rune = runes['Great Fireball'] #What if you make a typo?
+rune = runes['Sudden Death'] #What if you make a typo?
 use_life_rings = True
 # # # # # # # # # # # # # #
 
@@ -88,19 +92,25 @@ logging.info("Starting up, press CTRL-C to exit")
 
 session_mana_spent = 0
 session_value_generated = 0
+manabar_full_counter = 0
 
 try:
     while True:
         im = pyautogui.screenshot()
-        check_for_blank_rune()
-        manabar_color = im.getpixel((2650, 32))
+        manabar_color = im.getpixel((1163, 57))
         put_life_ring_on(use_life_rings)
 
-        if manabar_color == (41, 41, 41):
+        if manabar_color == (36, 37, 36):
             logging.info("Manabar empty")
             time.sleep(random.randint(1, 60))
+            manabar_full_counter = 0
+
         elif manabar_color == (0, 70, 155):
-            logging.info("Manabar full")
+            manabar_full_counter += 1
+            if manabar_full_counter > 3:
+                logging.critical("Manabar full more than 3 times in a row, mana is not being spent. Something is wrong. No blank rune?")
+                exit(1)
+            logging.info("Manabar full, counter: " + str(manabar_full_counter))
             create_rune(rune)
             session_value_generated = session_value_generated + (rune['value'] * rune['number_made'])
             session_mana_spent = session_mana_spent + rune['manacost']

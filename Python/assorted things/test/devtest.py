@@ -18,25 +18,28 @@ counter = 0
 
 
 
-#im = pyautogui.screenshot()
+im = pyautogui.screenshot()
 
+im.getpixel((50, 200))
 
-blank_rune_pos = pyautogui.locateOnScreen('blank_rune.png')
-if blank_rune_pos is None:
-    exit_button_pos = pyautogui.locateOnScreen('exit_button.png')
-    exit_button_pos_list = list(exit_button_pos)
-    exit_button_x, exit_button_y = exit_button_pos_list[0], exit_button_pos_list[1]
-    print("Found exit button at " + str(exit_button_x) + " " + str(exit_button_y))
-    pyautogui.click(exit_button_x, exit_button_y, button='left', duration=random.uniform(0.2, 1.2))
+print(im.getpixel((1163, 57)))
 
-    exit_yes_pos = pyautogui.locateOnScreen('exit_yes.png')
-    exit_yes_pos_list = list(exit_yes_pos)
-    exit_yes_x, exit_yes_y = exit_yes_pos_list[0], exit_yes_pos_list[1]
-    print("Found exit button at " + str(exit_yes_x) + " " + str(exit_yes_y))
-    pyautogui.click(exit_yes_x, exit_yes_y, button='left', duration=random.uniform(0.2, 1.2))
-    
-else:
-    print("A blank rune was found")
+# blank_rune_pos = pyautogui.locateOnScreen('blank_rune.png')
+# if blank_rune_pos is None:
+#     exit_button_pos = pyautogui.locateOnScreen('exit_button.png')
+#     exit_button_pos_list = list(exit_button_pos)
+#     exit_button_x, exit_button_y = exit_button_pos_list[0], exit_button_pos_list[1]
+#     print("Found exit button at " + str(exit_button_x) + " " + str(exit_button_y))
+#     pyautogui.click(exit_button_x, exit_button_y, button='left', duration=random.uniform(0.2, 1.2))
+#
+#     exit_yes_pos = pyautogui.locateOnScreen('exit_yes.png')
+#     exit_yes_pos_list = list(exit_yes_pos)
+#     exit_yes_x, exit_yes_y = exit_yes_pos_list[0], exit_yes_pos_list[1]
+#     print("Found exit button at " + str(exit_yes_x) + " " + str(exit_yes_y))
+#     pyautogui.click(exit_yes_x, exit_yes_y, button='left', duration=random.uniform(0.2, 1.2))
+#
+# else:
+#     print("A blank rune was found")
 
 # life_ring_pos = pyautogui.locateOnScreen('life_ring.png')
 # empty_ring_slot_pos = pyautogui.locateOnScreen('empty_ring_slot.png')
