@@ -32,8 +32,8 @@ def put_life_ring_on(use_life_rings):
     if use_life_rings is False:
         return
 
-    life_ring_pos = pyautogui.locateOnScreen('life_ring.png')
-    empty_ring_slot_pos = pyautogui.locateOnScreen('empty_ring_slot.png')
+    life_ring_pos = pyautogui.locateOnScreen('images/life_ring.png')
+    empty_ring_slot_pos = pyautogui.locateOnScreen('images/empty_ring_slot.png')
 
     if life_ring_pos is not None:
         life_ring_pos_list = list(life_ring_pos)
@@ -53,14 +53,14 @@ def put_life_ring_on(use_life_rings):
         logging.info("No life ring found")
 
 def check_for_blank_rune():
-    blank_rune_pos = pyautogui.locateOnScreen('blank_rune.png')
+    blank_rune_pos = pyautogui.locateOnScreen('images/blank_rune.png')
     if blank_rune_pos is None:
-        exit_button_pos = pyautogui.locateOnScreen('exit_button.png') #Welp, I'm repeating myself a lot.
+        exit_button_pos = pyautogui.locateOnScreen('images/exit_button.png') #Welp, I'm repeating myself a lot.
         exit_button_pos_list = list(exit_button_pos)
         exit_button_x, exit_button_y = exit_button_pos_list[0], exit_button_pos_list[1]
         pyautogui.click(exit_button_x, exit_button_y, button='left', duration=random.uniform(0.2, 1.2))
 
-        exit_yes_pos = pyautogui.locateOnScreen('exit_yes.png')
+        exit_yes_pos = pyautogui.locateOnScreen('images/exit_yes.png')
         exit_yes_pos_list = list(exit_yes_pos)
         exit_yes_x, exit_yes_y = exit_yes_pos_list[0], exit_yes_pos_list[1]
         pyautogui.click(exit_yes_x, exit_yes_y, button='left', duration=random.uniform(0.2, 1.2))
@@ -72,15 +72,15 @@ def check_for_blank_rune():
         logging.info("A blank rune was found")
 
 runes = {
-            'Great Fireball':  {'words': 'adori mas flam', 'manacost': 530, 'value': 57, 'number_made': 4},
+            'GFB':  {'words': 'adori mas flam', 'manacost': 530, 'value': 57, 'number_made': 4},
             'Explosion': {'words': 'adevo mas hur', 'manacost': 570, 'value': 31, 'number_made': 6},
-            'Sudden Death': {'words': 'adori gran mort', 'manacost': 0, 'value': 0, 'number_made': 0},
+            'SD': {'words': 'adori gran mort', 'manacost': 0, 'value': 0, 'number_made': 0},
             'Thunderstorm': {'words': 'adori mas vis', 'manacost': 430, 'value': 47, 'number_made': 4},
-            'Heavy Magic Missile': {'words': 'adori vis', 'manacost': 350, 'value': 12, 'number_made': 10},
+            'HMM': {'words': 'adori vis', 'manacost': 350, 'value': 12, 'number_made': 10},
         }
 
 # # # # # # # # # # # # # #
-rune = runes['Sudden Death'] #What if you make a typo?
+rune = runes['GFB'] #What if you make a typo?
 use_life_rings = True
 # # # # # # # # # # # # # #
 
