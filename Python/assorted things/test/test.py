@@ -70,6 +70,7 @@ def check_for_blank_rune():
 
     else:
         logging.info("A blank rune was found")
+        exit(1)
 
 runes = {
             'GFB':  {'words': 'adori mas flam', 'manacost': 530, 'value': 57, 'number_made': 4},
@@ -97,17 +98,17 @@ manabar_full_counter = 0
 try:
     while True:
         im = pyautogui.screenshot()
+        check_for_blank_rune()
         manabar_color = im.getpixel((1163, 57)) #Find a way to calculate a manabar percentage maybe :o
         put_life_ring_on(use_life_rings)
 
         if manabar_color == (36, 37, 36):
             logging.info("Manabar empty")
-            time.sleep(random.randint(1, 60))
             manabar_full_counter = 0
 
         elif manabar_color == (0, 70, 155):
             manabar_full_counter += 1
-            if manabar_full_counter > 3:
+            if manabar_full_counter > 5:
                 logging.critical("Manabar full more than 3 times in a row, mana is not being spent. Something is wrong. No blank rune?")
                 exit(1)
             logging.info("Manabar full, counter: " + str(manabar_full_counter))
@@ -121,7 +122,7 @@ try:
             time.sleep(random.randint(1, 100))
         else:
             logging.info("Manabar did not match full or empty, Tibia not open or misaligned")
-            time.sleep(60)
+            time.sleep(random.randint(1, 30))
             manabar_full_counter = 0
 except KeyboardInterrupt:
     logging.info("Caught KeyboardInterrupt, exiting")
