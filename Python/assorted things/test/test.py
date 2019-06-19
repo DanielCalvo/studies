@@ -98,18 +98,19 @@ manabar_full_counter = 0
 try:
     while True:
         im = pyautogui.screenshot()
-        check_for_blank_rune()
+        #check_for_blank_rune() #This doesn't work on some machines for some strange reason
         manabar_color = im.getpixel((1163, 57)) #Find a way to calculate a manabar percentage maybe :o
         put_life_ring_on(use_life_rings)
 
         if manabar_color == (36, 37, 36):
             logging.info("Manabar empty")
             manabar_full_counter = 0
+            time.sleep(random.randint(1, 15))
 
         elif manabar_color == (0, 70, 155):
             manabar_full_counter += 1
-            if manabar_full_counter > 5:
-                logging.critical("Manabar full more than 3 times in a row, mana is not being spent. Something is wrong. No blank rune?")
+            if manabar_full_counter > 10:
+                logging.critical("Manabar full more than " + str(manabar_full_counter) + " times in a row, mana is not being spent. Something is wrong. No blank rune?")
                 exit(1)
             logging.info("Manabar full, counter: " + str(manabar_full_counter))
             create_rune(rune)
@@ -119,7 +120,7 @@ try:
             logging.info("session_mana_spent: " + str(session_mana_spent))
             logging.info("session_value_generated : " + str(session_value_generated))
 
-            time.sleep(random.randint(1, 100))
+            time.sleep(random.randint(1, 60))
         else:
             logging.info("Manabar did not match full or empty, Tibia not open or misaligned")
             time.sleep(random.randint(1, 30))
