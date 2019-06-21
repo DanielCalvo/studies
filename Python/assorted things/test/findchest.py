@@ -5,6 +5,13 @@ import coloredlogs
 import random
 import time
 
+#def get_image_list_xy(image):
+#     image_pos_box = pyautogui.locateAllOnScreen(image)
+#     image_pos_list = list(image_pos_box) ##I don't want a box, I want a list of (x, y)
+#     image_list_xy = []
+#     for i in image_pos_list:
+#         image_list_xy.append([i[0], i[1]])
+#     return image_list_xy
 
 #Action list:
 #1 Close everything
@@ -44,21 +51,11 @@ def get_image_xy(image):
         print("Image " + image + " not found on screen")
         return None, None
 
-def get_image_list_xy(image):
-    image_pos_box = pyautogui.locateAllOnScreen(image)
-    image_pos_list = list(image_pos_box) ##I don't want a box, I want a list of (x, y)
-    image_list_xy = []
-    for i in image_pos_list:
-        image_list_xy.append([i[0], i[1]])
-    return image_list_xy
+close_button_x, close_button_y = 0, 0
 
-close_button_list = get_image_list_xy("images/close_button.png")
-
-#The loop below doesn't work: When you close one menu, the others move and previous coordinates become invalid
-for close_button in close_button_list:
-    print(close_button)
-    pyautogui.click(close_button[0], close_button[1], button='left', duration=random.uniform(0.1, 1.2))
-    time.sleep(0.1)
+while close_button_x is not None:
+    close_button_x, close_button_y = get_image_xy("images/close_button.png")
+    pyautogui.click(close_button_x, close_button_y, button='left', duration=random.uniform(0.1, 1.2))
 
 
 #Try using the The locateCenterOnScreen() function for this line
