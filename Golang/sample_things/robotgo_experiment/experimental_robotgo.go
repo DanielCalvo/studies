@@ -8,6 +8,9 @@ import (
 	//"log"
 	"fmt"
 	"github.com/go-vgo/robotgo"
+	"math/rand"
+	"os"
+	"time"
 )
 
 type rune struct {
@@ -46,6 +49,13 @@ var SD = rune{
 	number_made: 3,
 	value:       135,
 }
+var Energy_bomb = rune{
+	name:        "Energy Bomb",
+	magic_words: "adevo mas vis",
+	manacost:    880,
+	number_made: 2,
+	value:       203,
+}
 
 //You can use robotgo.MPoint for this if you want to
 //type coordinates struct {
@@ -53,24 +63,95 @@ var SD = rune{
 //	position_y int
 //}
 
+func eat(x int, y int) {
+	rand.Seed(time.Now().UnixNano())
+
+	robotgo.MovesClick(x+random_int(-5, 5), y+random_int(-5, 5), "right")
+	time.Sleep(300 * time.Millisecond)
+	robotgo.MovesClick(x+random_int(-5, 5), y+random_int(-5, 5), "right")
+	time.Sleep(300 * time.Millisecond)
+	robotgo.MovesClick(x+random_int(-5, 5), y+random_int(-5, 5), "right")
+	time.Sleep(300 * time.Millisecond)
+	robotgo.MovesClick(x+random_int(-5, 5), y+random_int(-5, 5), "right")
+	time.Sleep(300 * time.Millisecond)
+}
+
+func random_int(min int, max int) int {
+	rand.Seed(time.Now().UnixNano())
+	return min + rand.Intn(max-min+1)
+}
+
+func make_rune(rune string) {
+	local_chat := robotgo.OpenBitmap(image_directory + "local_chat.png")
+	local_chat_x, local_chat_y := robotgo.FindBitmap(local_chat, robotgo.CaptureScreen(), 0.0)
+	robotgo.MovesClick(local_chat_x+random_int(0, 500), local_chat_y+random_int(20, 40))
+
+	//Apparently the longer de delay is, the faster the string is typed, wtf lol
+	robotgo.TypeStrDelay(rune, 1000)
+	robotgo.KeyTap("enter")
+}
+
 var use_life_ring bool = true
 var use_mana_pot bool = false
 var mana_pot_interval = 0
 
-var manabar_x int = 0
-var manabar_y int = 0
+//Set these up before running the program
+var manabar_x int = 1024
+var manabar_y int = 32
 
-var food_slot_x int = 0
-var food_slot_y int = 0
+var food_slot_x int = 1530
+var food_slot_y int = 428
+
+var character_center_screen_x int = 841
+var character_center_screen_y int = 488
+
+//Don't forget the bar at the end!
+var image_directory string = "/home/daniel/PycharmProjects/studies/Golang/sample_things/robotgo_experiment/images/"
 
 func main() {
-
 	//session_mana_spent := 0
 	//session_value_generated := 0
 	//manabar_full_counter := 0
 
-	magic_words := SD.magic_words
-	fmt.Println(magic_words)
+	for {
+		manabar_color := robotgo.GetPixelColor(manabar_x, manabar_y)
+		//working! :D
+
+		if use_life_ring == true {
+			life_ring := robotgo.OpenBitmap(image_directory + "life_ring.png")
+			life_ring_x, life_ring_y := robotgo.FindBitmap(life_ring, robotgo.CaptureScreen(), 0.0)
+			empty_ring_slot := robotgo.OpenBitmap(image_directory + "empty_ring_slot_v2.png")
+			empty_ring_slot_x, empty_ring_slot_y := robotgo.FindBitmap(empty_ring_slot, robotgo.CaptureScreen(), 0.1)
+			fmt.Println("Life ring: ", life_ring_x, life_ring_y)
+			fmt.Println("empty ring slot: ", empty_ring_slot_x, empty_ring_slot_y)
+
+			//robotgo.MoveMouseSmooth(empty_ring_slot_x, empty_ring_slot_y)
+			robotgo.MoveMouseSmooth(life_ring_x, life_ring_y)
+			time.Sleep(1 * time.Second)
+
+			robotgo.DragSmooth(empty_ring_slot_x, empty_ring_slot_y)
+		}
+		os.Exit(0)
+		//if use life rings {
+		//put life ring on
+		//}
+
+		//check life ring status
+		//check for blank rune
+
+		if manabar_color == "00469b" {
+			fmt.Println("Manabar full")
+			eat(food_slot_x, food_slot_y)
+			make_rune(Energy_bomb.magic_words)
+		} else if manabar_color == "2a2b2a" {
+			fmt.Println("Manabar empty")
+			//drink potion
+		} else {
+			fmt.Println("Tibia not open or misaligned")
+		}
+		fmt.Println("Sleeping 10")
+		time.Sleep(10 * time.Second)
+	}
 
 	//Things done: Set up the counters
 	//Set up logging functionalities
