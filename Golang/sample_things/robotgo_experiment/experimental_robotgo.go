@@ -76,6 +76,33 @@ func eat(x int, y int) {
 	time.Sleep(300 * time.Millisecond)
 }
 
+func put_life_ring_on() {
+
+	empty_ring_slot := robotgo.OpenBitmap(image_directory + "empty_ring_slot_v2.png")
+	empty_ring_slot_x, empty_ring_slot_y := robotgo.FindBitmap(empty_ring_slot, robotgo.CaptureScreen(), 0.1)
+
+	if empty_ring_slot_x == -1 || empty_ring_slot_y == -1 {
+		fmt.Println("Life ring slot in use")
+		return
+	}
+
+	life_ring := robotgo.OpenBitmap(image_directory + "life_ring.png")
+	life_ring_x, life_ring_y := robotgo.FindBitmap(life_ring, robotgo.CaptureScreen(), 0.0)
+
+	if life_ring_x == -1 || life_ring_y == -1 {
+		fmt.Println("No life ring found")
+		return
+	}
+
+	fmt.Println("Life ring: ", life_ring_x, life_ring_y)
+	fmt.Println("empty ring slot: ", empty_ring_slot_x, empty_ring_slot_y)
+
+	robotgo.MoveMouseSmooth(life_ring_x, life_ring_y)
+	time.Sleep(500 * time.Millisecond)
+
+	robotgo.DragSmooth(empty_ring_slot_x, empty_ring_slot_y)
+}
+
 func random_int(min int, max int) int {
 	rand.Seed(time.Now().UnixNano())
 	return min + rand.Intn(max-min+1)
@@ -85,10 +112,25 @@ func make_rune(rune string) {
 	local_chat := robotgo.OpenBitmap(image_directory + "local_chat.png")
 	local_chat_x, local_chat_y := robotgo.FindBitmap(local_chat, robotgo.CaptureScreen(), 0.0)
 	robotgo.MovesClick(local_chat_x+random_int(0, 500), local_chat_y+random_int(20, 40))
-
-	//Apparently the longer de delay is, the faster the string is typed, wtf lol
+	//Apparently the longer thee delay is, the faster the string is typed, wtf lol
 	robotgo.TypeStrDelay(rune, 1000)
 	robotgo.KeyTap("enter")
+}
+
+func check_blank_rune() {
+	blank_rune := robotgo.OpenBitmap(image_directory + "blank_rune.png")
+	blank_rune_x, blank_rune_y := robotgo.FindBitmap(blank_rune, robotgo.CaptureScreen(), 0.1)
+
+	if blank_rune_x == -1 || blank_rune_y == -1 {
+		fmt.Println("Blank rune not found, runemaking not possible, exiting")
+		os.Exit(1)
+	} else {
+		fmt.Println("Found a blank rune at", blank_rune_x, blank_rune_y)
+	}
+}
+
+func drink_manapot() {
+
 }
 
 var use_life_ring bool = true
@@ -111,44 +153,39 @@ var image_directory string = "/home/daniel/PycharmProjects/studies/Golang/sample
 func main() {
 	//session_mana_spent := 0
 	//session_value_generated := 0
-	//manabar_full_counter := 0
+	manabar_full_counter := 0
 
 	for {
-		manabar_color := robotgo.GetPixelColor(manabar_x, manabar_y)
-		//working! :D
+		check_blank_rune()
 
 		if use_life_ring == true {
-			life_ring := robotgo.OpenBitmap(image_directory + "life_ring.png")
-			life_ring_x, life_ring_y := robotgo.FindBitmap(life_ring, robotgo.CaptureScreen(), 0.0)
-			empty_ring_slot := robotgo.OpenBitmap(image_directory + "empty_ring_slot_v2.png")
-			empty_ring_slot_x, empty_ring_slot_y := robotgo.FindBitmap(empty_ring_slot, robotgo.CaptureScreen(), 0.1)
-			fmt.Println("Life ring: ", life_ring_x, life_ring_y)
-			fmt.Println("empty ring slot: ", empty_ring_slot_x, empty_ring_slot_y)
-
-			//robotgo.MoveMouseSmooth(empty_ring_slot_x, empty_ring_slot_y)
-			robotgo.MoveMouseSmooth(life_ring_x, life_ring_y)
-			time.Sleep(1 * time.Second)
-
-			robotgo.DragSmooth(empty_ring_slot_x, empty_ring_slot_y)
+			put_life_ring_on()
 		}
-		os.Exit(0)
-		//if use life rings {
-		//put life ring on
-		//}
 
-		//check life ring status
-		//check for blank rune
-
+		manabar_color := robotgo.GetPixelColor(manabar_x, manabar_y)
 		if manabar_color == "00469b" {
 			fmt.Println("Manabar full")
 			eat(food_slot_x, food_slot_y)
 			make_rune(Energy_bomb.magic_words)
+			if manabar_full_counter > 3 {
+				drink_manapot() //Shouldn't you drink the manaport when the manaber is empty?
+			}
+
+			manabar_full_counter += 1
 		} else if manabar_color == "2a2b2a" {
 			fmt.Println("Manabar empty")
-			//drink potion
+			//drink_potion()
+			manabar_full_counter = 0
 		} else {
 			fmt.Println("Tibia not open or misaligned")
 		}
+
+		if manabar_full_counter > 10 {
+			fmt.Println("Mana full for more than 10 times in a row, something's wrong")
+			os.Exit(1)
+		}
+		fmt.Println("manabar_full_counter:", manabar_full_counter)
+
 		fmt.Println("Sleeping 10")
 		time.Sleep(10 * time.Second)
 	}
