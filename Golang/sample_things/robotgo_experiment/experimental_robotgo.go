@@ -66,14 +66,10 @@ var Energy_bomb = rune{
 func eat(x int, y int) {
 	rand.Seed(time.Now().UnixNano())
 
-	robotgo.MovesClick(x+random_int(-5, 5), y+random_int(-5, 5), "right")
-	time.Sleep(300 * time.Millisecond)
-	robotgo.MovesClick(x+random_int(-5, 5), y+random_int(-5, 5), "right")
-	time.Sleep(300 * time.Millisecond)
-	robotgo.MovesClick(x+random_int(-5, 5), y+random_int(-5, 5), "right")
-	time.Sleep(300 * time.Millisecond)
-	robotgo.MovesClick(x+random_int(-5, 5), y+random_int(-5, 5), "right")
-	time.Sleep(300 * time.Millisecond)
+	for i := 1; i < 5; i++ {
+		robotgo.MovesClick(x+random_int(-5, 5), y+random_int(-5, 5), "right")
+		time.Sleep(300 * time.Millisecond)
+	}
 }
 
 func put_life_ring_on() {
@@ -129,8 +125,15 @@ func check_blank_rune() {
 	}
 }
 
-func drink_manapot() {
-
+func use_manapot() {
+	manapot := robotgo.OpenBitmap(image_directory + "manapot.png.png")
+	manapot_x, manapot_y := robotgo.FindBitmap(manapot, robotgo.CaptureScreen(), 0.1)
+	if manapot_x == -1 || manapot_y == -1 {
+		fmt.Println("Manapot not found")
+		return
+	}
+	robotgo.MovesClick(manapot_x, manapot_y, "right")
+	robotgo.MovesClick(character_center_screen_x, character_center_screen_y)
 }
 
 var use_life_ring bool = true
@@ -140,10 +143,8 @@ var mana_pot_interval = 0
 //Set these up before running the program
 var manabar_x int = 1024
 var manabar_y int = 32
-
 var food_slot_x int = 1530
 var food_slot_y int = 428
-
 var character_center_screen_x int = 841
 var character_center_screen_y int = 488
 
@@ -163,29 +164,26 @@ func main() {
 		}
 
 		manabar_color := robotgo.GetPixelColor(manabar_x, manabar_y)
+
 		if manabar_color == "00469b" {
 			fmt.Println("Manabar full")
+			if manabar_full_counter > 10 {
+				fmt.Println("Mana full for more than 10 times in a row, something's wrong")
+				os.Exit(1)
+			}
 			eat(food_slot_x, food_slot_y)
 			make_rune(Energy_bomb.magic_words)
-			if manabar_full_counter > 3 {
-				drink_manapot() //Shouldn't you drink the manaport when the manaber is empty?
-			}
-
 			manabar_full_counter += 1
 		} else if manabar_color == "2a2b2a" {
 			fmt.Println("Manabar empty")
-			//drink_potion()
 			manabar_full_counter = 0
+			if use_mana_pot == true {
+				use_manapot()
+			}
 		} else {
 			fmt.Println("Tibia not open or misaligned")
 		}
-
-		if manabar_full_counter > 10 {
-			fmt.Println("Mana full for more than 10 times in a row, something's wrong")
-			os.Exit(1)
-		}
 		fmt.Println("manabar_full_counter:", manabar_full_counter)
-
 		fmt.Println("Sleeping 10")
 		time.Sleep(10 * time.Second)
 	}
