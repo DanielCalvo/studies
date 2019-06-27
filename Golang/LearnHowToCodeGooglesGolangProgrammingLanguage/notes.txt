@@ -147,4 +147,7 @@ Remember! Everything in Go is pass by value!
 
 
 131:
-Json to go, very coo.: https://mholt.github.io/json-to-go/
+Json to go, very cool.: https://mholt.github.io/json-to-go/
+type "byte" is an alias for the type "uint8". Neat!
+
+132: 
