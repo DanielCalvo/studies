@@ -12,3 +12,34 @@ There's a slack channel!
 
 7:
 Core concepts: Cluster architecture from a high level, API primitives, and Services and other Network Primitives
+
+
+9: Cluster architecture
+Cluster consists of a set of nodes. There are worker nodes and master node.
+Worker node: Hosts applications as containers
+Master node: Manages, plans, executes and monitors nodes
+
+etcd: Information about worker nodes and what containers they have running with additional info is stored in etcd in master
+kube-scheduler: Identifies the right node to place a container on based on assorted rules/resources
+controller-manager, node-controller, replication-controller: Follow up on these later
+kube-apiserver: Responsible for orchestrating all operations within the cluster, exposes the kubernetes API.
+Container run time engine: What runes the containers, usually docker, but kubernetes supports others
+
+kubelet: Agent that runs on every node in the cluster, listens from instructions from the kube-api server and handles containers on this node as required
+The kube-api server periodically gets status reports from the kubelet to monitor the status of nodes and their containers
+
+kube-proxy: Ensures that the necessary rules are in place to allow the containers running in them to reach each other
+
+Master: ETCD cluster, kube-apiserver, Kube Controller Manager, kube-scheduler
+Worker: kubelet, kube-proxy, Container Runtime Engine
+
+
+10: ETCD for beginners
+ETCD is a distributed key-value store.
+Listens on port 2379 by default
+
+Really easy to run it, you can download a release from github, uncompress it and launch ./etcd without any other dependencies (it's a go binary)
+You can then use ./etcdctl to:
+./etcdctl set key1 value1
+./etcdctl get key1
+
