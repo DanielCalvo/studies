@@ -294,3 +294,71 @@ kubectl get services
 
 Remember: The service acts as a built-in load balancer. It loads balance randomly between pods.
 A service spawns across all the nodes and pods, mapping everything to the ports defined in the service definition.
+
+
+30: Kubernetes service: ClusterIP
+Pods have an IP adress assigned to them, but when you have a deployment handling those pods, these IPs change very often, as pods are ephemeral.
+You cannot rely on these IP addresses for internal communication.
+A K8s server can group the pods together with a Virtual IP and provide a single "interface" to reach these pods.
+ClusterIP is the default type on Kubernetes services (if you don't specify a service type on your yaml, you get a cluster IP)
+
+On the yaml spec: The target port where the backend is exposed in the pods. The port is which port in the service this ports gets exposed.
+
+
+31: Practive test - Services
+Note: When doing kubectl get services, the port that you will see in the PORT(S) column is the service port, NOT the targetPort.
+You can see the targetPort by describing the service.
+
+
+32: Certification Tip: Imperative commands with kubectl
+--dry-run: This will not create a service for you, but will help you validate the .yaml file.
+-o yaml: This will output the resource definition of your object as yaml in the screen
+
+To generate a config for a pod:
+kubectl run --generator=run-pod/v1 nginx --image=nginx --dry-run -o yaml
+
+To create a deployment:
+kubectl run --generator=deployment/v1beta1 nginx --image=nginx (old way)
+kubectl create deployment --image=nginx nginx (newer way)
+
+To generate yamls for deployments:
+kubectl run --generator=deployment/v1beta1 nginx --image=nginx --dry-run -o yaml
+kubectl create deployment --image=nginx nginx --dry-run -o yaml
+
+kubectl run --generator=deployment/v1beta1 nginx --image=nginx --dry-run --replicas=4 -o yaml
+
+You can then save the definition to a file:
+kubectl run --generator=deployment/v1beta1 nginx --image=nginx --dry-run --replicas=4 -o yaml > nginx-deployment.yaml
+
+To generate service definitions:
+kubectl expose pod redis --port=6379 --name redis-service --dry-run -o yaml
+
+
+kubectl create service clusterip redis --tcp=6379:6379 --dry-run -o yaml
+kubectl create service nodeport nginx --tcp=80:80 --node-port=30080 --dry-run -o yaml
+
+(Follow up from Dani: You should definitely follow up on the creation of yaml definitions from the command line. It could be very useful! Note that for some things you need to run run (pod) and for others you need to do expose (service)
+follow up on imperative commands for all covered object types for the certification)
+
+
+33: Practice test: Imperative commands
+Very useful: https://kubernetes.io/docs/reference/kubectl/conventions/
+
+Deploy a nginx pod using the nginx:alpine image
+kubectl run nginx-pod --image=nginx:alpine --generator=run-pod/v1
+
+Create a redis pod with the label tier = db
+kubectl run redis --image=redis:alpine --generator=run-pod/v1 --labels=tier=db
+
+Create a service redis-service to expose the redis application within the cluster on port 6379.
+kubectl expose pod redis --port=6379 --name redis-service
+The above creates a ClusterIP service. Nice! :D
+
+Create a deployment named webapp using the image kodekloud/webapp-color with 3 replicas
+kubectl create deployment webapp --image=kodekloud/webapp-color #But how do you scale it?
+kubectl run --generator=deployment/v1beta1 webapp --image=kodekloud/webapp-color --replicas=3 #Worked this way!
+
+Expose the webapp as service webapp-service application on port 30082 on the nodes on the cluster. The web application listens on port 8080
+Meh this one sucked. It told me to create a .yaml with an imperative command and then edit it. That defeats the purpose of using imperative commands!
+
+

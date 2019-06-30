@@ -8,3 +8,8 @@ Exam tips: https://training.linuxfoundation.org/wp-content/uploads/2019/05/Impor
 5:
 There's a slack channel! I'm just gonna leave it here written down that there is a slack channel, even don't I don't plan on joining it. Don't forget!
 There's a slack channel!
+
+Check the FAQ here to mentally prepare a list of commands you'll use:
+https://www.cncf.io/certification/cka/
+
+Kodekloud and Katakoda seem worth a look!

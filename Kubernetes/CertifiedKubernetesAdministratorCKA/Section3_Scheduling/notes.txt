@@ -1,0 +1,139 @@
+37: Manual Scheduling
+
+You can set a field named nodeName on a pod.
+This is not set by default and you usually don't set this field.
+Kubernetes managed this field automatically for you.
+Managing this field manually allows you to place a pod manually on a node.
+
+If there is no scheduler available for some reason, the pods will not be scheduled in any node.
+
+You can manually schedule pods yourself. You can only specify the nodeName entry on a pod definition at creation time.
+
+If the pod is already created and you want to assign it to a node, you have to create Binding object and send a POST request to the pod's binding API, thus mimicking what the scheduler actually does.
+
+
+38: Practice Test - Manual scheduling
+If you create a pod and it stays in the Pending state, it is possible that you have no scheduler running. To confirm this:
+kubectl get pods --namespace=kubesystem. There should be a scheduler present!
+(Follow up from Dani: Which pods from Kubernetes should be available on a default install of Kubernetes?)
+
+
+39: Labels and selectors
+Labels are way of grouping things together in Kubernetes. Labels are properties attached to objects in Kubernetes
+Labels go under
+
+metadata:
+  labels:
+    key: value
+
+Once a pod or object is created, you can select it with a label by doing:
+kubectl get pods --selector app=myapp
+
+When defining a ReplicaSet (or deployment) you may see labels defined twice.
+On a ReplicaSet, the first label will be of the ReplicaSet itself. On the spec specification is where you'll have labels for pods.
+
+In other to tie the ReplicaSet to pods, you configure the selector field under the ReplicaSet specification, to match the labels defined on the pod(s). A single label will do, but you can specify as many as you want.
+The same goes for services. A service uses the selector field to match a certain label against existing pods. Pods that match will be part of the service.
+
+Annotations are for other metadata which are not necessarily labels.
+
+
+41: Resource requirements and limits
+
+Kubernetes places pods on the nodes with most available resources by default.
+If there are no resources available on a node to place a pod, kubernetes holds back scheduling the pod.
+You will see the pod in a pending state. If you look at the events you'll see the reason.
+(Follow up from Dani: How can you see "events" in Kubernetes? Is it by describing the pod?)
+
+By default, Kubernetes defines that a pod or a container within the pod requires 0.5 CPU units and 256 mebibytes of memory. These are known as the "resource request" -- The minimum amount of CPU and memory requested by a container.
+When the scheduler tries to place your application on a node, it will look for a node that has these resources available, minimally.
+
+You can specify the resources requirements for your pod under the pod specs. See 41_pod_resourcedef.yaml
+
+What does 1 count of CPU mean?
+"0.1" CPU can also be expressed as "100m". m stands for "mili". You can go as low as 1m. A count of 1 CPU is equal to 1 vcpu on whatever undelying platform you have (gcloud, aws, on prem)
+
+By default, Kubernetes sets a limit of 1 vcpu per container, so if you do not specify it explicitly, a container will be limited to using 1 vcpu when under load.
+The same goes with memory. By default the limit is 512 Mi. These can also be changed, take a look at See 41_pod_resourcedef.yaml.
+
+Remember that the limits are set for each container within the pod!
+
+If a pod tries to use resources beyond it's defined limit:
+In case of CPU: Kubernetes throttles it so it doesn't go beyond the specified limit
+In case of memory: If a pod tries to consume more memory than it's limit constantly, it will terminate.
+
+
+42: A note on editing pods:
+These are the things you CAN edit on an already existing pod:
+
+spec.containers[*].image
+spec.initContainers[*].image
+spec.activeDeadlineSeconds
+spec.tolerations
+
+You cannot edit resource limits, service accounts and environment variables of a running pod.
+
+But there are workarounds to this!
+You can do:
+kubectl edit pod <podname>
+Then change whatever you want in vim, save it.
+Delete the pod:
+kubectl delete pod <podname>
+And then apply the file you saved with whatever modifications you made:
+kubectl create -f /tmp/whateverpathtofile.yaml
+
+(Follow up from Dani: The above didn't work out of the box. Maybe google how to use vim to save something to a file as an argument?)
+
+The second workaround is to extract the pod definition:
+kubectl get pod mypod -o yaml > mynewpod.yaml
+vim mynewpod.yaml #edit resource limitations or whaver else you want
+Then delete the existing pod:
+kubectl delete pod mypod
+Then create a new pod with the yaml:
+kubectl create -f mynewpod.yaml
+
+With deployments, you can edit any field of the pod template, since the deployment will just remove the old pods and spawn new ones with the desired specifications.
+kubectl edit deployment mydeployment
+
+
+44: DaemonSets
+DaemonSets are similar to ReplicaSets, the difference being that they run one instance of your pod on each node in your cluster.
+Whenever a node is added to the cluster, a copy of your pod on the DaemonSet is added to that node.
+When a node is removed, that pod is automatically removed too.
+The DaemonSet ensures that one copy of a given pod is always present on all nodes on your cluster.
+Use cases of DaemonSets: Monitoring agent (Prometheus Exporter) or Log exporter (Filebeat)
+Kube-proxy actually runs as a DaemonSet in the cluster.
+Some networking solutions such as weave-net require an agent to be deployed in each node in the cluster (?)
+Creating a DaemonSet is very similar to a Replicaset, the only difference is that instead of having Kind: ReplicaSet you have Kind: DaemonSet
+
+You could emulate the functionality of a DaemonSet by having several copies of your pod definition, each with a different nodeName entry.
+That's how it actually used to be until Kubernetes v1.12 ahahah
+Currently DaemonSet uses nodeAffinity rules to make sure the pods all fall onto different nodes.
+
+
+46: Static Pods
+You can configure the kubelet service to read pod definitions by itself (without etc and kube-api) on /etc/kubernetes/manifests.
+Pods created this way are known as Static pods. Pods are the only object that you can create by interacting with the kubelet directly.
+You can list the pods by doing "docker ps", hah! kubectl is unavailable as it connects to the kube-api and that is unavailable too.
+
+You can still define static pods for Kubelet even when it's part of a cluster.
+If you do kubectl get pods and you have pods created manually through the kubelet with files on the node, they will still show up when you do kubectl get pods.
+The Kubelet creates a mirror object in the kube-api server. They will be read-only through the kube-api
+
+(Follow up on Dani: It would be cool to validate this when doing Kubernetes the hard way)
+
+You can use static pods to deploy the control plane itself (ooooh!)
+Install kubelet on the master nodes and then put the correct pod definitions in there, BAM, Kubernetes.
+
+47: Practive Test - Static pods
+(Follow up from Dani: Write down that way to get only certain Kubernetes fields
+
+The Kubelet doesn't run as a pod. To see where the static pods config are coming from, you have to do a:
+ps aux | grep kubelet
+You then need to check inside the config file for kubelet for that definition:
+vim /var/lib/kubelet/config.yaml
+Look for staticPodPath, by default it should be /etc/kubernetes/manifests
+
+(Follow up from Dani: Create a static pod named static-busybox that uses the busybox image and the command sleep 1000) Do this from the command line!
+
+REDO THE STATIC POD QUIZ TOMORROW!
