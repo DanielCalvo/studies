@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ReplicationController
+metadata: #Metadata for the ReplicaSet object
+  name: myapp-rc
+  labels:
+    app: myapp
+    type: front-end
+spec: #Spec of the replication controller
+  replicas: 3
+  template:
+    metadata: #Metadata for the pod objects to be created
+      name: redis
+    spec: #Spec of the pod
+      containers:
+        - name: redis123
+          image: redis

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: danideployment
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      labels:
+        app: myapp
+        type: front-end
+    spec: #Spec of the pod
+      containers:
+        - name: redis123
+          image: redis
+  replicas: 3
+  selector:
+    matchLabels:
+      type: front-end
