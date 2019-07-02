@@ -136,3 +136,35 @@ Author explains that the way secrets are set up in Kubernetes isn't the safest o
 kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-literal=DB_User=root --from-literal=DB_Password=password123
 
 (Follow up from Dani: Try adding secrets to other objects other than pods, such as Deployments and DaemonSets)
+
+
+74: Multi container pods
+You can have your microservice container and a side car container (such as a log shipper) inside the same pod.
+This is because both containers need to scale up and down together.
+They share the same network space, which means they can refer to each other as local host.
+They both have access to the same volumes as defined in the pod definition.
+
+
+75: Practice test - Multiple container pods
+(Follow up from Dani: How do you change the default namespace so you can do "kubectl get pods" from a different namespace without having to specify a namespace?)
+
+
+76: Multi-container pods design patterns
+There are three multi container POD design patterns: Sidecar, Adaptor and Ambassador
+
+
+77: initContainers
+When running a multi container pod, all pods are expected to stay alive at all times.
+If any container fails, the entire pod restarts.
+
+You can specify a type of container inside a pod named initContainer. Inside the spec, instead of being inside "containers" it's inside "initContainers". Check 77_initcontainer.yaml
+
+The initContainer container will run first, before the regular containers start. This can be useful if you need to do some sort of set up before your main container starts (such as cloning a repo)
+You can have multiple containers listed under initContainer. They will run sequentially.
+You can use initContainers to wait for
+
+If any of the initContainers fail to succeed, Kubernetes will restart the pod repeatedly until the initContainer(s) succeed.
+
+(Follow up from Dani: Can you do this with deployments as well? Hey maybe you should give all the concepts below a read, maybe they cover more things that you don't know!)
+(Follow up from Dani: Doublecheck/redo initContainers, the katakoda lab was not recognizing them for some reason!)
+More reading material is available here: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
