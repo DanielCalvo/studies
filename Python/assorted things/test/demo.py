@@ -35,7 +35,9 @@ def create_rune(rune):
     time.sleep(random.randint(1, 3))
 
     local_chat_x, local_chat_y = get_image_xy("images/local_chat.png")
-    
+    #local_chat_x = 283 #THE ABSOLUTE YOLO ON THIS DEMO
+    #local_chat_y = 1023
+
     pyautogui.click(local_chat_x + (random.randint(-25, 25)), local_chat_y + (random.randint(-10, 50)),
                     button='left', duration=random.uniform(0.2, 1.2))
 

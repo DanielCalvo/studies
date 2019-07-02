@@ -13,3 +13,6 @@ Check the FAQ here to mentally prepare a list of commands you'll use:
 https://www.cncf.io/certification/cka/
 
 Kodekloud and Katakoda seem worth a look!
+
+It would be nice to have a sample config of a pod with two containers somewhere.
+Also it would be cool to build a bunch of stuff at the end of the course with several objects (deployments, services, secrets and so on)

@@ -92,4 +92,47 @@ Just like any Kubernetes object, there are two ways of creating a configmap.
 Imperative: kubectl create configmap
 Declarative: kubectl create/apply -f
 
-You stopped in the part that examples of imperative syntax come up
+Creating a configMap imperatively:
+kubectl create configmap myconfigname --from-literal=mykey=myvalue
+kubectl create configmap myconfigname --from-file=pathtomyfile
+
+kubectl get configmaps
+kubectl describe configmaps
+kubectl describe configmap myconfigmap
+
+
+69: Practice test: Environment variables
+You can't edit environment variables of a running pod :(
+(Follow up from Dani: Creating a pod loading the configs from a configmap was really tough. You need to work on this!
+
+
+70: Configure secrets in applications
+Secrets are very similar fom configmaps, except they're stored on a encoded format
+
+You can also create a secret imperatively and declaratively:
+kubectl create secret generic mysecret --from-literal=mysecret=myvalue --from-literal=mysecret1=myvalue1
+kubectl create -f
+
+To generate a secret to put on a secret file, do:
+echo "mysecret" | base64
+
+To decode the secret:
+echo "bXlzZWNyZXQK" | base64 --decode
+
+To see secrets:
+kubectl get secrets
+
+To see the actual values of the secrets:
+kubectl get secret mysecret -o yaml
+
+
+71: A note about secrets
+Author explains that the way secrets are set up in Kubernetes isn't the safest or most coherent option.
+(Follow up from Dani: This page is suggested as further reading: https://kubernetes.io/docs/concepts/configuration/secret
+
+
+72: Practice test - Secrets
+(Follow up from Dani: Why did the test accept a secret created imperatively, but not descriptively? What did you mess up? :thinking:)
+kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-literal=DB_User=root --from-literal=DB_Password=password123
+
+(Follow up from Dani: Try adding secrets to other objects other than pods, such as Deployments and DaemonSets)
