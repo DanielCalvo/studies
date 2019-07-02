@@ -1,0 +1,22 @@
+
+54: Monitor cluster components
+Node level metrics are interesting, as well as pod-level metrics, such as number of pods and their resource usage.
+As of 18-Oct-2019, Kubernetes did not come with a full featured monitoring solution out of the box.
+
+You can have a thing called "Metrics server" in your Kubernetes cluster.
+It retrieves metrics from the nodes and pods, stores them and aggregates them in memory
+
+Kubernetes runs a component called Kubelet on each node server, responsible for receiving instructions from the Kubernetes master.
+The Kubelet contains a subcomponent named Container Advisor, or cAdvisor.
+cAdvisor is responsible from retrieving metrics from pods and exposing them through the Kubelet API to make the metrics available for the metrics server.
+
+You can clone the metrics server from git and then create the pods from the yaml definitions in there.
+
+
+56: Managing application logs
+(Follow up from Dani: You should create a container that simulates events or responds to very simple things, like telnet connections being innitiated to it!)
+
+You can view a stream of logs with:
+kubectl logs -f podname
+
+(Follow up from Dani: Not enough logging info for a production environment. I think a follow up is definitely in order!)

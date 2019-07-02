@@ -126,7 +126,9 @@ You can use static pods to deploy the control plane itself (ooooh!)
 Install kubelet on the master nodes and then put the correct pod definitions in there, BAM, Kubernetes.
 
 47: Practive Test - Static pods
-(Follow up from Dani: Write down that way to get only certain Kubernetes fields
+(Follow up from Dani: Write down that way to get only certain Kubernetes fields)
+(Follow up from Dani: Is there a definitive way to say if pods are static pods, other than their pod names?)
+
 
 The Kubelet doesn't run as a pod. To see where the static pods config are coming from, you have to do a:
 ps aux | grep kubelet
@@ -134,6 +136,12 @@ You then need to check inside the config file for kubelet for that definition:
 vim /var/lib/kubelet/config.yaml
 Look for staticPodPath, by default it should be /etc/kubernetes/manifests
 
-(Follow up from Dani: Create a static pod named static-busybox that uses the busybox image and the command sleep 1000) Do this from the command line!
+(Follow up from Dani: Create a static pod named static-busybox that uses the busybox image and the command sleep 1000) Do this from the command line! No memorization!
 
-REDO THE STATIC POD QUIZ TOMORROW!
+
+48: Multiple schedulers
+You can write your own scheduler program if you want, package and deploy it as the default scheduler or as an additional scheduler.
+A K8s cluster can have multiple schedulers simultaneously
+
+50: Schedulers
+There's further reading material out there for advanced scheduling. Could be an interesting read!
