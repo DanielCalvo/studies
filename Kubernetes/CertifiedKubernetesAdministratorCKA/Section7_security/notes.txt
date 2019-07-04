@@ -171,8 +171,8 @@ If kubernetes is broken for some reason and you can't use kubectl logs to see th
 105: Certificates API
 Kubernetes has an API call that can sign CSRs for us!
 We can create a kubernetes object named CertificateSigningRequest.
-
-Let's create all the things for a user named Jane.
+pacman is the package m
+Let's create all the things for a user namedpacman is the package m Jane.
 openssl genrsa -out jane.key 2048
 openssl req -new -key jane.key -subj "/CN=jane" -out jane.csr
 See 105_CSR.yaml for an example of a CertificateSigningRequest object (syntax might be a bit off, didn't test it)
@@ -213,3 +213,167 @@ kubectl config -h
 
 You can also specify a namespace under a context definition in config.
 You can have a path to a certificate for a cluster in the config, or you can have the certificate in base64 in the config.
+
+
+110: API Groups
+Whatever operations we've done so far to the cluster, we've been interacting with the API server, one way or the other.
+For instance, to get the version of your cluster, you can:
+curl https://kube-master:6433/version
+To get a list of pods you can:
+curl https://kube-master:6433/api/v1/pods
+
+The Kubernetes API is grouped into multiple endpoints depending on their purpose:
+(/metrics, healthz, /version, /api, /apis, /logs and so on)
+(Follow up from Dani: Can you investigate all API endpoints and interact with them later?)
+In this section, we focus on the APIs responsible for the cluster functionality, which are /api and /apis
+Core API: /api
+named API: /apis
+
+The core group is where all core functionality exists
+(v1/namespaces, v1/pods, v1/rc, v1/events, v1/endpoints, v1/nodes, v1/secrets and a bunch of other endpoints)
+
+The named group /apis is slightly more organized (according to author) and moving forward all k8s functionality will be here.
+(/apps, /extensions, /storage.k8s.io, /authentication.k8s.io, /certificates.k8s.io)
+
+Within apps you have:
+/apps/v1/deployments
+/apps/v1/replicasets
+/apps/v1/statefulsets
+
+And a bunch more or endpoints!
+
+Each resource (like /apis/apps/v1/deployments) has a set of actions associated with them (such as list, get, create, delete, update, watch)
+The API reference can tell you what the API group is for each object.
+
+You can also access your API to see the supported API groups:
+curl http://localhost:6443 -k
+curl http://localhost:6443/apis -k | grep "name"
+
+A note on using curl to directly access the API: You have to authenticate! So you'll probably have to do something like:
+curl http://localhost:6443 -k --key admin.key --cert admin.crt --cacert ca.crt
+
+You can also do this: kubectl proxy
+Which will start a proxy on 127.0.0.1:8001, using your certificates and config files to connect to the cluster for you.
+You can then curl this proxy and it will be the same as curling your target cluster, but already authenticated and with proper permissions!
+
+However, do note: kube proxy is NOT the same as kubectl proxy
+
+In the next section, we can see how we use parts of the API and verbs to allow or deny access to users.
+
+
+111: RBAC
+First of all, we create a role object. Please see 111-developer-role.yaml. You then apply the role:
+kubectl apply -f 111_developer-role.yaml
+When we have our role object set up, we need to create a role binding. See 111_devuser-developer-binding.yaml
+Do note that these apply to the default namespace.
+(Follow up from Dani: How to create other users in other namespaces?)
+
+To view roles and role bindings:
+kubectl get roles
+kubectl get rolebindings
+kubectl describe role developer
+kubectl describe rolebinding devuser-developer-binding
+
+You can also use this:
+kubectl auth can-i create deployments
+kubectl auth can-i delete nodes
+
+That's pretty cool! It'll return a boolean saying if you can or can not execute the specified action
+You can even test an user's permission:
+
+kubectl auth can-i create deployments --as dev-user
+kubectl auth can-i create pods --as dev-user
+kubectl auth can-i create pods --as dev-user --namespace test
+
+You can even go one level down and restrict someone's access to something with certain names. For instance, you could restrict a role to interact only with the pods named "blue" and "orange"
+See 111_resource-names.yaml
+
+112: Practice test: RBAC
+(Follow up from Dani: When confused, can I query the API directly to obtain answers?)
+(Follow up from Dani: Can you create role binding from memory? Can you accurately copy and paste one from the system?)
+(Follow up from Dani: It got really boring copy and pasting roles and rolebindings around. Do some exercises on these subjects later if you feel like it)
+
+
+113: Cluster Roles.
+There are Cluster Roles and Cluster Role bindings! Uh-oh!
+Roles and RoleBindings are namespaced, meaning they're created within namespaces.
+If you don't specify a namespace, they're created in the default namespace.
+Namespaces as we've been seeing until now, can isolate some resources, but not all of them!
+You can't divide nodes in namespaces and we've been seeing until now. Those are cluster wide or cluster scoped resources. They cannot be associated to any particular namespace.
+
+Resources are categorized as: Namespaced or Clusterscoped
+
+Namespaced resources: pods, replicasets, jobs, services, secrets, configmaps (the ones we've seen so far!)
+Cluster scoped resources: nodes, PVs, clusterroles, clusterrolebindings, certificatesigningrequests, namespaces)
+
+To see the full list of what is namespaced and what is cluster scoped, do:
+kubectl api-resources --namespaced=true
+kubectl api-resources --namespaced=false
+
+You can use cluster roles to give users to things like nodes and persistent volumes.
+See 113_cluster-role.yaml for an example of a cluster role.
+And 113_cluster-role-binding.yaml for an example of a binding.
+
+They're very similawr to the namespaced roles and rolebindings.
+
+
+114: Practive: Cluster roles and cluster role bindings
+kubectl get clusterroles --all-namespaces
+(Follow up from Dani: You skipped the cluster role binding practice session. Do it later if you're feeling like it)
+
+
+115: Image security
+When you specify on a pod:
+image:nginx
+Kubernetes actually interprets this as:
+image: docker.io/nginx/nginx
+
+To pull an image from a private registry, first you have to create a secret with the login credentials for the registry:
+
+kubectl create secret docker-registry regcred \
+    --docker-server=private-registry.io \
+    --docker-username=myuser \
+    --docker-password=mypassword \
+    --docker-email=myemail
+(Follow up from Dani: Can you create this secret from memory?)
+
+
+117: Security Contexts
+You can ask a pod to run as a certain user id. Check 117_seccontext_pod.yaml.
+This is supported to be set for all the containers in the pod, or you can set it on an individual container in the pod.
+Depends on which part of the spec you put it.
+Capabilities apparently allows you to give certain priviledges to the process running inside the pod, but not root rights.
+
+If you don't specify a user for a container (either during build or at launch for k8s) it'll run as root
+
+118: Practice test, security policy.
+Set the policy for the entire pod but for some reason it didn't get picked up. Tried to put it inside a container and it crashed.
+(Follow up from Dani: If you re-do this with the user specified under a container only (not the entire pod) you should be able replicate the failure. Maybe your understanding of yaml isn't that good!)
+
+
+119: Network Policy
+From a webserver, traffic coming from users is an Ingress traffic.
+Traffic leaving the cluster is of type egress.
+
+To recap in Kubernetes:
+Each Pod has an ip address.
+Each node has an ip address.
+Each service has an ip address.
+
+By default, all pods on the cluster can reach each other through the Kubernetes virtual networks.
+k8s is configured by default with an "All Allow" rule
+
+Imagine you have this:
+
+Frontend <> API server <> Database.
+
+Your frontend should not (and has no reason to) connect to your database directly. It has to go through your backend API first.
+You can implement a network policy to allow traffic to the database only from the backend server.
+A NetworkPolicy is another object in a k8s cluster.
+You link a NetworkPolicy to one or more pods.
+
+We use labels and matchLabels to link pods to policies.
+
+Not all network solutions support network policies.
+
+(Follow up from Dani: The sample yaml given on this one was very crappy. Research and redo the text exercises on lecture 120!)
