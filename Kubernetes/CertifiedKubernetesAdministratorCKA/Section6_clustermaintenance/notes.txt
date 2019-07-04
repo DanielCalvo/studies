@@ -1,0 +1,129 @@
+
+83: OS Upgrades
+When a node goes down, the pods on that node become obviously unaccesible
+Depending on how you deploy those pods, your users can be affected or not.
+If your pod was part of a replica set, there will be another instance of your pod in another node and everything will be ok.
+
+If the node comes back almost immediately, the kubelet starts and the pods come back online.
+If the node is down for more than 5 minutes, the pods are terminated from that node. Kubernetes considers them as dead.+
+If the pods were part of a replicaset, they will be recreated on other nodes.
+The time it waits for a pod to come back online is known as the --pod-eviction-timeout and is set on the on the kube-controller-manager with a default value of 5 minutes
+
+So when a node goes offline, the master node waits up to 5 minutes before considering the node dead.
+
+When a node comes back online after the pod eviction timeout, it'll come back with 0 pods scheduled on it.
+Pods that were on this node that were not part of some sort of replicaset will be gone forever.
+
+You can use kubectl drain mynode to safely drain the node of all the workloads so that they're moved to other nodes.
+When you drain a node, the pods are gracefully terminated from that node and created on another. The node that was drained is then marked as unschedulable.
+
+After you do maintenance on the drained node, you need to run kubectl uncordon mynode so that's marked as schedulable.
+The pods that moved to other nodes do not immediately fall back to the old node.
+
+There is also the kubectl cordon mynode command. It will mark a node as unschedulable, but it will not terminate any pods running on it.
+
+84: Practice test: Cluster upgrades
+kubectl get nodes -o wide <- Will display in which nodes pods are running
+kubectl drain node01 --ignore-daemonsets
+
+When doing kubectl describe node master, you'll see that the master node has the following:
+Taints:             node-role.kubernetes.io/master:NoSchedule
+This apparently is what prevents pods from being launched in the master node.
+
+If you have pods on a node that are not managed by a replicaset, when you drain that node you must force the drain.
+
+If you drain a node with a pod only on it that is not part of a ReplicationController, ReplicaSet, Job, DaemonSet or StatefulSet, that pod will be lost forever!
+
+
+85: Kubernetes releases & versions
+When you run the kubectl get nodes you get the version of the Kubernetes cluster (but which subcomponent is that? api server?)
+The kubernetes versioning consists of 3 parts:
+v1.11.3 (major.minor.patch)
+
+There are also alpha and beta releases with bugfixes and features being tested
+
+The kubernetes release package in github, when downloaded, has all the control plane software in the same version
+(kube-apiserver, controller-manager, kube-scheduler, kubelet and kube-proxy all v1.13.4 for instance)
+There are other components in the control plane that do not have the same version numbers, such as ETCD and coreDNS
+
+Further reading as suggested by the author:
+https://kubernetes.io/docs/concepts/overview/kubernetes-api/
+https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md
+https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api_changes.md
+
+
+87: Cluster upgrade process
+No component in the cluster can be at a version higher than kube-apiserver
+
+The versions of certain can be lower than others, but only in a specific way. Let's assume that kube-apiserver is at version X.
+
+kube-apiserver -> X (ex: v1.10)
+controller-manager, kubescheduler -> X-1 (can be up to 1 version older, ex: v1.9)
+kubelet, kube-proxy -> (can be up to 2 versions older, ex: v1.8)
+
+The exception to this is the kubectl command line tool, which can be the one version newer or one version older than kube-apiserver.
+Everything can also be the same version if you're not an adventurer.
+
+When should you upgrade? At any given time, Kubernetes supports only the most recent minor versions.
+If v1.12 is the lastest release, Kubernetes will support v1.12, v1.11 and v1.10
+When v1.13 is releases, v1.10 will go unsupported.
+
+The recommended update strategy is to update things one minor version at the time (v1.10 to v1.11 for example)
+
+The upgrade process depends on how your cluster is set up. If you're using GKE, you can upgrade your cluster with just a few clicks.
+If you deployed your cluster with kubeadmin, this can help you plan and upgrade your cluster with
+kubectl upgrade plan
+kubectl upgrade apply
+
+If you deployed the cluster from scratch (the hard way (TM)) then you manually have to upgrade things yourself.
+
+The following options relate to the upgrade strategy on kubeadm
+Upgrading a cluster has two major steps:
+First, you upgrade your master node.
+Then, you upgrade your worker nodes
+
+When the master is being updated, all the control plane processes go down briefly.
+While the master is down, all workloads on the worker nodes continue to serve users. But you cannot access the cluster using kubectl. You cannot deploy new things, delete or modify existing ones.
+The controler managers don't function either, if a pod fails, it won't be recreated.
+
+As far as upgrading the worker nodes, you can upgrade all of them at the same time, but then all of your pods go down.
+Once the worker nodes are back up, new pods are started and everything is back to normal
+
+You can also only upgrade one node at a time. After upgrading the master, upgrade the first node, and the workloads move elsewhere.
+Once the first node is upgraded and back up, you bring the second node down and upgrade that one.
+
+A third way of doing this, is simply adding nodes to the cluster with a newer software version already installed. Very convenient if you're in a cloud environment where you can easily create new machines.
+Just gradually add new nodes and remove the old ones, untill all nodes are new and on the new version.
+
+Running the kubeadm upgrade plan will give you a lot of useful information (current cluster version, kube adm tool version and a lot of other things)
+After upgrading the cluster, you must manually upgrade the kubelet version on each node.
+
+To upgrade the master:
+apt-get upgrade -y kubeadm=1.12.0-00
+kubeadmin upgrade apply v1.12.0
+
+The next step is to upgrade the kubelets. You may or may not have kubelet installed on your master node.
+apt-get upgrade -y kubelet=1.12.0-00
+systemctl restart kubelet
+
+To upgrade a node:
+kubectl drain node-1
+apt-get upgrade -y kubeadm=1.12.0-00
+apt-get upgrade -y kubelet=1.12.0-00
+kubeadm upgarde node config --kubelet-version v1.12.0
+systemctl restart kubelet
+kubectl uncordon node-1
+
+88: Practice test cluster upgrade:
+(Follow up from Dani: Are taints the only things that mark if a cluster node can run jobs/pods?)
+
+kubeadm upgrade plan
+kubectl drain master
+apt install kubeadm=1.12.0-00
+kubeadm upgrade apply v1.12.0
+apt install kubelet=1.12.0-00
+kubectl uncordon master
+
+(Follow up from Dani: Do this with your own install of kubernetes through kubeadm to better understand the process)
+
+

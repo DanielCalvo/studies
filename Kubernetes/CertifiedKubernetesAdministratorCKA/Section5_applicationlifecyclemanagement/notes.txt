@@ -168,3 +168,8 @@ If any of the initContainers fail to succeed, Kubernetes will restart the pod re
 (Follow up from Dani: Can you do this with deployments as well? Hey maybe you should give all the concepts below a read, maybe they cover more things that you don't know!)
 (Follow up from Dani: Doublecheck/redo initContainers, the katakoda lab was not recognizing them for some reason!)
 More reading material is available here: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+
+79: Self healing applications:
+Kubernetes by default restarts pods when they crash.
+But I remember liveliness probes and readiness probes and other things
+(Follow up from Dani: Can you take a look at this later?)
