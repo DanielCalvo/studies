@@ -1,0 +1,166 @@
+ 132: CoreDNS
+Looks like it would be useful to learn how to set up CoreDNS!
+
+135: CNI
+The container network interface (CNI) is a set of standards that defines how programs should be developed to solve networking challenges in a container runtime environment.
+
+136: Cluster networking:
+Might go without saying, but all nodes in the cluster need to have unique hostnames.
+
+Ports recap:
+Master node:
+ETCD: 2379
+kube-api: 6443
+kubelet: 10250
+kube-scheduler: 10251
+kube-controller-manager: 10252
+
+If you have a multimaster setup, you need port 2380 open so that ETCD clients can talk to each other.
+
+Worker node:
+Services: 30000 - 32767
+kubelet: 10250
+
+137: Explore Kubernetes environment:
+Gives you the internal network address:
+kubernetes get nodes -o wide
+
+To figure out the mac addr of another node on the cluster:
+arp node02
+(wew, would've taken me a while to remember that)
+
+
+138: Pod networking
+Every POD should have an IP address
+Every POD should be able to communicate with every other POD in the same node.
+Every POD should be able to communicate with every other POD on other nodes without NAT.
+
+The first thing that is done in the video tutorial is to set up a bridge interface internal to every single node that every pod on this node connects to.
+This way these pods on the same node can communicate, but not with pods on other nodes yet.
+
+You then need to add routes on every node.
+A given node will have routes to all the private internal bridge networks on all the other nodes.
+
+To conform to CNI, this script needs to have an ADD and a DEL section.
+
+The kubelet on each node is responsible for creating containers. Whenever a container is created, kubelet looks into:
+--cni-conf-dir=/etc/cni/net.d
+--cni-conf-dir=/etc/cni/bin
+
+To run net-script.sh with arguments: add, <container>, <namespace>
+
+
+139: CNI in Kubernetes
+CNI is configured/invoked on/by the Kubelet
+--network-plugin=cni
+--cnd-bin-dir=/opt/cni/bin
+--cni-conf-dir=/etc/cni/net.d
+
+Also viewable by doing ps aux | grep kubelet and checking the args for kubelet
+The bin directory has all the CNI plugins as executables:
+ls /opt/cni/bin
+
+The configuration dir:
+ls /etc/cni/net.d
+Has as set of config files, which is where the kubelet sees which plugin is to be used. If there are multiple files there, it will chose one in alfabetical order
+Under /etc/cni/net.d/10-bridge.conf
+
+That conf file will have info if an interface is gateway, the ip range and name, and a bunch of other things.
+
+
+140: CNI weave, Aka Weaveworks
+As you expand your cluster, it is very difficult to keep track of all the routes.
+Weaveworks deploys an agent on each node. These agents communicate with each other to exchange information on pods and networks on every node.
+Each agent stores a topology of the entire set up.
+Weave can be deployed on the node system manually (as in kubernetes the hardway) or it can run in a pod in k8s.
+
+You can see the weave pods with:
+kubectl get pods -n kube-system
+and:
+kubectl logs weave-net-1234 weave -n kube-system
+
+142: Weave practice:
+(Follow up from Dani: How to schedule a pod on a given node to troubleshoot?)
+(Follow up from Dani: Take a look at the weave net yaml files)
+
+144: IP Adress Management - weave. Aka IPAM
+CNI says it's the responsibility of the network plugin to assign IPs to the containers (and it's important that we don't have network collisions!=
+There's a plugin called "host local plugin" that manages free IP addresses for pods inside the host apparently.
+Inside /etc/cni/net.d/net-script-conf there is an IPAM section in which we specify the type of plugin to be used, the subnet and route info.
+Weaveworks by default allocates the range 10.32.0.0/12 for the entire network.
+This range is split among nodes.
+
+145: Service networking
+A service is just a virtual object.
+kube-proxy gets the ip of a given service and creates forwarding rules on each node saying that any traffic coming to the ip of the service needs to go to the IP of the pod.
+So whenever you try to access a service, you get forward to the pod's ip adress.
+But remember: It's not just the IP, it's an IP:port combination.
+Whenever these services are created or deleted, the kubeproxy creates or deletes these rules.
+Ways these rules can be created: userspace, ipvs, iptables. iptables is the default option.
+The range for the IP of services is set by the --service-cluster-ip option of kube-apiserver
+You can actually check the rules for your service by doing:
+iptables -L -t net | grep myservice
+You can also see these entries being created in /var/log/kube-proxy.log
+
+146: Practive test - Service networking
+Turns out the logs have a lot of useful network and assorted info if you're looking for a given spec!
+ps aux  | grep kube-api | grep range
+kubectl logs weave-net-zdh74 weave -n kube-system | grep ipall
+
+
+147: DNS in Kubernetes
+Whenever a service is created, the k8s DNS service create a record for the service
+so if you have mywebservice you can ping mywebservice and it'll resolve
+If the web service was in a different namespace named apps, you would
+ping webservice.apps
+or
+ping webservice.apps.svc
+or
+ping webservice.apps.svc.cluster.local (FQDN)
+Records for pods are not enabled by default, but they can be enabled.
+
+
+148: CoreDNS for Kubernetes
+Before v1.12, Kubernetes used CoreDNS
+CoreDNS is deployed as a ReplicaSet... within a deployment. But all we have to do is look at that pod.
+CoreDNS is configured at /etc/coredns/Corefile by default
+The plugin that makes CoreDNS work with Kubernetes is the Kubernetes plugin. You can see cluster.local configured there.
+This is passed as a configmap to coredns
+kubectl get configmap -n kubesystem.
+If you can to edit the config, you can edit the configmap
+CoreDNS watched the cluster for pods and services and each time one of those is created, it adds a record for it.
+CoreDNS creates a service named kube-dns available to the cluster.
+The IP of this service is configured as the nameserver (/etc/resolv.conf) on pods
+The DNS configuration on the pods is done automatically when they're created by Kubelet.
+
+If you check: /var/lib/kubelet/config.yaml you'll find the IPs of the DNS servers on your cluster.
+
+149: Practive test - explore DNS
+(Follow up from Dani: How do you list objects seeing which namespaces they're from?)
+
+150: Ingress
+When you create a load balancer in gcp, k8s requests a load balancer for google (?)
+This LB has an external IP that can be used to access the app.
+Remember that you need to pay for each LB as they have a public IP!
+The ingress allows users to access your applications based on what HTTP url or HTTP name they reach.
+And at the same time, implement SSL security!
+Think of an ingress as a layer 7 load balancer for HTTP.
+k8s does not come with an ingress controller by default.
+Ingresses available: nginx, contour, haproxy, traefix, istio and GCE (from google)
+
+Have a look at 150_nginxingress.yaml and 150_nginxnodeport.yaml
+Please note that missing here is also a configmap required for the nginx config and a ServiceAccount for nginx
+
+You can route users based on if they reach things like
+myapp/url1
+myapp/url2
+
+or if they visit myapp.com or myotherapp.com
+
+Don't forget you can:
+kubectl get ingress
+
+You can have multiple rules for a single ingress, regardless of name or url path.
+(Follow up from Dani: ingress configuration is very large, perhaps you should have a file with multiple examples?)
+(Follow up from Dani: Run commands from vim, also learn tmux to split your terminal)
+(Follow up from Dani: Remember! The ingress needs to be on the same namespace as the service!)

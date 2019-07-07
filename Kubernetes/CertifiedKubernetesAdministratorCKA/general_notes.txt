@@ -16,3 +16,15 @@ Kodekloud and Katakoda seem worth a look!
 
 It would be nice to have a sample config of a pod with two containers somewhere.
 Also it would be cool to build a bunch of stuff at the end of the course with several objects (deployments, services, secrets and so on)
+
+Madman ideas: Automate k8s the hard way with some golang
+Absolute madman idea: Connect to the kubernetes api manually and write a simple client!
+
+Catch up on the "ip" command, as ifconfig is now deprecated.
+
+I think you should also investigate all the --options when running k8s the hard way (what do they mean?)
+
+Post course:
+CKA search on reddit
+Go through all the docs: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+
