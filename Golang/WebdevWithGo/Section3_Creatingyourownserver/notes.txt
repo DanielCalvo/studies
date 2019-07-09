@@ -1,0 +1,5 @@
+
+3 step process:
+- listen
+- accept
+- read/write connection
