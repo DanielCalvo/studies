@@ -1,0 +1,8 @@
+Hello! This is a text file.
+It has two lines.
+{{$meaning := .}}
+The meaning of life: {{$meaning}}
+
+{{range .}}
+{{.}}
+{{end}}

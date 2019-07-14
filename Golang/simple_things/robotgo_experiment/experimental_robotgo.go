@@ -165,7 +165,7 @@ var character_center_screen_x int = 841
 var character_center_screen_y int = 488
 
 //Don't forget the bar at the end!
-var image_directory string = "/home/daniel/PycharmProjects/studies/Golang/sample_things/robotgo_experiment/images/"
+var image_directory string = "/home/daniel/PycharmProjects/studies/Golang/simple_things/robotgo_experiment/images/"
 
 func main() {
 	//session_mana_spent := 0
@@ -222,8 +222,8 @@ func main() {
 	//###
 	//Functionality 1: Find image on screen
 	//###
-	//manabar_full := robotgo.OpenBitmap("/home/daniel/PycharmProjects/studies/Golang/sample_things/manabar_full.png")
-	//manabar_square_12x12 := robotgo.OpenBitmap("/home/daniel/PycharmProjects/studies/Golang/sample_things/manabar_square_12x12.png")
+	//manabar_full := robotgo.OpenBitmap("/home/daniel/PycharmProjects/studies/Golang/simple_things/manabar_full.png")
+	//manabar_square_12x12 := robotgo.OpenBitmap("/home/daniel/PycharmProjects/studies/Golang/simple_things/manabar_square_12x12.png")
 	//log.Println(robotgo.FindEveryBitmap(manabar_square_12x12, manabar_full, 0.1))
 	////Move mouse to a part of the screen:
 	//xfce_x, xfce_y := robotgo.FindBitmap(xfce_menu_bitmap, robotgo.CaptureScreen(), 0.1)

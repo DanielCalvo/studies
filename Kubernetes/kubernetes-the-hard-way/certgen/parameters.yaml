@@ -1,0 +1,7 @@
+hosts:
+  controllers:
+    - hostname: worker1
+      ip: 192.168.1.94
+  workers:
+    - hostname: controller1
+      ip: 192.168.1.133

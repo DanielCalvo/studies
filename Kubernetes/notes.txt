@@ -8,6 +8,7 @@ Just read the whole thing: https://cloud.google.com/kubernetes-engine/docs/conce
 - Detail your CI process and see how you would go about reproducing it
 - Do you get a dump in your database once it's running or do you have a db image with the dump inside of it already?
 
+Hey how about helm?
 
 The tutorials on google cloud seem really good!
 

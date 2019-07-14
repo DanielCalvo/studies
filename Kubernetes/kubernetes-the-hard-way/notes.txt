@@ -1,0 +1,31 @@
+Okay, so I've done Kelsey's thing. Too much copying and pasting on that one. I wanna do it on VirtualBox.
+
+Step 1: INITIAL SET UP
+Set up two Debian 10 VirtualBox machines with their network interfaces in bridge mode on your local network.
+I went absolute yolo and didn't even configure static addresses, my home router DHCP leases should be long enough. [nervous laughter]
+Make sure you have your ssh public key on both machines.
+
+Controller node IP: 192.168.1.133
+Worker node IP: 192.168.1.94
+
+Add some shortcuts to your .bashrc:
+alias c1="ssh 192.168.1.133"
+alias w1="ssh 192.168.1.94"
+
+Install the following on your local:
+cfssl, cfssljson, kubectl (check Kelsey's repo for details)
+
+Also, make sure to add some host entries on the machines.
+
+Host entries on controller1:
+
+Host entries on worker1:
+
+(Follow up from Dani:
+- Run the cert creation and other stuff inside a container (yaml as param? in golango?)
+- Ansible state for physical host set up?
+)
+
+STEP 2: CERTIFICATES FOR EVERYTHING
+
+Run everything on this session on your local machine (not inside any VirtualBox VM)

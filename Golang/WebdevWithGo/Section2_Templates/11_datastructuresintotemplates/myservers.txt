@@ -1,0 +1,4 @@
+{{range .}}
+The name of my server: {{.Hostname}}
+The IP of my server: {{.IP}}
+{{end}}

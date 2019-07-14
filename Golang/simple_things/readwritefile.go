@@ -12,7 +12,7 @@ import (
 //}
 
 func main() {
-	filelocation := "/home/daniel/PycharmProjects/studies/Golang/sample_things/myfile.txt"
+	filelocation := "/home/daniel/PycharmProjects/studies/Golang/simple_things/myfile.txt"
 	//Printing a text file
 	dat, err := ioutil.ReadFile(filelocation)
 	check(err)
