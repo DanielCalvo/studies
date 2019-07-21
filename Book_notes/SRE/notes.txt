@@ -1,0 +1,6 @@
+Service Reliability Engineer:
+
+Engineer: Apply principles of computer science and engineering to systems
+Reliability: It has to be reliable enough, otherwise no one will use it
+Service: SREs focus on services built atop distributed systems.
+
