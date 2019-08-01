@@ -1,0 +1,12 @@
+9. First steps with terraform - AWS setup
+Create a user an user (or go to an existing one on the IAM tab and make sure to get your current, or create new ones, access key ID and Secret Access Key.
+
+Attach an AdministratorAccess policy to this user!
+
+
+10. Spinning up an instance
+Ended up using this to build an instance: https://learn.hashicorp.com/terraform/getting-started/build
+Don't forget to do `aws configure` first of all!
+Then:
+terraform init
+terraform apply
