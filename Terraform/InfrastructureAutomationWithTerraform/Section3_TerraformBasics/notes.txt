@@ -10,3 +10,13 @@ Don't forget to do `aws configure` first of all!
 Then:
 terraform init
 terraform apply
+terraform destroy
+terraform plan
+terraform plan -out out.terraform
+
+
+11. Basic recap:
+Logged in on AWS, created an IAM admin user
+Installed aws cli locally and configured it with that user
+Installed terraform locally
+Did terraform init, created a basic file to spin up a t2.micro instance, destroyed everything

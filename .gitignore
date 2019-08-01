@@ -7,3 +7,4 @@ private_key
 .vagrant
 LPIC_devops/vagrant/.vagrant
 OFFLINE_NOTES.TXT
+*/terraform.tfvars
