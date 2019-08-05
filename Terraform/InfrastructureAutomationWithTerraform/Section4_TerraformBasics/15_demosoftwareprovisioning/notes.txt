@@ -1,2 +1,4 @@
 You can build your own AMI with bundled software (packer is a great tool to do this!)
 Or you can boot standardized AMIs and install on them the software you need using file uploads & remote exec or use chef, pupet and ansible
+
+You can't ssh into the instance in this example without manually adding a vpc for ssh access :(

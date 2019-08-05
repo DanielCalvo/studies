@@ -1,0 +1,16 @@
+When you execuute terraform apply, a new terraform.tfstate and a new terraform.tfstate.backup is written.
+This is how terraform keeps track of the remote state.
+
+You can keep terraform.tfstate in version control, this allows you to see a history of your infrastructure. It allows you to colaborate with other team members.
+
+You can configure a "backend" to store the terraform state remotely (such as in amazon s3)
+
+The default backedn is the local backend, the one we've been using until now. It saves the file on the local filesystem.
+
+There are 2 steps to configure a remote state:
+- Add the backend code to a .tf file
+- Run the initialization process.
+
+You can't use variables on the terraform backend definition, so:
+- Manually login on AWS and create a S3 bucket
+- On your local, run aws configure

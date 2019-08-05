@@ -1,0 +1,8 @@
+
+You can have this thing called "datasources" that will provide you information... from the providar!
+
+AWS has data sources with, for example:
+- List of AMIs
+- List of Availability zones
+
+You can use this data as an input in terraform! You
