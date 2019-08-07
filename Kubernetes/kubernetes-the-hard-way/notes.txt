@@ -1,31 +1,566 @@
-Okay, so I've done Kelsey's thing. Too much copying and pasting on that one. I wanna do it on VirtualBox.
 
-Step 1: INITIAL SET UP
-Set up two Debian 10 VirtualBox machines with their network interfaces in bridge mode on your local network.
-I went absolute yolo and didn't even configure static addresses, my home router DHCP leases should be long enough. [nervous laughter]
-Make sure you have your ssh public key on both machines.
+dcalvo-k8s-master: 10.1.11.41
+dcalvo-k8s-client: 10.1.11.46
 
-Controller node IP: 192.168.1.133
-Worker node IP: 192.168.1.94
 
-Add some shortcuts to your .bashrc:
-alias c1="ssh 192.168.1.133"
-alias w1="ssh 192.168.1.94"
+04: PROVISIONING CA AND GENERATING CERTIFICATES:
 
-Install the following on your local:
-cfssl, cfssljson, kubectl (check Kelsey's repo for details)
+#----------------------------------------------------
+#4.1 Generating the CA configuration file, certificate and key:
 
-Also, make sure to add some host entries on the machines.
+{
 
-Host entries on controller1:
+cat > ca-config.json <<EOF
+{
+  "signing": {
+    "default": {
+      "expiry": "8760h"
+    },
+    "profiles": {
+      "kubernetes": {
+        "usages": ["signing", "key encipherment", "server auth", "client auth"],
+        "expiry": "8760h"
+      }
+    }
+  }
+}
+EOF
 
-Host entries on worker1:
+cat > ca-csr.json <<EOF
+{
+  "CN": "Kubernetes",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "Portland",
+      "O": "Kubernetes",
+      "OU": "CA",
+      "ST": "Oregon"
+    }
+  ]
+}
+EOF
 
-(Follow up from Dani:
-- Run the cert creation and other stuff inside a container (yaml as param? in golango?)
-- Ansible state for physical host set up?
-)
+cfssl gencert -initca ca-csr.json | cfssljson -bare ca
 
-STEP 2: CERTIFICATES FOR EVERYTHING
+}
 
-Run everything on this session on your local machine (not inside any VirtualBox VM)
+#----------------------------------------------------
+#4.2 Generating the admin client certificate and private key:
+
+{
+
+cat > admin-csr.json <<EOF
+{
+  "CN": "admin",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "Portland",
+      "O": "system:masters",
+      "OU": "Kubernetes The Hard Way",
+      "ST": "Oregon"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  admin-csr.json | cfssljson -bare admin
+
+}
+
+#----------------------------------------------------
+#4.3 Generating a certificate and key for kubelet on each node:
+
+for instance in dcalvo-k8s-client; do
+cat > ${instance}-csr.json <<EOF
+{
+  "CN": "system:node:${instance}",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "Portland",
+      "O": "system:nodes",
+      "OU": "Kubernetes The Hard Way",
+      "ST": "Oregon"
+    }
+  ]
+}
+EOF
+
+EXTERNAL_IP=10.1.11.46
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -hostname=${instance},${EXTERNAL_IP} \
+  -profile=kubernetes \
+  ${instance}-csr.json | cfssljson -bare ${instance}
+done
+
+#----------------------------------------------------
+#4.4 Generating kube-controller-manager client certificate and private key
+
+{
+
+cat > kube-controller-manager-csr.json <<EOF
+{
+  "CN": "system:kube-controller-manager",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "Portland",
+      "O": "system:kube-controller-manager",
+      "OU": "Kubernetes The Hard Way",
+      "ST": "Oregon"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  kube-controller-manager-csr.json | cfssljson -bare kube-controller-manager
+
+}
+
+#----------------------------------------------------
+#4.5 kube-proxy client certificate and private key:
+
+{
+
+cat > kube-proxy-csr.json <<EOF
+{
+  "CN": "system:kube-proxy",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "Portland",
+      "O": "system:node-proxier",
+      "OU": "Kubernetes The Hard Way",
+      "ST": "Oregon"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  kube-proxy-csr.json | cfssljson -bare kube-proxy
+
+}
+#----------------------------------------------------
+#4.6: kube-scheduler client certificate and private key:
+
+{
+
+cat > kube-scheduler-csr.json <<EOF
+{
+  "CN": "system:kube-scheduler",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "Portland",
+      "O": "system:kube-scheduler",
+      "OU": "Kubernetes The Hard Way",
+      "ST": "Oregon"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  kube-scheduler-csr.json | cfssljson -bare kube-scheduler
+
+}
+
+#----------------------------------------------------
+#4.7 Kubernetes API server certificate:
+
+{
+
+KUBERNETES_PUBLIC_ADDRESS=10.1.11.41
+
+cat > kubernetes-csr.json <<EOF
+{
+  "CN": "kubernetes",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "Portland",
+      "O": "Kubernetes",
+      "OU": "Kubernetes The Hard Way",
+      "ST": "Oregon"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -hostname=${KUBERNETES_PUBLIC_ADDRESS},127.0.0.1,kubernetes.default \
+  -profile=kubernetes \
+  kubernetes-csr.json | cfssljson -bare kubernetes
+
+}
+
+#----------------------------------------------------
+#4.8 Generate the service-account certificate and private key
+
+{
+
+cat > service-account-csr.json <<EOF
+{
+  "CN": "service-accounts",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "Portland",
+      "O": "Kubernetes",
+      "OU": "Kubernetes The Hard Way",
+      "ST": "Oregon"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  service-account-csr.json | cfssljson -bare service-account
+
+}
+
+#----------------------------------------------------
+#4.9 Distrubute the certificates to the appropriate instances.
+
+#Worker instance:
+
+INSTANCE=dcalvo-k8s-client
+INSTANCE_IP=10.1.11.46
+scp ca.pem ${INSTANCE}-key.pem ${INSTANCE}.pem root@${INSTANCE_IP}:~/
+
+#Master instance:
+INSTANCE_IP=10.1.11.41
+scp ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem service-account-key.pem service-account.pem root@${INSTANCE_IP}:~/
+
+#----------------------------------------------------
+
+
+#05: GENERATING KUBERNETES CONFIG FILES FOR AUTHENTICATION
+#In this section, we'll generate the config files for controller-manager, kubelet, kube-proxy, the scheduler clients and the admin user.
+
+
+#----------------------------------------------------
+
+#5.1 Generating a kubelet configuration file for each node:
+
+KUBERNETES_PUBLIC_ADDRESS=10.1.11.41
+
+for instance in dcalvo-k8s-client; do
+  kubectl config set-cluster kubernetes-the-hard-way \
+    --certificate-authority=ca.pem \
+    --embed-certs=true \
+    --server=https://${KUBERNETES_PUBLIC_ADDRESS}:6443 \
+    --kubeconfig=${instance}.kubeconfig
+
+  kubectl config set-credentials system:node:${instance} \
+    --client-certificate=${instance}.pem \
+    --client-key=${instance}-key.pem \
+    --embed-certs=true \
+    --kubeconfig=${instance}.kubeconfig
+
+  kubectl config set-context default \
+    --cluster=kubernetes-the-hard-way \
+    --user=system:node:${instance} \
+    --kubeconfig=${instance}.kubeconfig
+
+  kubectl config use-context default --kubeconfig=${instance}.kubeconfig
+done
+
+
+
+#----------------------------------------------------
+
+#5.2 Generating a kube-proxy configuration file:
+
+KUBERNETES_PUBLIC_ADDRESS=10.1.11.41
+
+{
+  kubectl config set-cluster kubernetes-the-hard-way \
+    --certificate-authority=ca.pem \
+    --embed-certs=true \
+    --server=https://${KUBERNETES_PUBLIC_ADDRESS}:6443 \
+    --kubeconfig=kube-proxy.kubeconfig
+
+  kubectl config set-credentials system:kube-proxy \
+    --client-certificate=kube-proxy.pem \
+    --client-key=kube-proxy-key.pem \
+    --embed-certs=true \
+    --kubeconfig=kube-proxy.kubeconfig
+
+  kubectl config set-context default \
+    --cluster=kubernetes-the-hard-way \
+    --user=system:kube-proxy \
+    --kubeconfig=kube-proxy.kubeconfig
+
+  kubectl config use-context default --kubeconfig=kube-proxy.kubeconfig
+}
+
+#----------------------------------------------------
+
+#5.3 Generate a kube-controller-manager configuration file:
+
+{
+  kubectl config set-cluster kubernetes-the-hard-way \
+    --certificate-authority=ca.pem \
+    --embed-certs=true \
+    --server=https://127.0.0.1:6443 \
+    --kubeconfig=kube-controller-manager.kubeconfig
+
+  kubectl config set-credentials system:kube-controller-manager \
+    --client-certificate=kube-controller-manager.pem \
+    --client-key=kube-controller-manager-key.pem \
+    --embed-certs=true \
+    --kubeconfig=kube-controller-manager.kubeconfig
+
+  kubectl config set-context default \
+    --cluster=kubernetes-the-hard-way \
+    --user=system:kube-controller-manager \
+    --kubeconfig=kube-controller-manager.kubeconfig
+
+  kubectl config use-context default --kubeconfig=kube-controller-manager.kubeconfig
+}
+
+#----------------------------------------------------
+
+#5.4 Generate a kube-scheduler config file:
+
+{
+  kubectl config set-cluster kubernetes-the-hard-way \
+    --certificate-authority=ca.pem \
+    --embed-certs=true \
+    --server=https://127.0.0.1:6443 \
+    --kubeconfig=kube-scheduler.kubeconfig
+
+  kubectl config set-credentials system:kube-scheduler \
+    --client-certificate=kube-scheduler.pem \
+    --client-key=kube-scheduler-key.pem \
+    --embed-certs=true \
+    --kubeconfig=kube-scheduler.kubeconfig
+
+  kubectl config set-context default \
+    --cluster=kubernetes-the-hard-way \
+    --user=system:kube-scheduler \
+    --kubeconfig=kube-scheduler.kubeconfig
+
+  kubectl config use-context default --kubeconfig=kube-scheduler.kubeconfig
+}
+
+#----------------------------------------------------
+
+#5.5 Generate a config file for the admin user on Kubernetes:
+
+{
+  kubectl config set-cluster kubernetes-the-hard-way \
+    --certificate-authority=ca.pem \
+    --embed-certs=true \
+    --server=https://127.0.0.1:6443 \
+    --kubeconfig=admin.kubeconfig
+
+  kubectl config set-credentials admin \
+    --client-certificate=admin.pem \
+    --client-key=admin-key.pem \
+    --embed-certs=true \
+    --kubeconfig=admin.kubeconfig
+
+  kubectl config set-context default \
+    --cluster=kubernetes-the-hard-way \
+    --user=admin \
+    --kubeconfig=admin.kubeconfig
+
+  kubectl config use-context default --kubeconfig=admin.kubeconfig
+}
+
+#----------------------------------------------------
+
+#5.6 Distribute the Kubernetes configuration files:
+
+#Worker instance:
+INSTANCE_IP=10.1.11.46
+INSTANCE=dcalvo-k8s-client
+scp ${INSTANCE}.kubeconfig kube-proxy.kubeconfig root@${INSTANCE_IP}:~/
+
+#Master instance:
+INSTANCE_IP=10.1.11.41
+scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig root@${INSTANCE_IP}:~/
+
+#----------------------------------------------------
+
+
+#06 GENERATING THE DATA ENCRYPTION CONFIG AND KEY
+#Kubernetes can encrypt the data that it stores about cluster state, secrets and application config at rest.
+
+ENCRYPTION_KEY=$(head -c 32 /dev/urandom | base64)
+
+cat > encryption-config.yaml <<EOF
+kind: EncryptionConfig
+apiVersion: v1
+resources:
+  - resources:
+      - secrets
+    providers:
+      - aescbc:
+          keys:
+            - name: key1
+              secret: ${ENCRYPTION_KEY}
+      - identity: {}
+EOF
+
+#Master instance:
+INSTANCE_IP=10.1.11.41
+scp encryption-config.yaml root@${INSTANCE_IP}:~/
+
+#----------------------------------------------------
+
+
+#07 BOOTSTRAPPING THE ETCD CLUSTER
+#Do note that all the commands in this section (part 7) are meant to be run in the master instance (ssh root@10.1.11.41)
+
+
+#----------------------------------------------------
+
+#7.1 Download and install the etcd binaries:
+
+wget -q --show-progress --https-only --timestamping "https://github.com/coreos/etcd/releases/download/v3.3.9/etcd-v3.3.9-linux-amd64.tar.gz"
+
+{
+  tar -xvf etcd-v3.3.9-linux-amd64.tar.gz
+  sudo mv etcd-v3.3.9-linux-amd64/etcd* /usr/local/bin/
+}
+
+#----------------------------------------------------
+
+#7.2 Configure the etcd server:
+
+{
+  sudo mkdir -p /etc/etcd /var/lib/etcd
+  sudo cp ca.pem kubernetes-key.pem kubernetes.pem /etc/etcd/
+}
+
+INTERNAL_IP=10.1.11.41
+ETCD_NAME=$(hostname -s)
+
+cat <<EOF | sudo tee /etc/systemd/system/etcd.service
+[Unit]
+Description=etcd
+Documentation=https://github.com/coreos
+
+[Service]
+ExecStart=/usr/local/bin/etcd \\
+  --name ${ETCD_NAME} \\
+  --cert-file=/etc/etcd/kubernetes.pem \\
+  --key-file=/etc/etcd/kubernetes-key.pem \\
+  --peer-cert-file=/etc/etcd/kubernetes.pem \\
+  --peer-key-file=/etc/etcd/kubernetes-key.pem \\
+  --trusted-ca-file=/etc/etcd/ca.pem \\
+  --peer-trusted-ca-file=/etc/etcd/ca.pem \\
+  --peer-client-cert-auth \\
+  --client-cert-auth \\
+  --initial-advertise-peer-urls https://${INTERNAL_IP}:2380 \\
+  --listen-peer-urls https://${INTERNAL_IP}:2380 \\
+  --listen-client-urls https://${INTERNAL_IP}:2379,https://127.0.0.1:2379 \\
+  --advertise-client-urls https://${INTERNAL_IP}:2379 \\
+  --initial-cluster-token etcd-cluster-0 \\
+  --initial-cluster ${ETCD_NAME}=https://${INTERNAL_IP}:2380
+  --initial-cluster-state new \\
+  --data-dir=/var/lib/etcd
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+#----------------------------------------------------
+
+#7.3 Start the etcd server:
+
+{
+  sudo systemctl daemon-reload
+  sudo systemctl enable etcd
+  sudo systemctl start etcd
+}
+
+#----------------------------------------------------
+
+#7.4 List ETCD cluster members (verify that it works):
+
+sudo ETCDCTL_API=3 etcdctl member list \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/etcd/ca.pem \
+  --cert=/etc/etcd/kubernetes.pem \
+  --key=/etc/etcd/kubernetes-key.pem
+
+#Output:
+#862a4c5a2ca497a8, started, dcalvo-k8s-master, https://10.1.11.41:2380, https://10.1.11.41:2379
+#Yeaaaaaaaaaaaaaaaaaaaah
+
+
+#----------------------------------------------------
+#----------------------------------------------------
+#----------------------------------------------------
+#----------------------------------------------------
+#----------------------------------------------------
