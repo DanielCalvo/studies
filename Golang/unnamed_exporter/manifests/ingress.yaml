@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: unnamed-exporter
+  namespace: monitoring
+spec:
+  rules:
+    - host: to.be.changed.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: unnamed-exporter
+              servicePort: 2113

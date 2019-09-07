@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unnamed-exporter
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: unnamed-exporter
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: unnamed-exporter
+    spec:
+      serviceAccountName: unnamed-exporter
+      containers:
+        - name: unnamed-exporter
+          image: vioseven/unnamed-exporter:latest
+          ports:
+            - containerPort: 2113
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 2113
+              scheme: HTTP
+            initialDelaySeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 2113
+              scheme: HTTP
+            initialDelaySeconds: 5
+          resources:
+            requests:
+              memory: 50Mi
+            limits:
+              memory: 50Mi

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: unnamed-exporter
+  namespace: monitoring
+  labels:
+    app: unnamed-exporter
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/scheme: "http"
+spec:
+  selector:
+    app: unnamed-exporter
+  ports:
+    - port: 2113
