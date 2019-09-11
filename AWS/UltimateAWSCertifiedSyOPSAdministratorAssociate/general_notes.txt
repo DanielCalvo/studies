@@ -1,0 +1,9 @@
+
+11:
+Does a dedicated EC2 instance mean you can launch many VMs on a single host that you have, while a physical dedicated EC2 instance means you get an entire server for a single instance?
+
+12:
+Play around with spot requests
+
+21:
+Review EC2 creation errors
