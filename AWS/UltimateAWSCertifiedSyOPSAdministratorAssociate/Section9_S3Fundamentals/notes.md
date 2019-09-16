@@ -1,4 +1,4 @@
-## Overal chapter status: 
+## Overal chapter status: Studied carefully taking all the notes
 
 ### 92. S3 Fundamentals 
 Huge exam topic!
@@ -96,24 +96,109 @@ If you set a type of bucket encryption for the entire bucket, files uploaded wil
 
 
 ### 96. S3 Security & Bucket policies 
+There's 3 types of security.
+- User based
+    - Uses IAM policies. Which API calls should be allowed for a specific user from IAM console (Popular on the exam)
+- Resource based
+    - Bucket policies - bucket wide rules from the S3 console -- allows cross acount (?) (Popular on the exam)
+    - Supports Object Access Control list (ACL) - finer grain
+    - Bucket Access Control list (ACL) - less common 
 
-```text
+#### S3 bucket policies
+- JSON based policy 
+    - Resources: buckets and objects
+    - Actions: Set of API to allow or deny
+    - Effect: Allow / Deny
+    - Principal: The account or user to apply the policy to
+- You can use the S3 bucket policy to:
+    - Grant public access to the bucket
+    - Force objects to be encrypted at upload
+    - Grant access to another account (Cross Account access)
 
-```
+#### S3 security - Other
+- Networking
+    - Supports VPC Endpoints (for instances in VPC without full internet access. These instances can talk to S3 directly)
+- Logging and audit
+    - You can have S3 generate access logs and store those in another bucket. Do not store logs in the same bucket as this will be recursive and generate infinite logs!
+    - API calls can be logged in AWS CloudTrail
+- User Security
+    - You can enable MFA in versioned buckets to delete objects
+    - Signed URLs: URLs that are valid only for a limited time. (popular at the exam!)
+
+#### Hands on
+- Access control list: Not popular
+- Bucket policy: Very popular
+
+#### To force policies
+- How to ensure that the objects can be encrypted at upload (popular question at the exam)
+- Bucket > Permissions > Bucket policy > Generate a bucket policy (you can use the generator) like this: https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/
+- Bucket policies are cool.
+- You can only upload from the UI if you select "Amazon S3 master key" upon upload time.
+
 ### 97. S3 Websites 
+- S3 can host static websites that are available publicly!
+- The website URL will be:
+    - <bucketname>.s3-website.<AWSRegion>.amazonaws.com
+    - OR
+    - <bucketname>.s3-website-<AWSRegion>.amazonaws.com
+- If you get a 403 forbidden error, make sure the bucket policy allows public reads!
+- Sometimes when you change a bucket policy the result isn't instantaneous, it can take a minute or two
+- Properties > Static website hosting > Use this bucket to host a website
+- But after doing that I get a 403 as my bucket isn't public and I don't have the appropriate policy for it set up
 
-```text
+#### Bucket permissions for S3 websites:
+- Block public access to buckets and objects granted through new public bucket policies: Off
+- Block public and cross-account access to buckets and objects through any public bucket policies: Off
 
+Created an S3 bucket policy with Policy generator to allow GetObject to any object:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Id": "Policy1568644565619",
+    "Statement": [
+        {
+            "Sid": "Stmt1568644552111",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::testmctest/*"
+        }
+    ]
+}
 ```
+
 ### 98. S3 CORS 
-
+Popular on the exam!
+- Cross Origin Resource Sharing allows you to limit the number of websites that can request your files in S3 (and limit your costs)
+- It's from when you have a static page on a S3 bucket (bucket A) that gets images from another bucket (bucket B). You can set images on bucket B to only be acessible to your static site on bucket A, not the entire internet.
+- Here's a snipped of documentation:
 ```text
-
+Scenario 1: Suppose that you are hosting a website in an Amazon S3 bucket named website as described in Hosting a Static Website on Amazon S3. Your users load the website endpoint http://website.s3-website-us-east-1.amazonaws.com. Now you want to use JavaScript on the webpages that are stored in this bucket to be able to make authenticated GET and PUT requests against the same bucket by using the Amazon S3 API endpoint for the bucket, website.s3.amazonaws.com. A browser would normally block JavaScript from allowing those requests, but with CORS you can configure your bucket to explicitly enable cross-origin requests from website.s3-website-us-east-1.amazonaws.com.
+Scenario 2: Suppose that you want to host a web font from your S3 bucket. Again, browsers require a CORS check (also called a preflight check) for loading web fonts. You would configure the bucket that is hosting the web font to allow any origin to make these requests.
+From: https://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html
 ```
+
 ### 99. S3 Consistency Model 
 
-```text
+When something is done in S3, it can take a bit of time to replicate and to be active. There are two types of consistency you get on S3: 
+#### Read after write consistency for PUTS of new objects
+- When you use the put object API and the object did not exist before, as soon as the object is written, we can retrieve it
+- ex: (PUT 200 -> GET 200)
+- This is true only if you did not do a GET before the object was uploaded to see if it existed, you may get a 404 because you are eventually consistent. The previous result gets cached. You need to wait a bit.
+- ex: (GET 404 -> PUT 200 -> GET 404)
 
-```
+#### Eventual consistency for DELETES and PUTS of existing objects
+- If you read an object after updating it, you might get the older version, ex: PUT 200 -> PUT 200 -> GET 200.
+- If you delete an object, you might still be able to retrieve it for a short time, ex: DELETE 200 -> GET 200
+
+In other words:
+- As soon as you write, you can retrieve it
+- If you overwrite an object or delete an object you get eventual consistency, you might get an older version or might be able to get the object after it was deleted just for a short time.
 
 ### Quiz!
+- Buckets must have a unique name
+- Files that are already on the bucket when you start versioning will have a version of null
+- To have encryption happen when you upload the files to S3, but to manage the key yourself and not have it on Amazon, use the SSE-C encryption method
+- SSE-C requires HTTPS
+- 
