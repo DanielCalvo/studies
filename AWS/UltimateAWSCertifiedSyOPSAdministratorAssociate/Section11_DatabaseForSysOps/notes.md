@@ -1,3 +1,5 @@
+## Overal chapter status: Studied carefully taking all the notes. Exam is kinda tricky on multiple az vs read replicas, could use some review
+
 ### 126. RDS Overview
 To start from the basics:
 - RDS: Relational Database Service
@@ -195,19 +197,175 @@ Security is a popular exam topic on RDS
 - RDS is a managed service. The exam will gauge your knowledge on what can be done by you and what is done by Amazon
 
 ### 133. RDS API & Hands on
+There are some RDS API parts we need to know for the exam
+
+- DescribeBDInstances API
+    - Helps to get a list of all the DB instances you have deployed including Read Replicas
+    - Helps to get the DB version (possible exam question: How do you get the DB version)
+- CreateDBSnapshot API
+    - Makes a snapshot of a DB (possible exam question: How to automate snapshot?)
+    - DescribeEvents API
+- DescribeEvents API
+    - Returns information about events related to your DB instance
+- RebootDBInstanceAPI
+    - Helps to initiate a 'forced' failover by rebooting the DB instance
+    
+`aws rds describe-db-instances`
+`aws rds describe-events`
+`aws rds reboot-db-instance --db-instance-identifier mydb`
 
 ### 134. RDS & CloudWatch
+- Cloudwatch metrics associated the RDS, gathered from the hypervisor:
+    - DatabaseConnections
+    - SwapUsage
+    - ReadIOPS / WriteIOPS
+    - ReadLatecy / Write Latency
+    - ReadThroughPut / WriteThroughPut
+    - DiskQueueDepth
+    - FreeStorageSpace
+- Enhanced monitoring is also available! (gathered from an agent on the DB instance)
+    - In depth CPU / Thread / process metrics
+    - Over 50 new cpu/mem/IO/sys metrics
+
+#### Hands on!
+- RDS > mydb > Modify > Enable enhanced monitoring
+- RDS > mydb > monitoring > Drop down "Enhanced Monitoring"
 
 ### 135. RDS Performance insights
+- Visualize your database performance and analyze any issues that affect it
+- With the performance insights dashboard, you can visualize the database load and filter the load:
+    - By waits: Find the resource that is the bottleneck (CPI, IO, lock, etc)
+    - By SQL statements: Find the SQL statement that is the problem
+    - By hosts: Find the server that is using most the DB
+    - By Users: Find the user that is using the most the DB
+- DBLoad: The number of active sessions for the DB engine
+- You can view the SQL queries that are putting the most load in the database
+
+https://aws.amazon.com/blogs/database/tuning-amazon-rds-for-mysql-with-performance-insights/
 
 ### 136. Aurora overview
+No deep knowledge necessary, but a high level view of Aurora is required
+- Proprietary technology from AWS (not open source)
+- Postgres and MySQL are both supported as the Aurora database type (that means your DB drivers will work as if Aurora was a Postgres or MySQL database) 
+- Aurora is "AWS cloud optimized" and AWS claims a 5x performance improvement over MySQL on RDS and 3x over on Postgres on RDS 
+- Aurora storage automatically grows in increments of 10GB, up tp 64TB
+- Aurora can have 15 replicas while MySQL has 5 and the replication process is faster (sub 10ms replica lag)
+- Failover in Aurora is instantenous. HA Native
+- Aurora costs more than RDS (20% more) but it's more efficient
+
+#### Aurora high availability and read scaling
+- Aurora stores 6 copies of your data across 3 AZs
+    - 4 copies out of 6 are needed for writes
+    - 3 copies out of 6 needed for reads
+    - Aurora has peer-to-peer data replication to fix corrupted data
+    - Storage stored as a"Shared storage volume" which is striped across hundreds of volumes (not manageable by the end user)
+    - The shared storage volume has replication + self healing + auto expanding features
+- One Aurora instance takes writes (master)
+- If something happens with the master, failover happens in last than 30 seconds
+- You can have the master + 15 aurora read replicas to serve reads
+- Any of these read replicas can become the master in case of failure
+- One master, multiple replicas, storage: replicated, self healing, auto expanding
+
+#### Aurora DB cluster
+- Aurora provides a writer endpoint, a DNS name, always pointing to the master. The master can fail and failover can take place, but the endpoint remains the same
+- You can have a read replicas. The read replicas can have auto scaling!
+- There is a reader endpoint! Very similar to the writer endpoint. It helps with connection load balancing. Load balancing happens and connection level, not statement level (popular on the exam)
+- Writer endpoint! Reader endpoint! Autoscaling! Shared storage volume that autoexpands!
+
+#### Features of Aurora (more like buzzwords)
+- Automatic fail over
+- Backup and recovery
+- Isolation and security
+- Industry compliance
+- Push-button scaling
+- Automated patching with zero downtime
+- Advanced monitoring
+- Routine maintenance
+- Backtrack: Restore data at any point without using backups
+
+#### Aurora security
+- Encryption at rest using KMS
+- Automated backups, snapshots and replicas are also encrypted
+- Encryption in flight using SSL (same process as MySQL or Postgress)
+- You can authenticate using IAM
+- You're responsible for protecting the instance with SGs
+- You can't SSH
+
+#### Aurora serverless
+- No need to choose instance size
+- Only supports MySQL and Postgres
+- Helpful when you can't predict your workload
+- DB cluster will start and autoscale based on CPU usage / connections
+- Can migrate from Aurora cluster to Aurora serverless and vice versa (cool!)
+- Aurora serverless usage is measured in ACU (Aurora Capacity units)
+- Some features of Aurora aren't supported in serverless mode, so make sure to check the documentation if you plan on using it
 
 ### 137. Aurora Hands On
+- Cool! Multiple instances by default! Creation looks a lot like normal RDS, except with more options
+- Remember to always connect to the writer and the reader endpoints, never connect to a single instance of aurora directly!
 
-### 138. ElastiCache
+### 138. ElastiCache overview
+- In the same way that RDS is for managed relational databases...
+- ElastiCache is for managed Redis or Memcached! 
+- Caches are in-memory databases with high performance and low latency
+- Helps reduce load off databases by caching data
+- Helps make your application stateless
+- Write scaling using sharding
+- Read scaling using read replicas
+- Multi AZ with failover capabilities
+- AWS takes care of maintenance, pathces, optimizations, set up, configuratio, monitoring, failure recover and backups, just like with RDS
+
+#### ElastiCache solution architecture
+- Application queries ElastiCache, if data is not available there, get data from RDS and store it in ElastiCache
+- When you look for cached data in ElastiCache and the data is there, it's called a cache hit
+- The opposite of that is a cache miss, and in that case our app goes ahead and queries RDS for the data, and then write to cache
+- Caches help relieve the read load from RDS
+- Cache has to have some validation strategy to make sure only the most current data is there (to be done at application level though)
+
+#### Elasticache Solution architecture -- User Session store
+- User logs in into the application
+- Application writes the session data into ElastiCache
+- User hits another instance running the application
+- Application retrieves the session from ElastiCache
+- The user session store is stored in ElastiCache and shared across instances. Cool!
+
+#### Redis overview
+- Redis is an in memory key-value store
+- Low latency (sub ms)
+- Cache can survive reboots by default (called persistence)
+- Great to host:
+    - User sessions
+    - Leaderboards (there's a sorting capability)
+    - Distributed states
+    - Relieve pressure on databases (such as RDS)
+    - Pub/sub capability for messaging (?)
+- Multi AZ with automatic failove for disaster recovery if you don't want to lose your cache data
+- Supports read replicas
+
+#### Memcached overview
+- In memory object store
+- Cache doesn't survive reboots
+- Use cases
+    - Quick retrieval of objects from memory
+    - Cache often access objects
+- Overall, Redis has largely grown in popularity and has better feature sets than memcached
+- Author recommends Redis, though the exam won't ask anything as to which one is better / most popular
+    
 
 ### 139. ElastiCache Hands On
+- You can encrypt elasticache at rest, and in transit! Cool!
+- Redis supports cluster mode
+- There are also automated backups
 
 ### 140. Section Clean up
+- Make sure delete snapshots and backups
 
 ##Quiz!
+- Queries against the main database are causing performance problems. Answer: Set up a read replica
+- To enable SSL connections to your Postgre database, use parameter groups with the SSL option enabled
+- To have automatic recovery in case of your db becoming irresponsive, use Multi AZ. (One DNS name, automatic failover)
+- To have your backups run faster and not impact the production database, enable Multi AZ
+- To obtain the RDS database engine version, use the DescribeDBInstances api call
+- To find out which SQL statements are slowing down your db, slice the performance by SQL statements on the insights dashboard
+- Remember to use the Aurora read endpoint to use load balancing for read replicas and reach the appropriate replicas
+
