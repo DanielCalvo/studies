@@ -80,16 +80,119 @@ Popular topic at the exam!
 ### 127. RDS Hands on
 - Aurora is not available as part of the free tier :(
 - Most popular at the exam: MySQL
-)
+- Can't change the VPC once db is created :o
+
 ### 128. RDS Multi AZ vs Read Replicas
+Popular on the exam: Difference between multi AZ and read replicas
+
+#### Multi AZ
+- Your application reads and writes to the master database.
+    - This master DB does synchronous replication to a stand by database in another AZ, which is on stand by
+    - You cannot directly reach the stand by database or launch connections against it. It's just there as failover
+    - Your app when it talks to the database, it talks to one DNS name
+    - If a failure happens, you still talk to the same DNS name, but amazon changes the database in the background
+    - Multi AZ is not to scale up reads. It's just for fault tolerance
+    - It fails over only if the primarey db 
+
+#### RDS Multi AZ in depth
+- The failover happens only in the following conditions:
+    - The primary db instance fails
+    - An AZ has an outage
+    - The DB instance server type is changed
+    - The operating system of the DB instance is undergoing software patching
+    - A manual failover of the DB instance was initiated using reboot with failover
+- No failover for DB operations: long-running queries, deadlocks or database corruption errors
+- Endpoint is the same after failover (no URL change in application needed)
+
+##### Why use multi AZ in top of fault tolerance
+- Lower maintainance impact
+- You can use multi AZ to reduce maintenance time, if Amazon does maintenance on your database, it will do on the standy first
+- When the standy is upgraded, amazon will then perform changes to the master
+- If you have backups, those are created from the standby, not impacting performance of the master db
+- Multi AZ is only within a single region. If the whole region goes down, you're still gonna have a bad time
+
+#### RDS Read Replicas
+- Improves read performance!
+- Writes still happen to a single master
+- Reads can happen from any db, from the master or the read replicas
+- Replication from master to read replicas is asynchronous
+
+##### RDS Read Replicas in depth
+- Read replicas help scaling read traffic
+- A Read replica can be promoted as a standalone database (manually)
+- Read replicas can be within AZ, Cross AZ or Cross region
+- Each read replica has it's own DNS endpoint. To scale, your application needs to be aware of all the DNS endpoints
+- You can have read replicas of read replicas
+- Read replicas can be multi AZ
+- Read replicas can help with disaster recovery by using a cross region read replica
+- Read replicas are not supported for Oracle
+- Possible exam question: We want to run BI / Analytics reports on our production data but we don't want to impact our production application, how do we do it?
+    - Create a read replica!
+- Really needed for the exam: To know the difference between read replicas and a multi AZ setup
 
 ### 129. RDS Multi AZ vs Read Replicas Hands On
+- Created a multi-az database
+- You can reboot with failover. It takes a while!
+- Actions > Create read replica. You can pick different regions! Also on another AZ
+- Saw an example of a read replica working. Cool!
 
 ### 130. RDS Parameter Groups
+- You can configure the DB engine using Parameter groups
+- Dynamic parameters are applied immediately
+- Static parameters are applied after instance reboot
+- You can modify the parameter group associated with a DB (must reboot to take effect)
+- Author encourages you to look at the doc if you're curious about the list of parameters for a given DB
+
+#### Must know parameter for the exam
+- PostgreSQL / SQL Server: `rds.force_ssl = 1` to force SSL connections
+- For MySQL / MariaDB: `GRANT USAGE ON *.* TO 'mysqluser@'%' REQUIRE SSL;`
+
+#### Hands on
+- You can create your own parameter group. Pretty cool! It's a bunch of database settings
+- Click on running db > modify > select parameter group > apply now! 
+- Instance is going to be in a "modifying" state (rebooting) for a while
 
 ### 131. RDS Backup vs Snapshots
 
+#### Backups
+- Backups are "continuous" and allow point in time recovery
+- Backups happen during maintenance windows
+- When you delete a db instance, you can retain the automatic backups
+- Backups have a retention period of anything between 0 to 35 days
+- If you delete a given database, it's backups will be deleted eventually
+
+#### Snapshots
+- Snapshots take IO operations and can stop the database from seconds to minutes
+- Snapshots taken on multi AZ DBs don't impact the master, just the stand by
+- Snapshots are incremental after the first one (which is full)
+- You can copy and share DB snapshots
+- Manual snapshots never expire!
+- You can take a final snapshot when you delete your DB
+
+#### Quick snapshot hands on
+- Database > Maintenance and backups > Take snapshot
+- Database > Actions > Restore to point in time 
+- You can also copy a snapshot in the same region or in another region!
+
 ### 132. RDS Security
+Security is a popular exam topic on RDS
+- Encryption at rest:
+    - Can only be enabled when you create the database instance
+- To go from an unencrypted database to an encrypted one
+    - unencrypted db > snapshot > copy snapshot as encrypted > create DB from snapshot
+
+#### Your security settings regarding DBs
+- Check the ports / IP / Security group inbound rules in the DB's SG to have the connectivity that you want (public/private, what network, etc)
+- In database users/permissions are handled by you, not AWS
+- Creating a database with or without public access
+- Ensure parameters groups or the DB is configured to only allow SSL connections
+
+#### AWS security settings regarding DBs
+- No SSH access
+- No manual DB patching
+- No manual OS patching
+- No way to audit the underlying instance
+- RDS is a managed service. The exam will gauge your knowledge on what can be done by you and what is done by Amazon
 
 ### 133. RDS API & Hands on
 
