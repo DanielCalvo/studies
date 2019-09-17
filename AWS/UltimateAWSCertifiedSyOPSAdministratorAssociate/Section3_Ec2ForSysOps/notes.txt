@@ -1,7 +1,17 @@
 
+- General notes -
+11:
+Does a dedicated EC2 instance mean you can launch many VMs on a single host that you have, while a physical dedicated EC2 instance means you get an entire server for a single instance?
+
+12:
+Play around with spot requests
+
+21:
+Review EC2 creation errors
 
 4. Section introduction
 AMIs are really asked at the exam!
+- General notes -
 
 
 5. Launching an EC2 instance:
