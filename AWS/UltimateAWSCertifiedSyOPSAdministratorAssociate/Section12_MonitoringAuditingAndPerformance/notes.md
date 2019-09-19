@@ -1,6 +1,5 @@
-#Chapter status: Took notes attentively, but didn't do the quiz yet
-
-# Personal note: Interesting to set up on your own to track expenditures and automated things
+- Chapter status: Took notes attentively, got the quiz very right!
+- Personal note: Interesting to set up on your own to track expenditures and automated things
 
 ### 141. Section intro
 - CloudWatch: Important in the exam 
@@ -9,7 +8,7 @@
 - Cloudwatch provides metrics for every service in AWS
 - Metric is a variable to monitor (cpu utilization, network in, etc)
 - Metrics will belong to namespaces
-- A dimension is an atribute of a metric (instance id, environment, etc)
+- A dimension is an attribute of a metric (instance id, environment, etc)
 - You can have up to 10 dimensions per metric
 - Metrics will have timestamps
 - You can create dashboards with the metrics you want
@@ -19,7 +18,7 @@
 - Detailed monitoring enables per minute metric for an additional cost
 - Using detailed monitoring you could get more prompt scaling in your ASG!
 - The AWS free tier allows you to have 10 detailed monitoring metrics
-- Memory usage is not pushed by defaul on EC2, it must be pushed as a custom metric using monitoring scripts
+- Memory usage is not pushed by default on EC2, it must be pushed as a custom metric using monitoring scripts
 
 #### AWS CloudWatch custom metrics
 - You can defined and send your own metrics to cloudwatch
@@ -52,7 +51,7 @@ One or two questions about this
 
 ### 144. CloudWatch Logs
 - Your application can send logs to cloudwatch using the SDK
-- Cloud watch can collecct log from
+- Cloud watch can collecct logs from
     - Elastic beanstalk
     - ECS
     - AWS Lambda
