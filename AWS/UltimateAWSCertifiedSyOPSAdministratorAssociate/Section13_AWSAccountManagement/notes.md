@@ -39,12 +39,44 @@
 - Helpful to only allow approved services
 
 ### 155. AWS Organizations Hands-on
+- You invite create accounts
+- You then associate an account with an organizational unit
+- You can create an access policy that can allow/deny access to certain services
+- You then enable policy types and apply a policy(ies) to an OU
+- Not only you have to check IAM for acess denied errors, but if your account is part of an organization, there's a chance there's a service control policy attached to it
+- You can only see from the root account which policies are assigned to which accounts
 
 ### 156. AWS Service Catalog Overview
+- Not very popular on the exam, but important to know
+- Users that are new to AWS have too many options and may create stacks that are not compliant or in line with the rest of the organization
+- Some users just want a quick self-service portal to launch a set of authorized products pre-definer by admins
+- As an admin, you create a product, which is a cloudformation template
+- And then you create a portfolio, which is a collection of products 
+- As a user, you're presented with a product list
+
+#### AWS service catalog, more info
+- Creates and manages catalogs of IT services that are approved on AWS
+- The "products" are CloudFormation templates (VMs, servers, software, databases, regions, ip ranges, you can do a bunch of stuff)
+- CloudFormation helps ensure consistency and standardization by Admins
+- Products are assigned to portfolios. Teams are presented a self-service portal where they can launch the products
+- All the deployed products are centrally managed deployed services
+- Helps with governance, compliance and consistency
+- Can give user access to launching products without requiring deep AWS knowledge
+- Integrations with "self-service portals" such as serviceNow 
 
 ### 157. AWS Service Catalog Hands-on
+- Created a stack from a cloudformation config
+- Created a portfolio
+- Added a product to a portfolio
+- You add users/groups to a portfolio
 
 ### 158. AWS Billing Alarms
+- Billing data metric is stored in CLoudWatch us-east-1
+- Billing data is for overall WorldWide AWS costs
+- This is for global costs, not for project costs
+- Let's create a billing alarm 
+-  Top right, your account name > My Billing Dashboard > Billing preferences > Receive Billing Alets > Manage Billing Alerts
+- On the left pannel: Billing > Alarms
 
 ### 159. AWS Cost Exporter
 
