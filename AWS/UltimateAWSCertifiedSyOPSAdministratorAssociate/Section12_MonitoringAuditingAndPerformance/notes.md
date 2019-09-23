@@ -213,4 +213,3 @@ Popular exam topic!
 ### 151. Section clean up
 
 ### Quiz
-- Todo!
