@@ -307,10 +307,85 @@ For Host assessments
 - Pro tip: You should be able to read AWS Policies on JSON format
 
 ### 176. STS & Cross Account Access
+- Security Token Service!
+- It allows to grant limited and temporary access to AWS resources
+- You'll generate tokens and these tokens will be valid for up to one hour
+- You can use this for Cross Account Access
+    - Allow users from one AWS account to access resources in another account
+- Federation (Active Directory)
+    - Provides a non-AWS user with temporary AWS access by linking users' Active Directory credentials
+    - You can also use SAML (Security Assetion markup language)
+    - You can also allow Single Sign On (SSO) to enable users to log in to the AWS console without assigning IAM credentials
+- Any time you have security token that is temporary in nature, STS is in play
+- You can also use STS for federation with third party providers, such as Cognito
+    - Used mainly in web and mobile applications
+    - Makes use of Facebook/Google/Amazon to federate them
+    
+#### Cross account access
+- You define an IAM role for another account to access
+- Define which accounts can access this IAM role
+- Use AWS STS to retrieve credentials and impersonate the IAM role you have access to (AssumeRole API)
+- Temporary credentials can be valid for between 15 minutes to 1 hour
+
+#### Diagram:
+- You're a user and you want to access a role, either in the same or in another account
+- We do a call to the AssumeRole API on STS which will check against IAM permissions to see if you can do it
+- And then it will send you back temporary security credentials 
+- These security credentials will allow you to use the role you wanted
 
 ### 177. Identity Federation with SAML & Cognito
 
+#### What is identity federation
+- Federation lets users outside AWS to assume a temporary role for accessing AWS resources
+- These users will assume an identity provided access role
+- Federation: The identities of users are stored in a third party, trusted by AWS. 
+- Examples for third parties
+    - LDAP
+    - Microsoft Active Directory (SAML)
+    - Single Sign On
+    - Open ID
+    - Cognito
+- Using federation, you don't need to create IAM users, user management is done outside of AWS
+- Popular on the exam: SAML, Custom Broker, Cognito
+
+#### SAML Federation for enterprises
+- You can integrate ADFS or any SAML thing with AWS
+- Your users ADFS users have access to AWS with temporary credentials
+
+#### Custom Identity Broker Application for Enterprises
+- Use only if your identity provider is not compatible with SAML 2.0
+- This identity broker must determine the appopriate IAM policy
+- Same principle as SAML, but you have to implement an identity broker yourself
+
+#### AWS Cognito - Federated Identity Pools for Public Applications
+Use case: You have an app and your users need to put a file on a S3 bucket
+- Goal
+    - Provide direct access to AWS resources from the client side
+- How
+    - Log in to a federated identity provider, or remain anonymous
+    - Get temporary AWS credentials back from the federated identity pool
+    - These credentials come with a pre-defined IAM policy stating their permissions
+- Example
+    - Provide temporary write access to an S3 bucket using a facebook login
+- Note
+    - Web Identity federation is an alternative to using Cognito but AWS recommends against it 
+
+#### Diagram
+- App > logs in to CUP > gets a token back from it
+- App > sends token to federated identity 
+- Federated identity talks to STS to get credentials
+- Federated identity sends temporary AWS credentials to the app
+- App can now access S3 bucket (example) using these temporary credentials
+
 ### 178. JSON Policies tab
+- Well look at IAM and S3 buckets and try to understand them
+- In the exam, there will be json policies and you'll have to analyze them :o
+
+```text
+https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_examples.html
+https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_aws_deny-ip.html
+
+```
 
 ### 179. AWS Compliance frameworks
 
