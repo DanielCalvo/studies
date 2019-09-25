@@ -1,3 +1,6 @@
+- Chapter status: Took notes attentively, got the quiz mostly right
+- Follow up on better understanding JSON policies!
+
 ### 162. Intro!
 - Uh-oh, one of the hardest sections, we learn about many things!
 
@@ -6,15 +9,15 @@
     - Hardware, software, facilities, network, etc, everything running the AWS's services
     - Also responsible for managed services like S3, DynamoDB and many others 
 - Customer's responsibility: Security **in** the cloud
-    - For an EC2 instance, the customer is responsible for the management of the gues OS (including patches and updates), firewall & network config, IAM, etc
+    - For an EC2 instance, the customer is responsible for the management of the guest OS (including patches and updates), firewall & network config, IAM, etc
 
 #### Example: RDS
-AWS's responsbility:
+AWS's responsibility:
     - Manage the underlying EC2 instance with no SSH access for you
     - Automated DB patching
     - Automated OS patching
     - Audit the underlying instance, disks & guarantee it functions
-- Your responsability:
+- Your responsibility:
     - Check the ports / IP / security groups in the DB's SG
     - In-database user creation and permissions
     - Creating a databasw with or without public access
@@ -186,7 +189,7 @@ For Host assessments
 
 ### 171. KMS Overview + Encryption in place
 - Any time you hear "encryption" for an AWS service, it's most likely KMS
-- Easy way to controll access to your data, AWS manages the key for you
+- Easy way to control access to your data, AWS manages the key for you
 - Fully integrated with IAM for authorization 
 - Seamlessly integrated into:
     - EBS: Encrypted volumes
@@ -302,7 +305,7 @@ For Host assessments
 ### 175. IAM PassRole Action
 - Popular at the exam!
 - When you create an EC2 instance, you assign a role to it 
-- In order to assign a role to an EC2 instancem you need IAM:PassRole. Important to remember!
+- In order to assign a role to an EC2 instance you need IAM:PassRole. Important to remember!
 - IAM:PassRole can be used for any service where we assign roles (not only EC2)
 - Pro tip: You should be able to read AWS Policies on JSON format
 
@@ -388,9 +391,38 @@ https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_aws
 ```
 
 ### 179. AWS Compliance frameworks
+- Wew AWS has a lot of compliance certifications
+- There a bunch of region specific certifications (US and Europe)
+- https://aws.amazon.com/compliance/iso-certified/
+- AWS being compliant does not mean that you are automatically compliant! :o
+- You need to get audited as well, depending on whatever compliance you have to comply with
+- Remember the AWS shared responsability model
 
 ### 180. AWS Artifact
+- Not really a service
+- AWS Artifact is a portal that provides customers with on-demand access to AWS compliance documentation and AWS agreements
+- Artifact reports: You can download AWS security and compliance documents 
+- Artifact agreements: Allows you to review, accept and track the status of AWS agreements
+- Can be used to support internal audit or compliance
+- Auditor: "Do you have documentation proving that AWS is PCI compliant"
+- You: "Yes sir, we can find this documentation in AWS Artifact"
+- Artifact is just for downloading compliance reports 
 
 ### 181. Security and Compliance Section Summary
+- AWS Shield: DDoS Protection + 24/7 support for Advanced DDoS protection
+- AWS WAF: Firewall to filter incoming requests based on rules
+- AWS Inspector: For EC2, install agent and find vulnerabilities
+- AWS GuardDuty: Find malicious behaviour with VPC, DNS and CloudTrail Logs
+- AWS Trusted advisor: Will analyze AWS account and get recommendations on improving performance, cost and security
+- AWS KMS: Encryption keys managed by AWS
+- AWS CloudHSM: Hardware encryption, you manage the keys, supports asymetrical encryption
+- AWS STS: Generates security tokens
+- Identity Federations: SAML 2.0 or Custom for Enterprise, Cognito for app
+- AWS Artifact: Get access to compliance reports
+- AWS Config (not in chapter): Track config changes and compliance against rules
+- AWS CloudTrail (not in chapter): Track API calls made by users within an account
+ 
 
 ### Quiz
+- Remember the, the report reporting who has MFA enabled is under IAM!
+- Read more JSON policies, they can be difficult to understand!
