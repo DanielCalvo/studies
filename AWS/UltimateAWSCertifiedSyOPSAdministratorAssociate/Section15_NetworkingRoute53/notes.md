@@ -1,3 +1,7 @@
+- Chapter status: Took notes attentively, got the quiz a bit wrong
+- Follow up on better understanding the difference between CNAMES and ALIAS, Stephan's explanation was a bit ambigious
+- Rewatch lectures 195 to better understand domain delegaton and lecture 187 to better understand CNAME vs ALIAS
+
 ### 182. Section introduction 
 - Yay we'll check a bunch of stuff! DNS is cool. There are graphs!
 - Also 3rd party domains
@@ -72,7 +76,7 @@
 - Depending on your geographical location, you will get a different DNS response, which will be the one with the lowest latency from you
 
 ### 191. Route 53 health checks
-- An instance/endpoint is deemded unhealthy if it fails 3 health checks in a row 
+- An instance/endpoint is considered unhealthy if it fails 3 health checks in a row 
 - Default health check interval is 30 seconds. It can be changed, but this incurs higher costs.
 - In the background on Amazon's side, about 15 health chekers will check the endpoint health
 - You can have HTTP, TCP and HTTPS health checks (no SSL verification)
@@ -83,12 +87,49 @@
 - Created 3 health checks on route 53
 
 ### 192. Routing policy - failover
+- You have a main EC2 instance and a failover one
+- Route 53 has a health check pointing to the primary instance
+- If the route check fails, it'll point you to the failover instance
+
+#### Hands on
+- New address entry, routing policy > failover
+- When creating the main A rentry, set the failover type to primary and associate it with a healthcheck
+- Create the second entry with the same name on the name entry and the routing policy of failover, type secondary. The secondary failover doens't need a health check
 
 ### 193. Routing policy - geolocation
+- Different from latency based!
+- Routing based on user location 
+- Ex: Traffic that originates from the UK should go to this specific IP
+- You should create a default policy in case there's no match on location!
+
+#### Hands on
+- New address entry, routing policy > Geolocation
+- You can then choose a location! Continents or countries
+- Remember to create multiple A entries to the same name with different geolocation settings so different people from different places get different results from your DNS 
+- Don't forget to create a default routing policy at the end!
 
 ### 194. Routing policy - multi value
+- Use when you want to route traffic to multiple resources
+- You can associate a route 53 health check with errors
+- Returns up to 8 healthy records for each multi value query
+- Multi value is not a good replacement for having an ELB!
+- Diagram: Multiple values associated with one A entry. Each entry is associated with a health check. If the health check is unhealthy, route 53 no longer returns that when someone queries that name.
+
+#### Hands on
+- New address entry, routing policy > Multivalue answer, associate it with a healthcheck
+- Create a bunch of records with the same name and multivalue routing policy!
 
 ### 195. 3rd party domains & Route 53
+- Route 63 is also a registrar!
+- A domain name registrar as an organization that manages the reservation of internet domain names
+- Remember: Domain Registrar != DNS
+- If you buy your domain on a 3rd party website, you can still use Route 53!
+    - Create a hosted zone in route 53
+    - Update NS records on the 3rd party website to use route 53 name servers
+
+#### Hands on
+- Go on google domains and on the settings, set google domains to use a custom name server, and in there set the AWS name servers
+- Possible exam question: "How do you integrate a third party domain with route 53?" Create your domain elsewhere but have the name servers point to your AWS route 53 hosted zone
 
 ### 196. Section clean up
 
