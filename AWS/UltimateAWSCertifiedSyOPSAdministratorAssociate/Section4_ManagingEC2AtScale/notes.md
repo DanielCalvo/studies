@@ -1,4 +1,4 @@
-- Chapter status: Took notes attentively, got the right!
+- Chapter status: Took notes attentively, got the quiz right!
 
 ### 22: Intro
 - Amazon EC2 Systems Manager
@@ -45,7 +45,6 @@
 - AWS Systems Manager > Managed Instances > (Wait a minute or two for your EC2 instances to start up) > You see your instances!
 
 ### 25: AWS Tags & SSM Resource groups
-
 - Tags: Key value pairs that can be attached to many resource kinds.
 - Most commonly EC2, but they can be attached to many services
 - They're arbitrary, you can call them whatever you want (team, name, environment...)
@@ -70,7 +69,6 @@
 - Go to Resource Groups > Create group > Tag based > Grouping Criteria
 - Resource type: AWS::EC2::Instance
 - Tag: Environment: Dev
-
 
 ### 26: SSM Documents & SSM Run Command
 - You can define a SSM Document to perform an action
@@ -209,7 +207,7 @@ Author recommends to use a hierarchy (departments, teams, environments). You can
 
 
 ### 32: AWS OpsWorks Overview
-- Chef & Pupper help you perform server configuration automatically or repetitive actions
+- Chef & Puppet help you perform server configuration automatically or repetitive actions
 - They work great with EC and on premises VM
 - AWS OpsWorks = Managed Chef and Pupper.
 - It's an alternative to AWS SSM.

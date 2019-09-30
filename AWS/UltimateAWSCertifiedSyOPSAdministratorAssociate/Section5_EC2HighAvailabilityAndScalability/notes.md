@@ -1,17 +1,53 @@
+- Chapter status: Went all the way to lecture 36 and then went for the Cloudformation lecture
+    - Resume on the lecture 36 with the hands on using cloudformation perhaps 
+
 ### 34. Section introduction
 
-```text
-Load balancers and auto scaling groups!
-Troubleshooting!
-Advanced options!
-CloudWatch Integrations!
-```
+- Load balancers
+    - Troubleshooting!
+    - Advanced options and logging
+    - CloudWatch Integrations
+- Autoscaling groups
+    - Troubleshooting!
+    - Advanced options and logging
+    - CloudWatch Integrations
 
 ### 35. What is high availability and Scalability?
 
-```text
-Your system can handle greater loads by scaling
-There's two types of scalability: Vertical and Horizontal
+- Scalability means that an application/system can handle greater loads by adapting
+- There are two kinds of scalability
+    - Vertical scalability  
+    - Horizontal scalability (also called Elasticity)
+- Scalability is linked but different to High Availability
+
+#### Vertical scalability
+- Vertical scalability means increasing the size of the instance
+- Like increasing from t2.micro to t2.large
+- Common for some non distributed systems, like some databases
+- RDS and ElastiCache are services that can scale vertically
+- There's usually a limit on how much you can vertically scale (hardware)
+
+#### Horizontal scalability
+- Horizontal scalability means increasing the number of instances/systems in your application
+- Horizontal scaling implies distributed systems
+- Very common for web applications
+- It's easy to horizontally scale thanks to cloud offerings such as Amazon EC2
+
+#### High Availability
+- High Availability usually goes hand in hand with horizontal scaling
+- High Availability means running your application / system in at least 2 data centers (or 2 different availability zones)
+- The goal of HA is to survive a data center loss
+- HA can be passive, RDS Multi AZ for example
+- HA can be active, EC2 horizontal scaling for example
+
+#### High Availability & scalability for EC2
+- Vertical scaling: Increase instance size
+- Horizontal scaling: Increase the number of isntances (scale out/in). This can be used with
+    - Auto scaling groups
+    - Load Balancers
+- High Availability: Run instances for the same application across multi AZ
+    - Auto Scaling group multi AZ
+    - Load Balancer multi AZ
 
 Vertical: Means increasing the size of your instance. RDS and Elasticache can scale vertically well, although there are limits to this.
 Horizontal: Means increasing the number of instances/systems for your application
@@ -25,71 +61,100 @@ Goal: Survive datacenter loss.
 
 An Auto scaling group can be multi-az
 A load balancer can be multi-az
-```
+
 
 ### 36. Load Balancer overvieww
+- Load balancing are servers that forward internet traffic to multiple EC2 instances downstream
+- Users don't connect directly to an instance, they connect to a load balancer.
 
-```text
-Load balancing are servers that foward internet traffic to multiple EC2 instances in this case
-- It spreads load across multiple instances downstream
-- Expose a single point of access to your app
+#### Why use a load balancer
+- Spreads load across multiple downstream instances 
+- Expose a single point of access (DNS) to your app
 - Seamlessly handle failure of downstream instances
 - Does helthcheck on the instances and redirects traffic to instances that are working
-- Load balancers can provide HTTPs termination
-- Can enforce stickiness with cookies
+- Load balancers can provide HTTPs termination. Encryption/SSL is between the cliend and the ELB
+- Can enforce stickiness with cookies so that the user talks to the same instance over time 
 - Can provide high availability across zones
 - Can separate public traffic from private traffic (?)
 
-There's an EC2 load balancewr named ELB. It's a managed load balancer
-EC2 ensures it's working, take care of updates, provide some configurations settings
-It is integrated with many AWS services
+####  Why use an EC2 loadbalancer
+- And ELB (EC2 load balancer) is a managed load balancer
+    - AWS guarantees that it will be working
+    - AWS takes care of updates, maintenance, high availability
+    - AWS provides only a few configuration knobs
+- It costs less to set up your own load balancer but it will be a lot more effort on your end
+- ELB is integrated with many AWS offerings/services
 
-There are different types of LBs:
-- Classic load balancer, or V1, from 2009.
-- Application loadbalancer, v2 - 2016
-- Network load balancewr, v2, 2017
-Overall it's recommended to use the newer, v2 load balancers.
+#### Types of load balancers on AWS
+- AWS has 3 kinds of load balancers
+- Classic load balancer, or v1, from 2009
+- Application load balancer, v2 - 2016
+- Network load balancer, v2, 2017
+- Overall it's recommended to use the newer, v2 load balancers as they provide more features
+- Application load balancer and network load balancer is what will be asked mainly in the exam
+- You can set up internal (internal) or external (public) ELBs
 
-You can set up internal (internal) or external (public) load balancer
+#### Healthchecks:
+- Health checks are crucial for load balancers
+- They enable the load balancer to know which instances are healthy so that it can forward traffic to them
+- The health check is done on a port and a route (/health is common)
+- If the instance responds 200 (OK) it is considered healthy, if it responds with anything else it is considered unhealthy
 
-Healthchecks: 
-These allow the LB to know which instances to forward traffic to.
-Healthcheck is done to a port and route (like /health)
+#### Application load balancer (v2)
+- Application load balancers (layer 7), these allow:
+    - Load balancing to multiple HTTP applications across machines (target groups)
+    - Load balancing to multiple HTTP applications on the same machine (ex: containers)
+    - Common question on the exam! We need something to load balance across the same application running on the same machine (?). Application load balancer does it!
+    - Load balance based on route in URL
+    - Load balance based on hostname in URL
+- Load balancers are a great fit for microservices & container-based applications (such as Docker & Amazon ECS)
+- There is also a port mapping feature to redirect you to any dynamic port in the backend
+- In comparison, you would need to create one Classic Load Balancer per application before. That was very expensive and ineficient! 
 
-Application load balancers (layer 7)
-These are called L7 as they allow you to work at the HTTP level. You group applications in target groups.
-You can load balancer to multiple applications on the same machine (common exam question)
-You can load balance based on the route or hostname (?) on the URL.
+#### Diagram on application load balancer for HTTP
+- A load balancer sends traffic to a target group, with a healthcheck
+- A load balancer will send the http traffic based on the route (like /user)
+- You can set up many target groups on the same application load balancer
+- You can have as many target groups as you want behind your ELB
 
-Good fit for micro services and container based apps.
+#### Application load balancer v2 good to know 
+- Stickiness can be set at the target group level. 
+    - Same request goes to the same instance
+    - Stickiness is directly generated by the ALB (not the application, cookie at the ALB level)
+- ALB supports HTTP/HTTPS & Websockets protocols
+- The application servers don't see the IP of the client directly (common exam question!)
+    - The true IP of the client is inserted in a header named `X-Forwarded-For`
+    - The port and protocol are also available in `X-Forwarded-Port` and `X-Forwarded-Proto` respectively
+    - ELB does the connection termination for the clients. Your EC2 sees the private IP of your load balancer
 
-There's a port mapping feature to redirect to a dynamic port.
+#### Network Load Balancer (v2)
+- To forward TCP traffic to your instances
+- Can handle millions of requests per second, very high performance
+- Support static IP or elastic IP
+- Less latency, about 100ms (vs 400ms for ALB)
+- Network Load Balancers should be used for extreme performance and should not be the default load balancer you choose
+- Overall, the creation process is the same as the applocation load balancer
 
-Good to know:
-- Stickiness can be set at the target group level.
-- The application servsrs don't see the IP of the client direcetly. The true IP of the client is inserted in the header "X-Forwaded-For"
- 
- 
-Network Load Balancers (v2) Layer 4
-TCP traffic.
-Handles high throughput
-Support for static IP or elastic IP
+#### Diagram
+- It's about the same, except everything is TCP based
+- You get routed to a target group based on "TCP + rules". I imagine it's a TCP port and some other rules
 
-Load Balancer Good to know:
-- Classic ones are deprecated
-- Use application load balancers for HTTP / HTTPS & healthsocket
-- Network Load balancer for TCP
-- Load balancers support SSL termination
-- All load balancers have health check capabilities
-- Any LB has a static host name. Do not try to resolve and use the underlying IP.
-- LB can scale but not instantly.
+#### Load Balancer Good to Know
+- Classic load balancers are deprecated
+- Use the Application load balancer for HTTP/HTTPS and Websocket
+- Use the Network Load Balancer for TCP
+- CLB and ALB support SSL certificates and provide SSL termination
+- All load balancers have health check capability
+- ALB can route based on hostname/path
+- ALB is a great fit with ECS (Docker)
+- Any load balancer (CLB, ALB, NLB) has a static host name. Do not try to resolve and use the underlying IP. You get the URL, use the URL. Don't use the underlying IP. (Popular on the exam)
+- LBs can scale, but not instantly, contact AWS for a "warm-up"
+- NLB see directly the client IP, no X-Forwarded-For header (probably an HTTP only functionality)
+- 4xx are client induced errors
+- 5xx are application induced errors
+    - Load balancer errors 503 means at capacity or no registered target
+- If the LB cant connect to your application, check your security groups!
 
-There are 3 types of LB: CLB, NLB and ALB
-
-If the LB can't connect to you app, check your security group!
-
- 
-```
 
 ### 37. Load Balancer Hands On Using SSM
 

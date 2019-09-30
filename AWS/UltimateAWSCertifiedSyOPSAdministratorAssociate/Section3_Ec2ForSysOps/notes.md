@@ -4,7 +4,7 @@ Follow ups
 
 ### 5. Launching an EC2 instance
 - Chapter is all hands on
-- Created an instance with a new SG and an existing keypayr
+- Created an instance with a new SG and an existing keypair
 
 ### 6. Changing EC2 instance type
 - Only works for EBS backed instances
