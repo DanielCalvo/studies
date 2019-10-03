@@ -24,3 +24,7 @@
 - LB = Load Balancer
 - ASG = Auto Scaling Group
 - ECS = Elastic Container Service
+
+#### Chapter 8
+- EFS = Elastic File System
+- EBS = Elastic Block Store

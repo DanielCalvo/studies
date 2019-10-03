@@ -1,4 +1,5 @@
 - Chapter status: This seems fun! I want to practice! I want to launch things!
+- Still have to review the chapter and do the quiz
 - Lecture 64: Hey I'd like a find in map example
 - Fn::Sub was not very well explained on lecture 64
 
