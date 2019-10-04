@@ -1,5 +1,5 @@
-- Chapter status
-    - Lecture 80 was a bit confusing
+- Chapter status: Studied carefully, still need to do the quiz
+- Lecture 80 was a bit confusing
 
 ### 75. Section intro
 - Amazon EFS
@@ -186,14 +186,90 @@
 - Volume type will probably show as "Ephemeral0"
 
 ### 86. EBS for SysOps
+If you plan to use the root volume of an instance after it's terminated:
+    - Set the delete termination flag to "No"
+    - You can see this option when creating the EC2 instance
+- If you use EBS for high performance, use EBS-optimized instance types (AWS has a list of EBS optimized instances)
+- If an EBS volume is unused, you still pay for it
+- For cost saving over a long period, it can be cheaper to snapshot a volume and restore it later if it's unused
+
+#### EBS Troubleshooting
+- High wait time or slow reponse for SSH > Increase IOPS
+- EC2 won't start with EBS volume as root: Make sure volume names are properly mapped (/dev/xvdb instead of /dev/xvda for example)
+- After increasing a partition size, you still need to repartition to use the incremented storage (xfs_growfs for example)
 
 ### 87. EBS RAID Configurations
+- EBS is already redundant storage (replicated within AZ)
+- But what if you want to increase IOPS to say, 100.000 IOPS?
+- What if you want to mirror your EBS volumes?
+- You would mount volumes in parallel in RAID settings!
+- RAID is possible as long as your OS supports it
+- Some raid options are: (0 & 1 are asked at the exam)
+    - RAID 0 
+    - RAID 1
+    - RAID 5 (not recommended for EBS)
+    - RAID 6 (not recommended for EBS)
+- We'll explore RAID 0 and RAID 1
+
+#### RAID 0
+- Increased performance
+- Combining 2 or more volumes and getting the total disk space and I/O
+- But if one disk fails, all the data is lost
+- Use cases would be:
+    - An application that needs a lot of IOPS and doesn't need fault-tolerance
+    - A database that has replication already built—in
+- Using this, we can have a large disk with a lot of IOPS
+    - Two 500 GB Amazon EBS IO1 volumes with 4.000 provisioned IOPS each will create a  IOOO GiB RAID 0 array with an available bandwidth of 8.000 IOPS and 1.OOO MB/s of throughput   
+
+#### RAID 1
+- Mirrored volumes
+- If one disk fails, our logical volume is still working
+- We have to send the data to two EBS volumes at the same time (2x the network usage)
+- Use case
+    - Application that needs increased fault tolerance
+    - Application were you need to service disks
+- For example
+    - Two 500GiB Amazon EBS IO1 volumes with 4.000 provisioned IOPS a 500 GiB RAID 1 with an available bandwidth of 4.000 IOPS and 500MB/s of throughput
+- You have to do these on your own, but on the exam they don't expect you to know how to do it, they just want to make sure you remember the concepts
 
 ### 88. CloudWatch & EBS
+- Important EBS Volume CloudWath metrics
+    - VolumeIdleTime: Number of seconds when no read/write is submitted
+    - VolumeQueueLenght: Number of operations waiting to be executed. Maybe you don't have enough IOPS of maybe there's an application issue
+    - BurstBalance: If it becomes 0, you need a volume with more IOPS
+- GP2: Metrics reported every 5 minutes
+- IO2: Metrics reported every 1 minutes
+- EBS volumes have status checks
+    - Ok: The volume is performing well
+    - Warning: Performance below expected
+    - Impaired: Stalled, performance severaly degraded
+    - Insufficient data: Metric data collection in progress
 
 ### 89. EFS Overview
+- Elastic File system!
+- It's a managed NFS (Network file system) that can be mounted on many EC2 instances
+- EFS works with EC2 instances in Multi-AZ
+- High available, scalable, expensive (3x GP2), pay per use
+- The difference though is that you don't provision capacity, you pay for what you use. So it could end up being cheaper than GP2
+
+#### EFS, part two
+- Use cases: Content management, web serving, data sharing, Wordpress
+- Uses NFS v4.1 protocol
+- Uses security group to control access to EFS  
+- Compatible with Linux based AMIs (not Windows)
+- Performance modes:
+    - General purpose (default)
+    - Max I/O: Used for when you have thousands of EC2 instances accessing EFS
+- EFS has a feture to sync filesystems on premise to EFS
+- You can also backup EFS-to-EFS (incremental, you can choose frequency)-
+- Supports encryption at rest using KMS
 
 ### 90. EFS Hands On
+- First of all, create an SG, no inbound rules, all outbound rules, default SG
+- Create some EC2 instances, make sure they're in the same SG as the EFS
+- Used the EC2 mounting instructions to mount on the same VPC
+- You have to add the NFS port as an inbound rule for this to work
+- Exam might ask if your connection from EC2 to EFS times out, why? SG issue
 
 ### 91. Section Clean up
 
