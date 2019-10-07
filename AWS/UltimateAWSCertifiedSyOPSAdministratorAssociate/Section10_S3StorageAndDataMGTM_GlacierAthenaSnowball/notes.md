@@ -55,11 +55,97 @@
 - It takes a while for the logs to show up after you do the requests (took about 2h for the author)
 
 ### 105. S3 Policies Hands on
+- Let's analyze the policies here: https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html
+- Sometimes in the exam they'll show a bucket policy and you have to understand what it does
+- Read them and re-read them to be able to understand them! Exam might ask about them
+
 ### 106. S3 Cross Region Replication
+- Bucket in eu-west-1 > Asynchronous replication > us-east-1
+- Must enable versioning in the source and destination
+- Buckets must be in different AWS regions
+- Buckets can be in different accounts
+- Copying is asynchronous (won't happen right away)
+- Must give proper IAM permissions to S3
+- Use cases: Compliance, lower latency access, replication across accounts
+
+#### Hands on
+- Create the first bucket (Ireland), enable versioning
+- Create another bucket in another region with versioning
+- Go to first bucket > management > and then replication > add rule > entire bucket 
+- Choose destination bucket > Create new role on step 3
+ 
 ### 107. S3 Pre signed URLs
+- You can generate pre-signed URLs using the SDK or CLI
+    - For downloads (easy, can use the CLI)
+    - For uploads (harder, must use SDK)
+- Valid for a default of 3600 seconds, can change timeout with `--expires-in- [TIME_BY_SECONDS]` argument
+- Users given a pre-signed URL inherit the permissions of the person who generated the URL for /GET/PUT
+- Use cases:
+    - Allow only logged-in users to download a premium video on your S3 bucket
+    - Allow an ever changing list of users to download files by generating URLs dynamically
+    - Allow temporarely a user to upload a file to a precise location in our bucket
+
+#### Hands on
+- On the command line: `aws s3 presign help`
+- Description
+    - Generate a pre-signed URL for an Amazon S3 object. This allows anyone who receives the pre-signed URL to retrieve the S3 object with an HTTP GET request.
+    - For sigv4 requests the region needs to be configured explicitly
+- `aws configure set default.s3.signature_version s3v4`
+- `aws s3 presign s3://yourbucket/yourfile.jpeg --expires-in 300 --region eu-west-1`
+
 ### 108. CloudFront Overview
+- Content Delivery network (CDN)
+- Improves read performance, content is cached at the edge
+- About 136 points of presence globally (edge locations)
+- Popular with S3, but works with EC2, Load balancing. Exam might ask about this! Remember that it not only applies to S3, but EC2 and load balancing too
+- Can protect against network attacks
+- Can provide SSL encryption (HTTPS) at the edge using ACM
+- CloudFront can use SSL encryption (HTTPS) to talk to your applications
+- CloudFront supports RTMP protocol (videos/media)
+- Possible exam question: Every time you see "caching of files, efficiently around the world" think CloudFront
+
 ### 109. CloudFront with S3 - Hands on
+- We'll create an S3 bucket
+- We'll create a CloudFront distribution to distribute the content of that bucket 
+- We'll create an Origin Access Identity (user of CloudFront acessing the S3 bucket)
+- We'll limit the S3 bucket to be accesses only using this identity
+
+#### Hands on
+- Create bucket, everything default
+- CloudFront > Create distribution > Web 
+- Origin Domain name: The bucket you just created, Create new Origin Access Identity, Yes update bucket policy
+- Redirect HTTP to HTTPS, Methods: GET, HEAD.
+- Leave everything else as default and create distribution
+
+- Uh-oh, we have a Origin Access Identity created
+- If you go back to the S3 bucket and check it's policy, you can see that it was updated to include the CloudWatch permissions
+- Using the CloudFront URL I got redirected to the S3 bucket :(
+- Author says it takes about 3 hours for it to be fixed! :O, says we need to make files public in the meanwhile, it's a DNS propagation thing
+
 ### 110. CloudFront Monitoring
+- CloudFront access logs: Logs every request made to CLoudFront into a logging S3 bucket
+
+#### CloudFront Reports
+- It's possible to generate reports on
+    - Cache statistics reports
+    - Popular Objects report
+    - Top Referrers Report
+    - Usage Reports
+    - Viewers Report
+- These reports are based on the data from the Access logs
+
+#### CloudFront Troubleshooting
+- CloudFront caches HTTP 4xx and 5xx status codes returned by S3 (or the origin server)
+- 4xx error code means that the user doesn't have access to the underlying bucket (403) or the object the user is requesting is not found (404)
+- 5xx error codes indicates Gateway issues
+
+#### Hands on
+- CloudFront distributions > The one you created previously > Edit > Bucket for logs
+- Go back to S3 and create a bucket for logs, default settings
+
+#### Monitoring
+- Tons of reports on cache statistics, really cool  
+
 ### 111. S3 Inventory
 ### 112. S3 Storage Tiers
 ### 113. S3 Lifecycle rules 
