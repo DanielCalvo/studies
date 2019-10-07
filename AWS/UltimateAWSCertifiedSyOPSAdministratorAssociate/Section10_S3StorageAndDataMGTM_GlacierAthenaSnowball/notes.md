@@ -1,3 +1,7 @@
+- Chapter notes: Re-write the description on storage gateway, it's a bit confusing still (maybe consul the AWS docs and copy and paste something from there)
+- Maybe plan with athena a bit more later
+- Quiz status: Pending
+
 ### 100. Section Intro
 - Session is intense
 - Popular on the exam, some questions might be tricky
@@ -147,17 +151,254 @@
 - Tons of reports on cache statistics, really cool  
 
 ### 111. S3 Inventory
+- Amazon S3 inventory helps manage your storage
+- Audit and report on the application and encryption status of your objects
+- Use cases
+    - Business
+    - Compliance
+    - Regulatory needs
+- You can query all the data using Amazon Athena, Redshift, Presto, Hive, Spark
+- You can set up multiple inventories
+- Data goes from a source bucket to a target bucket (need to set up policy)
+
+#### Hands on
+- Create a bucket with default settings
+- Bucket > Management > Inventory
+- Inventory takes up to 48h to generate :(
+- A bucket policy is applied to the destination bucket
+
 ### 112. S3 Storage Tiers
+- Not asked in detail at the exam, but you should know how it works
+- Amazon S3 Standard - General purpose
+- Amazon S3 Standard-Infrequent access (IA)
+- Amazon S3 One Zone-Infrequent access
+- Amazon S3 Reduced Redundancy Storage (deprecated)
+- Amazon S3 Intelligent Tiering (new!)
+- Amazon Glacier (there's a dedicated lecture for it)
+
+#### S3 Standard
+- High durability  (99.999999999%) of objects across multiple AZ
+- If you store 10.000.000 (ten million) objects in Amazon S3, you can on average expect to incur a loss of a single object once every 10.000 years
+- 99.99% availability over a given year
+- S3 is designed to be hosted across multiple AZs so it can sustain 2 concurrent facility failures
+- Use cases for S3: Big data analytics, mobile & gaming, content distribution...
+
+#### S3 Reduced Redundancy Storage (DEPRECATED)
+- Designed to provide 99.99% durability
+- 99.99% availability of objects over a given year
+- Designed to sustein the loss of data in a single facility
+- Use cases: Noncritical, reproducible data at lower levels of redundancy than Amazon's S3 standard storage (thumbnails, transcoded media, processed data that can be reproduced)
+
+#### S3 Standard - Infrequent Access (IA)
+- Suitable for data that is less frequently accesses but requires rapid access when needed
+- High durability (99.999999999%) of objects across multiple AZs
+- 99.99% availability
+- Low cost compared to Amazon S3 standard, but you get a "retrieval fee" every time you access a file. Maybe use this only when you know that you're going to access your files, say, once a month
+- Can sustain 2 concurrent facility failures
+- Use cases: Store data for disaster recovery, backups...
+
+#### S3 One Zone - Infrequent access (IA)
+- Same as IA but data is stored in a single AZ
+- Same durability (11 9's) of objects in a single AZ, but data is lost when AZ is destroyed
+- Destroyed != Being down. Destroyed means there's a flood, fire, volcano, nuclear explosion, alien invasion,  etc
+- 99.95% availability 
+- Low cost compared to IA (by 20%)
+- Use cases: Storing secondary backup copies of on-premise data, or storing data you can recreate 
+
+#### S3 Intelligent tiering (new!)
+- Probably not at the exam
+- Same low latency and high throughput performance of S3 standard
+- Small monthly monitoring and auto-tiering fee
+- Automatically moves objects between two access tiers based on changing access patterns
+- Designed for durability of 99.999999999% of objects across multiple AZs
+- Resilient against events that impact an entire AZ
+- Designed for 99.9% AZ over a given year
+
+#### Hands on
+- Create a bucket with default settings
+- Looks like you set permissions when you upload a file, it's a per file permission thing :thinking:
+
 ### 113. S3 Lifecycle rules 
-### 114. S3 Analytics
+- Set of rules to move data between different tiers to save storage cost
+    - Example: General purpose > Infrequent Access > Glacier
+- Transition actions: Defines when objects are transitioned to another storage class
+    - Example: We can choose to move objects to Stndard IA class 60 days after you created them or can move to Glacier for archiving after 6 months
+- Expiration actions: Helps to configure objects to expire after a certain time period. S3 deletes expired objects on our behalf
+    - Example: Access log files cna be set to delete after a specified period of time
+- Can be used to delete incomplete multi-part uploads!
+
+#### Hands on
+- Some bucket > Management > Lifecycle rule
+- Created a rule to move objects to IA after 30 days and to delete them after 365 days. Neat!
+
+### 114. S3 Analytics - Storage class analysis
+- You can setup analytics to help determine when to transition objects from Standard to Standard_IA 
+- Does not work for ONEZONE_IA or Glacier
+- Report is updated on a daily basis
+- Takes about 24h to 48h for it to first start
+- This report helps you put together efficient lifecycle rules
+
+#### Hands on
+- To enable it: Your bucket > Management > Analytics
+
 ### 115. Glacier Overview
+- Low cost storage meant for archiving / backup
+- Data is retained for the longer term (10s of years)
+- Alternative to on-premise tape storage
+- Average anual durability is 99.99999999% (11 9's, same as S3)
+- Cost per storage per month is low (USD 0.004 per GB) + retrieval cost
+- Naming: In S3 we have buckets and objects. In Glacier we have archives. Each item in glacier is called an archive. An item can be as big as 40TB
+- Archives are stored in vaults
+- Exam tip: "We want to archive data form S3 after xxx days, what do we use?". Use Glacier!
+
+#### Glacier operations
+- There are 3 Glacier operations:
+    - Upload: Single operation of by parts (MultiPart upload) for larger archives
+    - Download: First initiate a retrieval job for the particular archive, Glacier then prepares it for download. User then has a limited time to download the data from a staging server
+    - Delete: Use Glacier rest API or AWS SDK by specifying archive ID
+- Restore links have an expiry date
+- 3 retrieval options (possible exam question):
+    - Expedited: (1 to 5 minutes interval): 0.03 per GB and 0.01 per request
+    - Standard: (3 to 5 hours): 0.01 per GB and 0.05 per 1000 requests
+    - Bulk: (5 to 12 hours): 0.0025 per GB and 0.025 pero 1000 requests 
+
+#### Vaunt policies & Vault lock
+- Vault is a collection of archives
+- Each Vault has:
+    - One vault access policy 
+    - One vault lock policy
+- Vault policies are written in JSON 
+- Vault access policy is similar to bucket policy (restrict user / account permissions)
+- Vault lock policy is a policy you lock, for regulatory and compliance requirements (popular exam question)
+    - The policy is immutable, it can never be changed (which is why it's called lock).
+    - Lock policy example: Forbid deleting an archive if it's older than 1 year old
+    - Other example: Implement WORM (write once read many), to prevent any archive once created to be tampered with (popular exam question, How do we implement a WORM policy for glacier? Using a vault lock policy)   
+
 ### 116. Glacier vs S3 Storage Class
+- On any bucket > right click file > change storage class
+- Different retrieval methods have different prices and different restore times
+
 ### 117. Glacier Vault lock - Hands on
+- Go to the Glacier console, create vault
+- You then create a vault policy and lock it with a vault lock, meaning your policy won't be able to be changed
+- You're not able to upload files to Glacier through the UI, you need to use the SDK or CLI
+
 ### 118. Snowball overview
+- Physical data transport solution that helps moving TBs or PBs of data in or out of AWS
+- Alternative over moving data over the network (and paying network fees)
+- Secure, tamper resistant, uses KMS 256 bit encryption
+- Tracking using SNS and text messages, E-ink shipping label
+- Pay per data transfer job 
+- Use cases: Large data cloud migrations, DC decomission, disaster recovery   
+- If it takes more than a week to transfer over the network, use Snowball devices 
+
+#### Snowball process
+1. Request snowball devices from the AWS console for delivery 
+2. Install the snowball client on your servers
+3. Connect the snowball to your servers and copy file using the client
+4. Ship back the device when you're done (goes to the righ AWS facility)
+5. Data will be loaded into an S3 bucket
+6. Snowball is completely wiped 
+7. Tracking is done using SNS, text messages and the AWS console
+
+#### Snowball edge
+- Snowball edge adds computational capability to the device
+- 100TB capacity with either:
+    - Storage optimized: 24 vCPU
+    - Compute optimized: 52 vCPU & optional GPU
+- Supports a custom EC2 AMI so you can perform processing on the go :o
+- Supports custom Lambda functions
+- Very useful to pre-process data while moving
+- Use case: Data migration, image collation, IoT capture, machine learning
+
+#### AWS Snowmobile
+- Oh woah it's a truck
+- Transfer exabytes of data 
+- Each snowmobile has 100PB of capacity (use multiple in parallel)
+- Petter than Snowball if you transfer more than 10PB
+
 ### 119. Snowball Hands on
+- There a Snowball page and you can create a job!
+
 ### 120. Storage Gateway for S3
+- AWS is pushing for "hybrid cloud"
+    - Part of your infrastructure is on the cloud
+    - Part of your infrastructure is on premise
+- This can be due to 
+    - Long cloud migrations
+    - Security requirements
+    - Compliance requirements
+    - IT strategy    
+- S3 is a proprietary storage technology (unlike EFS/NFS) so how do you expose the S3 data to on-premise?
+- AWS Storage Gateway!
+
+#### AWS Storage Cloud Native Options
+- Block
+    - Amazon EBS
+    - EC2 Instance store
+- File
+    - Amazon EFS
+- Object
+    - S3
+    - Glacier
+
+#### AWS Storage Gateway
+- Bridge between on-premise data and cloud data in S3
+- Use cases: disaster recovery, backup & restore, tiered storage
+- 3 types of storage gateway (and you need to know them for the exam!)
+    - File Gateway
+    - Volume Gateway
+    - Tape Gateway
+- These go through Storage Gateway, and then they go to EBS, S3 or Glacier behind the scenes
+
+#### File Gateway
+- Configured S3 buckets accessible using the NFS and SMB protocol
+- Supports S3 standard, S3 IA, S3 One Zone IA
+- Bucket access using IAM roles for each File Gateway
+- Most recently used data is cached in the file gateway
+- Since it's NFS or SMB, can be mounted on many servers
+
+##### Diagram
+- Application server > NFS > File Gateway > HTTPS > S3/Glacier
+
+#### Volume Gateway
+- Block storage using iSCSI protocol backed by S3 
+- Backed by EBS snapshots which can help restore on-premise volumes
+- Cached volumes: low latency access to most data 
+- Stored volumes: entire dataset is on premises, scheduled backups to S3 
+
+##### Diagram
+- Application server > iSCSI > Volume Gateway > Storage Gateway bucket in Amazon S3 > Amazon EBS snapshots
+
+#### Tape Gateway
+- Some companies still have backup processes using physical tapes
+- With Tape Gateway, companies use the same process but in the cloud
+- Virtual Tape library (VTL) backed by Amazon S3 and Glacier
+- Back up data using existing tape-based processes (and SCSI interface)
+- Works with leading backup software vendors
+
+##### Diagram
+- Backup server > iSCSI > Tape Gateway > HTTPS > Virtual Tapes stores in Amazon S3 > Archived tapes stored in Amazon Glacier 
+
+#### AWS Storage Gateway Summary
+- Exam tip: Read the question well, it will hint at which gateway to use
+- On premise data to the cloud > Storage Gateway
+- File Access / NFS > File Gateway (backed by S3)
+- Volume / Block Storage / iSCSI > Volume Gateway (backed by S3 with EBS snapshots)
+- VTL Tape solution / Backup with iSCSI > Tape Gateway (backed by S3 and Glacier)
+
 ### 121. Storage Gateway for S3 - Hands on
+- Storage gateway console!
+
 ### 122. Athena Overview
+- Serverless service to perform analytics directly against S3 files
+- Use SQL language to query the files
+- Has a JDBC/ODBC driver
+- Charged per query and amount of data scanned
+- Supports CSV, JSON, ORC, Avro and Parquet (built on Presto)
+- Use cases for Athena: Business Intelligence/analytics/reporting, analyse & query VPC flow logs, ELB logs, CloudTrail Trails, etc
+- Exam tip: Analyze data directly on S3 > Use Athena
+
 ### 123. Athena Hands on
 ### 124. Section Clean up
 
