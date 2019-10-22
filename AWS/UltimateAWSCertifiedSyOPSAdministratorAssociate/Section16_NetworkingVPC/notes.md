@@ -22,13 +22,13 @@
 
 ### Hands on
 - There's the default VPC!
-- Each VPC has a few subnets, it appesrs the default VPC has one subnet per AZ in ireland
+- Each VPC has a few subnets, it appears the default VPC has one subnet per AZ in ireland
 - Subnets have gateways, ACLs, flow logs and some other features
 
 ### 200. VPC Overview and Hands on
 - Virual Private Cloud (VPC)
 - You can have multiple VPCs in a region (max of 5, soft limit)
-- Max CIRD per VPC is 5. For each cider:
+- Max CIDR per VPC is 5. For each cider:
     - Min size is /28 (16 IP Adresses)
     - Max size is /16 (65536 IP Adresses)
 - Because a VPC is private, only the private IP ranges are allowed! 
