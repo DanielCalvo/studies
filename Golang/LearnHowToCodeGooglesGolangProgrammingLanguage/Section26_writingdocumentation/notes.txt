@@ -1,0 +1,11 @@
+golang.org > Doc for the std library
+godoc.org > Has third party docs as well
+
+go help doc
+go doc fmt.Println
+
+
+go doc json.Number
+go doc json.Number.float64
+
+godoc -http=:8080

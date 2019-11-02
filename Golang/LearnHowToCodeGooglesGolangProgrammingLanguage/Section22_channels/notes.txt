@@ -1,7 +1,0 @@
-
-
-https://docs.google.com/document/d/1ckYpi6hcRkaBUEk975f54oGsHYHu7GhzOk7-nOrkNxo/edit#heading=h.5dxneqkuu8o
-fan out in
-https://play.golang.org/p/iU7Oee2nm7
-throttle throughput
-https://play.golang.org/p/RzR3Kjrx7q
