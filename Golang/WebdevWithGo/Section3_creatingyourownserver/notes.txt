@@ -3,3 +3,5 @@
 - listen
 - accept
 - read/write connection
+
+Exercise on 26: Create a server that returns (prints?) the URL of the GET request
