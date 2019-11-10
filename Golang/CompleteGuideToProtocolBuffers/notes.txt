@@ -1,0 +1,4 @@
+Some interesting protobuf definitions here:
+
+https://github.com/googleapis/googleapis/tree/master/google
+https://github.com/googleapis/googleapis/tree/master/google/type
