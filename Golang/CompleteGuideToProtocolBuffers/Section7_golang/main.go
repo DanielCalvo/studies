@@ -30,6 +30,11 @@ func main() {
 }
 
 func doEnum() {
+	em := enumpb.EnumMessage{
+		Id:           42,
+		DayOfTheWeek: enumpb.DayOfTheWeek_THURSDAY,
+	}
+	fmt.Println(em)
 
 }
 
