@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	complexpb "github.com/DanielCalvo/studies/Golang/CompleteGuideToProtocolBuffers/Section7_golang/complex"
 	enumpb "github.com/DanielCalvo/studies/Golang/CompleteGuideToProtocolBuffers/Section7_golang/enum_example"
 	simplepb "github.com/DanielCalvo/studies/Golang/CompleteGuideToProtocolBuffers/Section7_golang/simple"
 	"github.com/golang/protobuf/jsonpb"
