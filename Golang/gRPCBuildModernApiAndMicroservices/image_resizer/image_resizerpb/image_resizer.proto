@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package image_resizerpb;
+
+option go_package="image_resizerpb";
+
+
+message ImgRequest {
+    bytes Img = 1;
+    string ImgName = 2;
+}
+
+message ImgResponse {
+    bytes Img = 1;
+    string ImgName = 2;
+}
+
+service ImgService {
+    // Unary
+    rpc Resize(ImgRequest) returns (ImgResponse) {};
+}

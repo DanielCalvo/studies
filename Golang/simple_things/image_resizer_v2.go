@@ -9,6 +9,8 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"sync"
+	"time"
 )
 
 //Can you create a struct with image sizes and the resize ratio that you want for them?
@@ -41,6 +43,10 @@ func main() {
 	getImages(imageChan, srcDir, dstDir)
 	fmt.Println("End of main")
 
+	//This is undesirable. The channel logic is not properly implemented, main finishes before processImages finishes, and some images are left half processed
+	//It appears a revisit to the fan-in fan-out is in order, followed by an improvement to this program.
+	time.Sleep(5 * time.Second)
+
 }
 
 func getImages(c chan string, srcDir, dstDir string) {
@@ -64,13 +70,20 @@ func getImages(c chan string, srcDir, dstDir string) {
 func processImages(imageChan chan string, resizeRatioPercent int, srcDir, dstDir string) {
 	//Improve print messages to have better formatting
 	goroutines := runtime.NumCPU()
+	var wg sync.WaitGroup
+	wg.Add(goroutines)
+
 	for i := 0; i < goroutines; i++ {
 		go func() {
+
 			for v := range imageChan {
 				resizeImage(v, srcDir, dstDir, resizeRatioPercent)
 			}
 		}()
+		wg.Done()
 	}
+	wg.Wait()
+
 }
 
 func resizeImage(imgFileName, srcDir, dstDir string, resizeRatioPercent int) {
