@@ -1,28 +1,40 @@
 package main
 
 import (
+	"../image_resizerpb"
+	"bytes"
 	"context"
 	"fmt"
+	"github.com/anthonynsimon/bild/transform"
 	"google.golang.org/grpc"
-	"io/ioutil"
+	"image"
+	"image/jpeg"
 	"log"
 	"net"
 )
-import "../image_resizerpb"
 
-type server struct {
-}
+type server struct{}
 
 func (*server) Resize(ctx context.Context, req *image_resizerpb.ImgRequest) (*image_resizerpb.ImgResponse, error) {
 	fmt.Println("Received:", req.GetImgName())
 
-	err := ioutil.WriteFile("/tmp/banana.jpeg", req.Img, 0777)
+	r := bytes.NewReader(req.Img)
+	img, _, err := image.Decode(r)
+	if err != nil {
+		fmt.Println("Could not decode image:", req.GetImgName())
+	}
+
+	imgResized := transform.Resize(img, img.Bounds().Dx()*50/100, img.Bounds().Dy()*50/100, transform.Linear)
+
+	buf := new(bytes.Buffer)
+	err = jpeg.Encode(buf, imgResized, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	res := &image_resizerpb.ImgResponse{
-		ImgName: "Banana",
+		ImgName: req.GetImgName(),
+		Img:     buf.Bytes(),
 	}
 
 	return res, nil

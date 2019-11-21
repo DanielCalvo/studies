@@ -75,7 +75,6 @@ func processImages(imageChan chan string, resizeRatioPercent int, srcDir, dstDir
 
 	for i := 0; i < goroutines; i++ {
 		go func() {
-
 			for v := range imageChan {
 				resizeImage(v, srcDir, dstDir, resizeRatioPercent)
 			}
