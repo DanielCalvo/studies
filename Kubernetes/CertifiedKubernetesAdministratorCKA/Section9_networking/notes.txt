@@ -1,4 +1,28 @@
- 132: CoreDNS
+ 132: CoreDNSMk 3
+- Here you can really overcomplicate things!
+
+The big goals:
+- Cloud (AWS!)
+- Kubernetes
+- Golang / software engineering in general
+
+The big project things:
+- Web based Golang.
+- K8s on AWS with Istio
+- Terraform with old school AWS and some other AWS services?
+
+Auxiliary big project things:
+- Learn most about what you can about API and gRPCs and what else? Queueing? Other auxiliary services?
+- Storage something? Secret management something?
+
+
+The demo cluster:
+- AWS
+- Kops
+- Linkerd
+- Some network storage solution (how do you keep your data and/or run something stateful?)
+- Consul/Vault would be neat!
+
 Looks like it would be useful to learn how to set up CoreDNS!
 
 135: CNI
