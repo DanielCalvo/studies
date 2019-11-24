@@ -7,6 +7,7 @@ protoc Section5_grpc_unary/calculator/calculatorpb/calculator.proto --go_out=plu
 protoc Section5_grpc_unary/image_resizer/image_resizerpb/image_resizer.proto --go_out=plugins=grpc:.
 
 protoc Section6_grpc_serverstreaming/greet/greetpb/greet.proto --go_out=plugins=grpc:.
+protoc Section6_grpc_serverstreaming/image_resizer/image_resizerpb/image_resizer.proto --go_out=plugins=grpc:.
 
 protoc Section7_grpcclientstreaming/greet/greetpb/greet.proto --go_out=plugins=grpc:.
 
