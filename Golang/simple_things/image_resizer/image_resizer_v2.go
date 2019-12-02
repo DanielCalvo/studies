@@ -57,7 +57,6 @@ func getImages(c chan string, srcDir, dstDir string) {
 
 	for _, file := range files {
 		if _, err := os.Stat(dstDir + file.Name()); err == nil {
-			fmt.Println(file.Name(), "is already resized, skipping")
 			continue
 		}
 		if !file.IsDir() && strings.HasSuffix(file.Name(), ".jpg") || strings.HasSuffix(file.Name(), ".jpeg") {

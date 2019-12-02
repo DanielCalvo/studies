@@ -13,10 +13,6 @@ import (
 	"strings"
 )
 
-func SayHi(s string) {
-	fmt.Println("This is a sample function that just says hi!")
-}
-
 type Img struct {
 	Img   image.Image
 	Ratio int
@@ -64,7 +60,6 @@ func ResizeDir(dir string, ratios ...int) error {
 	}
 
 	for _, file := range files {
-
 		img, err := imgio.Open(dir + file.Name())
 		if err != nil {
 			continue

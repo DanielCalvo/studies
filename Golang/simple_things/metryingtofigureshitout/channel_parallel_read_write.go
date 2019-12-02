@@ -17,7 +17,7 @@ func main() {
 }
 
 func populateChan(c chan int) {
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 5; i++ {
 		c <- i
 		time.Sleep(time.Millisecond * 100)
 	}
@@ -31,7 +31,7 @@ func readChan(c chan int) {
 		go func() {
 			for v := range c {
 				fmt.Println(v, runtime.NumGoroutine())
-				time.Sleep(time.Millisecond * 300)
+				time.Sleep(time.Millisecond * 3000)
 			}
 		}()
 

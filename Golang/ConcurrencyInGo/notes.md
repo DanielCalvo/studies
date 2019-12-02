@@ -19,6 +19,6 @@
 - What is a Go generator?
 - Ok I saw a generator. But why would you use a generator? :o
 - "A generator for a pipeline is any function that converts a set of discrete values into a stream of values on a channel"
-- You stopped on page 109. Read it again and get going!
 - Tee channel is missing
 - Perhaps google "google channel pattern examples" for some clearer examples.
+- Have a look at the context package again
