@@ -1,82 +1,104 @@
 package image_common
 
 import (
-	"fmt"
 	"github.com/anthonynsimon/bild/imgio"
 	"github.com/anthonynsimon/bild/transform"
-	"github.com/pkg/errors"
 	"image"
 	"io/ioutil"
+	"log"
 	"os"
 	"runtime"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 type Img struct {
-	Img   image.Image
-	Ratio int
+	Img      image.Image
+	Filename string
+	SrcDir   string
+	DstDir   string
+	Ratio    int
 }
 
-func ResizeImage(img image.Image, ratios ...int) []Img {
-	//fmt.Println("Hi from ResizeImage")
-	var imgs []Img
-	for _, rt := range ratios {
-		imgRes := transform.Resize(img, img.Bounds().Dx()*rt/100, img.Bounds().Dy()*rt/100, transform.Linear)
+func ImgGen(srcDir, dstDir string, ratios []int) <-chan Img {
 
-		i := Img{
-			Img:   imgRes,
-			Ratio: rt,
-		}
-		imgs = append(imgs, i)
+	if !strings.HasSuffix(srcDir, string(os.PathSeparator)) {
+		srcDir = srcDir + string(os.PathSeparator)
 	}
-	return imgs
-}
-
-//A comment on how concurrency and file saving are handled would be nice here!
-func ResizeDir(dir string, ratios ...int) error {
-
-	if len(ratios) == 0 {
-		return errors.New("ratios parameter must be at least one integer")
+	if !strings.HasSuffix(dstDir, string(os.PathSeparator)) {
+		dstDir = dstDir + string(os.PathSeparator)
 	}
 
-	if !strings.HasSuffix(dir, "/") {
-		dir = dir + "/"
+	_, err := os.Stat(srcDir)
+	if os.IsNotExist(err) {
+		log.Fatalf("Directory with images to be resized (%s) does not exist\n", srcDir)
+
 	}
 
-	for _, rDir := range ratios {
-		_, err := os.Stat(dir + strconv.Itoa(rDir))
-		if os.IsNotExist(err) {
-			err = os.Mkdir(dir+strconv.Itoa(rDir), 0755)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	files, err := ioutil.ReadDir(dir)
-	if err != nil {
-		return err
-	}
-
-	for _, file := range files {
-		img, err := imgio.Open(dir + file.Name())
+	_, err = os.Stat(dstDir)
+	if os.IsNotExist(err) {
+		err = os.Mkdir(dstDir, 0755)
 		if err != nil {
-			continue
+			log.Fatalf("Cannot create destination directory at %s", dstDir)
 		}
+	}
 
-		//multi-routine logic would go here
-
-		Imgs := ResizeImage(img, ratios...)
-
-		fmt.Println("Resizing:", file.Name(), "with ratios:", ratios, "goroutines:", runtime.NumGoroutine())
-
-		for _, i := range Imgs {
-			err = imgio.Save(dir+strconv.Itoa(i.Ratio)+"/"+file.Name(), i.Img, imgio.JPEGEncoder(82))
+	for _, rt := range ratios {
+		_, err := os.Stat(dstDir + strconv.Itoa(rt))
+		if os.IsNotExist(err) {
+			err = os.Mkdir(dstDir+strconv.Itoa(rt), 0755)
 			if err != nil {
-				return err
+				log.Fatalf("Cannot create destination directory at %s", dstDir+strconv.Itoa(rt))
 			}
 		}
 	}
-	return nil
+
+	files, err := ioutil.ReadDir(srcDir)
+	if err != nil {
+		log.Fatalf("Unable to read the files from %s", srcDir)
+	}
+
+	out := make(chan Img)
+	go func() {
+		for _, file := range files {
+			for _, rt := range ratios {
+				_, err := os.Stat(dstDir + strconv.Itoa(rt) + string(os.PathSeparator) + file.Name())
+				if os.IsNotExist(err) {
+					img, err := imgio.Open(srcDir + file.Name())
+					if err != nil {
+						continue
+					}
+					imgc := Img{
+						Img:      img,
+						Filename: file.Name(),
+						SrcDir:   srcDir,
+						DstDir:   dstDir,
+						Ratio:    rt,
+					}
+					out <- imgc
+				} else {
+					log.Println("Already resized:", file.Name())
+				}
+			}
+		}
+		close(out)
+	}()
+	return out
+}
+
+func ImgRes(c <-chan Img, wg *sync.WaitGroup) {
+	for i := 0; i < runtime.NumCPU(); i++ {
+		go func() {
+			defer wg.Done()
+			for i := range c {
+				log.Println("Resizing:", i.Filename)
+				iRes := transform.Resize(i.Img, i.Img.Bounds().Dx()*i.Ratio/100, i.Img.Bounds().Dy()*i.Ratio/100, transform.Linear)
+				err := imgio.Save(i.DstDir+strconv.Itoa(i.Ratio)+string(os.PathSeparator)+i.Filename, iRes, imgio.JPEGEncoder(82))
+				if err != nil {
+					log.Fatalf("Unable to save file. Error: %s", err)
+				}
+			}
+		}()
+	}
 }

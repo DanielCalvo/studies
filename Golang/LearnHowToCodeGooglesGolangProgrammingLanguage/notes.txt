@@ -151,5 +151,6 @@ Json to go, very cool.: https://mholt.github.io/json-to-go/
 type "byte" is an alias for the type "uint8". Neat!
 
 
-
 https://docs.google.com/document/d/1ckYpi6hcRkaBUEk975f54oGsHYHu7GhzOk7-nOrkNxo/edit#heading=h.sup5hlipj5b9
+
+196: golint and go vet are handy!

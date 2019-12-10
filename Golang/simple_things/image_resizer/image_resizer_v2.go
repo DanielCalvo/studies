@@ -10,7 +10,6 @@ import (
 	"runtime"
 	"strings"
 	"sync"
-	"time"
 )
 
 //Can you create a struct with image sizes and the resize ratio that you want for them?
@@ -39,13 +38,15 @@ func main() {
 
 	imageChan := make(chan string)
 
-	go processImages(imageChan, resizeRatioPercent, srcDir, dstDir)
-	getImages(imageChan, srcDir, dstDir)
-	fmt.Println("End of main")
+	var wg sync.WaitGroup
+	wg.Add(runtime.NumCPU())
 
-	//This is undesirable. The channel logic is not properly implemented, main finishes before processImages finishes, and some images are left half processed
-	//It appears a revisit to the fan-in fan-out is in order, followed by an improvement to this program.
-	time.Sleep(5 * time.Second)
+	go processImages(imageChan, &wg, resizeRatioPercent, srcDir, dstDir)
+	getImages(imageChan, srcDir, dstDir)
+
+	wg.Wait()
+
+	fmt.Println("End of main")
 
 }
 
@@ -66,22 +67,17 @@ func getImages(c chan string, srcDir, dstDir string) {
 	close(c)
 }
 
-func processImages(imageChan chan string, resizeRatioPercent int, srcDir, dstDir string) {
+func processImages(imageChan chan string, wg *sync.WaitGroup, resizeRatioPercent int, srcDir, dstDir string) {
 	//Improve print messages to have better formatting
-	goroutines := runtime.NumCPU()
-	var wg sync.WaitGroup
-	wg.Add(goroutines)
 
-	for i := 0; i < goroutines; i++ {
+	for i := 0; i < runtime.NumCPU(); i++ {
 		go func() {
+			defer wg.Done()
 			for v := range imageChan {
 				resizeImage(v, srcDir, dstDir, resizeRatioPercent)
 			}
 		}()
-		wg.Done()
 	}
-	wg.Wait()
-
 }
 
 func resizeImage(imgFileName, srcDir, dstDir string, resizeRatioPercent int) {

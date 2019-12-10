@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"runtime"
+	"sync"
 	"time"
 )
 
@@ -10,30 +11,31 @@ func main() {
 
 	c1 := make(chan int)
 
-	go readChan(c1)
-	populateChan(c1)
-	fmt.Println("End of main")
+	var wg sync.WaitGroup
+	wg.Add(runtime.NumCPU())
 
+	go populateChan(c1)
+	go readChan(&wg, c1)
+	wg.Wait()
+
+	fmt.Println("End of main")
 }
 
-func populateChan(c chan int) {
-	for i := 0; i < 5; i++ {
+func populateChan(c chan<- int) {
+	for i := 0; i < 10; i++ {
 		c <- i
 		time.Sleep(time.Millisecond * 100)
 	}
 	close(c)
 }
 
-func readChan(c chan int) {
-	//Not sure if I should have waitgroups in here...
-	const goroutines = 8
-	for i := 0; i < goroutines; i++ {
+func readChan(wg *sync.WaitGroup, c <-chan int) {
+	for i := 0; i < runtime.NumCPU(); i++ {
 		go func() {
+			defer wg.Done()
 			for v := range c {
-				fmt.Println(v, runtime.NumGoroutine())
-				time.Sleep(time.Millisecond * 3000)
+				fmt.Println("Hello!", v, i)
 			}
 		}()
-
 	}
 }
