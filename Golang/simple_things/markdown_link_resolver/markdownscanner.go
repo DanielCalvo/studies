@@ -11,6 +11,7 @@ import (
 //if dir exists, do a cheackout
 //take branch as parameter?
 //if no parameter assume master
+//what if you can't clone the repo?
 
 func main() {
 
