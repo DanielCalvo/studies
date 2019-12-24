@@ -33,7 +33,6 @@ func ImgGen(srcDir, dstDir string, ratios []int) <-chan Img {
 	_, err := os.Stat(srcDir)
 	if os.IsNotExist(err) {
 		log.Fatalf("Directory with images to be resized (%s) does not exist\n", srcDir)
-
 	}
 
 	_, err = os.Stat(dstDir)

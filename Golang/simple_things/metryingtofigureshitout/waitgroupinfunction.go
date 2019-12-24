@@ -15,8 +15,7 @@ func main() {
 	wg.Add(runtime.NumCPU())
 
 	go populateChan(c1)
-	go readChan(&wg, c1)
-	wg.Wait()
+	go readChan(c1)
 
 	fmt.Println("End of main")
 }
@@ -29,7 +28,8 @@ func populateChan(c chan<- int) {
 	close(c)
 }
 
-func readChan(wg *sync.WaitGroup, c <-chan int) {
+func readChan(c <-chan int) {
+	var wg sync.WaitGroup
 	for i := 0; i < runtime.NumCPU(); i++ {
 		go func() {
 			defer wg.Done()
@@ -38,4 +38,5 @@ func readChan(wg *sync.WaitGroup, c <-chan int) {
 			}
 		}()
 	}
+	wg.Wait()
 }
