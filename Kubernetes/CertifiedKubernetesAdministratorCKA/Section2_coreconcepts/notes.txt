@@ -6,7 +6,7 @@ Core concepts: Cluster architecture from a high level, API primitives, and Servi
 
 
 9: Cluster architecture
-Cluster consists of a set of nodes. There are worker nodes and master node.
+Cluster consists of a set of nodes. There are worker nodes and master nodes.
 Worker node: Hosts applications as containers
 Master node: Manages, plans, executes and monitors nodes
 
