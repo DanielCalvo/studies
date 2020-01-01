@@ -6,8 +6,8 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - targetPort: 8080
-      port: 8080
-      nodePort: 30080
+    - targetPort: 80 #Port on the Pod to forward the request to
+      port: 80 #Port on this NodePort service that will serve requests
+      nodePort: 30080 #Port on the node that will forward requests
   selector:
     app: simple-webapp

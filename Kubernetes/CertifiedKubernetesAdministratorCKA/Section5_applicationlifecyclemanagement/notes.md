@@ -1,78 +1,74 @@
 
-61: Rolling updates and rollbacks
-When you first create a deployment, it triggers a rollout.
-A new rollout creates a new deployment revision. Let's call it rev1.
-When the container version is updated (new image?) a new rollout is triggered, generating a new revision, which we can call rev2.
+### 76: Rolling updates and rollbacks
+- When you first create a deployment, it triggers a rollout.
+- A new rollout creates a new deployment revision. Let's call it rev1.
+- When the container version is updated (new image?) a new rollout is triggered, generating a new revision, which we can call rev2.
+- This allows us to keep track of the changes made to our deployments and enables us to rollback if necessary.
 
-This allows us to keep track of the changes made to our deployments and enables us to rollback if necessary.
+- You can see the rollout status of a given deployment by doing:
+- `kubectl rollout status deployment/myapp-deployment`
 
-You can see the rollout status of a given deployment by doing:
-kubectl rollout status deployment/myapp-deployment
-
-To see the revisions and roll out history:
-kubectl rollout history deployment/myapp-deployment
+- To see the revisions and roll out history:
+- `kubectl rollout history deployment/myapp-deployment`
 
 There are two type of deployment strategies.
-Recreate strategy: All the pods in the deployment are destroyed, and then recreated.
-This is disadvantageous as it causes downtime in between the time all the containers are destroyed and the new ones are spawning up.
+- Recreate strategy: All the pods in the deployment are destroyed, and then recreated.
+- This is disadvantageous as it causes downtime in between the time all the containers are destroyed and the new ones are spawning up.
 
-Rolling update: Imagine 5 pods. Rolling update takes down 1 pod with the old version, and spawns up a new pod with the new version.
-It keeps repeating this process until all the pods are running the new version. This is the default strategy.
+- Rolling update: Imagine 5 pods. Rolling update takes down 1 pod with the old version, and spawns up a new pod with the new version.
+- It keeps repeating this process until all the pods are running the new version. This is the default strategy.
 
-To change the image version of your deployment, you would simply change the it on the deployment definition yaml and do a:
-kubectl apply -f mydeployment.yaml
+- To change the image version of your deployment, you would simply change the it on the deployment definition yaml and do a:
+- `kubectl apply -f mydeployment.yaml`
 
-But you can also do it imperatively:
-kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1
+- But you can also do it imperatively:
+- `kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1`
 
-When using kubectl describe deployment mydeployment, if using the Recreate strategy, you will see the underlying ReplicaSet being scaled down to 0, and then scaled up to whatever number it had previously.
-When using the RollingUpdate strategy, the old replicaset will be scaled down by 1, while the new replicaset will be scaled up by 1 over time.
-This process will repeat itself until all pods are on the new replicaset.
+- When using kubectl describe deployment mydeployment, if using the Recreate strategy, you will see the underlying ReplicaSet being scaled down to 0, and then scaled up to whatever number it had previously.
+- When using the RollingUpdate strategy, the old replicaset will be scaled down by 1, while the new replicaset will be scaled up by 1 over time.
+- This process will repeat itself until all pods are on the new replicaset.
 
-To rollout a deployment, you can:
-kubectl rollout undo deployment/myapp-deployment
+- To rollout a deployment, you can:
+- kubectl rollout undo deployment/myapp-deployment
 
-You can see the new and old replicasets both change the number of replicas to reflect the undo change (pods will be gradually destroyed on the new and started on the old)
+- A deployment runs a ReplicaSet under the hood
+- You can see the new and old replicasets both change the number of replicas to reflect the undo change (pods will be gradually destroyed on the new and started on the old)
 
-Command summary:
-kubectl -f create mydeployment.yaml
-kubectl get deployments
-kubectl apply -f mydeployment.yaml #With a new image version
-kubectl set image deployment/mydeployment nginx=nginx:1.9.1
-kubectl rollout status deployment/myapp-deployment
-kubectl rollout history deployment/myapp-deployment
-kubectl rollout undo deployment/myapp-deployment
+- To create a deployment imperatively: `kubectl run nginx --image=nginx`
 
-
-62: Practice Test: Rolling Updates
-Memorize how to do this:
-kubectl set image deployment/frontend simple-webapp=kodekloud/webapp-color:v2
-
-Remember that except for pods, you can edit all object types on the fly!
+- Command summary:
+- `kubectl -f create mydeployment.yaml`
+- `kubectl get deployments`
+- `kubectl apply -f mydeployment.yaml #With a new image version`
+- `kubectl set image deployment/mydeployment nginx=nginx:1.9.1`
+- `kubectl rollout status deployment/myapp-deployment`
+- `kubectl rollout history deployment/myapp-deployment`
+- `kubectl rollout undo deployment/myapp-deployment`
 
 
-64: Commands:
-Commands and arguments on a pod definition file. Not strictly part of the certification, but author believes it's important!
+### 77: Practice Test: Rolling Updates and rollbacks
+- Pretty easy, it was just editing existing objects, changing their update strategy and images and seeing how the pods come and go
 
-In case of ENTRYPOINT, whatever you specify as an argument, will get appended to the entrypoint.
-In case of CMD, the command parameters passed will get replaced entirely.
 
-You can also use ENTRYPOINT and CMD like:
-
+### 80: Commands:
+- Not a required topic, but important to know!
+- Commands and arguments on a pod definition file. Not strictly part of the certification, but author believes it's important!
+- In case of ENTRYPOINT, whatever you specify as an argument, will get appended to the entrypoint.
+- In case of CMD, the command parameters passed will get replaced entirely.
+- You can also use ENTRYPOINT and CMD like:
+```
 FROM Ubuntu
 ENTRYPOINT ["sleep"]
 CMD["5"]
+```
 
-The default argument for sleep will be 5, but you can overwrite it by passing an argument to the container at launch time.
+- The default argument for sleep will be 5, but you can overwrite it by passing an argument to the container at launch time.
+You can also do something like: `docker run --entrypoint sleep_v2 ubuntu-sleeper 10`
 
-You can also do something like:
-docker run --entrypoint sleep_v2 ubuntu-sleeper 10
-
-
-65: Commands and Arguments
-In a pod definition:
-Command is analogous to ENTRYPOINT
-args is analogous to CMD
+### 81: Commands and Arguments
+- In a pod definition:
+    - Command is analogous to ENTRYPOINT
+    - args is analogous to CMD
 
 
 67: Configure Environment Variables in applications
