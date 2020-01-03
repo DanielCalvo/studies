@@ -1,88 +1,86 @@
+### 111: Kubernetes Security primitives
+- Two things to set up:
+- Who can access the cluster?
+- What can they do?
 
-95: Security primitives
-Two things to set up:
-Who can access the cluster?
-What can they do?
+- Who can access:
+- Defined by authentication mechanisms
+- You can base user access on:
+    - Files - Usernames and Passwords
+    - Files - Usernames and Tokens
+    - Certificates
+    - External certification providers (such as LDAP)
+    - Service accounts (for machines only)
 
-Who can access:
-Defined by authentication mechanisms
-You can base user access on:
-- Files - Usernames and Passwords
-- Files - Usernames and Tokens
-- Certificates
-- External certification providers (such as LDAP)
-- Service accounts (for machines only)
+- What can they do:
+- Defined by authorization mechanisms.
+- You can set this up with:
+    - RBAC Auth (role based access controls)
+    - ABAC Auth (atribute based access control)
+    - Node Authorization
+    - Webhook mode
 
-What can they do:
-Defined by authorization mechanisms.
-You can set this up with:
-- RBAC Auth (role based access controls)
-- ABAC Auth (atribute based access control)
-- Node Authorization
-- Webhook mode
+- Communication between applications in the cluster:
+    - By default, all pods can talk to all pods within the cluster.
+    - You can restrict access between them by using network policies.
 
-Communication between applications in the cluster:
-By default, all pods can talk to all pods within the cluster.
-You can restrict access between them by using network policies.
+### 112: Authentication
+- We have two types of users: Humans, such as admins and developers
+- And service accounts, aka robots.
 
+- Kubernetes does not manage user accounts natively. It relies on an external source for that, like a file or certificates or external auth service.
 
-96: Authentication
-We have two types of users: Humans, such as admins and developers
-And service accounts, aka robots.
+- You can however, create and manage service accounts through kubernetes with:
+    - `kubectl create serviceaccount sa1`
+    - `kubectl list serviceaccount`
 
-Kubernetes does not manage user accounts natively. It relies on an external source for that, like a file or certificates or external auth service.
+- All user access is managed by the kube-apiserver (aka api server). It authenticates the request before processing it
 
-You can however, create and manage service accounts through kubernetes with:
-kubectl create serviceaccount sa1
-kubectl list serviceaccount
+- Ways that the kube-api server authenticates:
+    - You can have a list of usernames and passwords on a static password file
+    - You can have a list of usernames and tokens on a static file
+    - You can authenticate using certificates
+    - And you can connect to a third party for auth (such as LDAP)
 
-All user access is managed by the kube-apiserver (aka api server). It authenticates the request before processing it
-
-Ways that the kube-api server authenticates:
-- You can have a list of usernames and passwords on a static password file
-- You can have a list of usernames and tokens on a static file
-- You can authenticate using certificates
-- And you can connect to a third party for auth (such as LDAP)
-
-Users and passwords on file:
-For list of usernames and passwords on file, you can create them as a .csv (:o) on the api server and use that as login information:
+- Users and passwords on file:
+- For list of usernames and passwords on file, you can create them as a .csv (:o) on the api server and use that as login information:
+```
 password123,user1,u0001
 password123,user2,u0002
 password123,user3,u0003
 
-The list above can also have a fourth column for groups.
+```
 
-You then pass this file to the kube-apiserver on start up: --basic-auth-file=userdetails.csv (if you set kube-api from scratch!)
-If you set it up using kube-adm, you have to change the pod definition for the kube-apiserver pod to contain this command like flag
+- The list above can also have a fourth column for groups.
 
-To then authenticate on the kube-apiserver using this type of auth, you have manually pass it by plaintext on a curl request (:ooo)
-curl -v -k https://master-node-ip:6443/api/v1/pods -u "user1:password123"
+- You then pass this file to the kube-apiserver on start up: --basic-auth-file=userdetails.csv (if you set kube-api from scratch!)
+- If you set it up using kube-adm, you have to change the pod definition for the kube-apiserver pod to contain this command like flag
 
-Static token file:
-<big long token>,user10,u0010,group1
-<big long token>,user10,u0012,group2
+- To then authenticate on the kube-apiserver using this type of auth, you have manually pass it by plaintext on a curl request (:ooo)
+- `curl -v -k https://master-node-ip:6443/api/v1/pods -u "user1:password123"`
 
-When starting kube-apisever, pass: --token-auth-file=user-details.csv
-You then pass the token on a curl request with --header "Authorization: Bearer <bigtokenstring>"
+- Static token file:
+    - `<big long token>,user10,u0010,group1`
+    - `<big long token>,user10,u0012,group2`
 
-Protip: Neither token on plaintext or users on plaintext are recommended to adding new users.
-Use Role Based Authentication for new users!
+- When starting kube-apisever, pass: --token-auth-file=user-details.csv
+- You then pass the token on a curl request with --header "Authorization: Bearer <bigtokenstring>"
 
-97: Basic auth set up
-(Follow up from Dani: If this is interesting, set up kube-apiserver to use basic auth)
+- Protip: Neither token on plaintext or users on plaintext are recommended to adding new users.
+- Use Role Based Authentication for new users!
 
-98: TLS Basics
-Symmetric Encryption: Data is encrypted and decrypted using the same key. Sender and receiver need to have the key, which means it has to be exchanged between sender & receiver.
-Someone sniffing the network would be able to get the message and the encryption key.
+### 115: TLS Basics
+- Symmetric Encryption: Data is encrypted and decrypted using the same key. Sender and receiver need to have the key, which means it has to be exchanged between sender & receiver.
+- Someone sniffing the network would be able to get the message and the encryption key.
 
-Assymetric encryption: Uses private and public keys. SSH also uses this communication format.
+- Assymetric encryption: Uses private and public keys. SSH also uses this communication format.
 
-Generate CSR (Certificate Signing Request)
-Send it to the CA (Certificate Authority)
-CA signs the CSR and now you have an actual CRT (Certificate)
+- Generate CSR (Certificate Signing Request)
+- Send it to the CA (Certificate Authority)
+- CA signs the CSR and now you have an actual CRT (Certificate)
 
-CAs use public and private keys to sign certificates. The public key of all CAs is built into the web browser.
-The browser uses the CA's public key to validate that the certificate was generated by the CA themselves.
+- CAs use public and private keys to sign certificates. The public key of all CAs is built into the web browser.
+- The browser uses the CA's public key to validate that the certificate was generated by the CA themselves.
 
 These are public CA's that let you validate public websites.
 They are not private CA's that can let you validate sites inside your local network / organization
@@ -94,78 +92,72 @@ Usually private keys are named .key or -key.pem.
 Private keys have the word "key" in them usually, either as an extension or part of the file name.
 
 
-100: TLS in Kubernetes. Yay for lecture 100! We're halfway there!
-Three types of certificates:
-Root certificates (from the CA)
-Server certificates (from the server)
-Client certificates (from your local)
+### 116: TLS in Kubernetes. Yay for lecture 100! We're halfway there!
+- Three types of certificates:
+    - Root certificates (from the CA)
+    - Server certificates (from the server)
+    - Client certificates (from your local)
 
-All interaction between the k8s master and nodes is encrypted.
-kubectl establishes a secure connection to talk to the kube-apiserver
+- All interaction between the k8s master and nodes is encrypted.
+- kubectl establishes a secure connection to talk to the kube-apiserver
 
-Server certificates for servers (master?)
-Client certificates for clients  (nodes? remote user with kubectl?)
+- Server certificates for servers (master?)
+- Client certificates for clients  (nodes? remote user with kubectl?)
 (Follow up from Dani: Clear that up!)
 
-Server components:
-kube-apiserver exposes a HTTPS service. It has:
-apiserver.crt
-apiserver.key
-ETCD server also has etcdserver.crt and etcdserver.key
-Kubelet server also has kubelet.crt and kubelet.key
+- Server components:
+    - kube-apiserver exposes a HTTPS service. It has:
+    - apiserver.crt
+    - apiserver.key
+    - ETCD server also has etcdserver.crt and etcdserver.key
+    - Kubelet server also has kubelet.crt and kubelet.key
 
 Client components, the clients can be:
-Us, admins, connecting to the cluster through kubectl or the REST api. (admin.crt, admin.key)
-kube-scheduler talks to the kube-apiserver to find pods that require scheduling and then gets the apiserver to schedule the pods on the right worker nodes. As far as the kube-apiserver is concerned, the scheduler is just another client, so it also needs to validate it's identity (scheduler.key, scheduler.crt)
-kube-controller-manager (controller-manager.crt, controller-manager.key)
-kube-proxy (kube-proxy.crt, kube-proxy.key)
-The kube-apiserver is the only service that talks to the ETCD server, so as far as the ETCD server is concernted, the kube-apiserver is also a client.
-The kube-apiserver also talks to the kubelets. In both of these communications, it can use api-server.key and api-server.crt, or you can generate certificate pairs for each communication channel.
+- Us, admins, connecting to the cluster through kubectl or the REST api. (admin.crt, admin.key)
+- kube-scheduler talks to the kube-apiserver to find pods that require scheduling and then gets the apiserver to schedule the pods on the right worker nodes. As far as the kube-apiserver is concerned, the scheduler is just another client, so it also needs to validate it's identity (scheduler.key, scheduler.crt)
+- kube-controller-manager (controller-manager.crt, controller-manager.key)
+- kube-proxy (kube-proxy.crt, kube-proxy.key)
+- The kube-apiserver is the only service that talks to the ETCD server, so as far as the ETCD server is concernted, the kube-apiserver is also a client.
+- The kube-apiserver also talks to the kubelets. In both of these communications, it can use api-server.key and api-server.crt, or you can generate certificate pairs for each communication channel.
 
-Kubernetes requires you to have at least one CA to sign all of this!
-You can even have more than one, one for all the components in the cluster, and another one for ETCD and apiserver (or just ETCD)
-For now we'll just stick to one CA for everything.
+- Kubernetes requires you to have at least one CA to sign all of this!
+- You can even have more than one, one for all the components in the cluster, and another one for ETCD and apiserver (or just ETCD)
+- For now we'll just stick to one CA for everything.
 
+### 117: TLS in Kubernetes: Certificate creation -- Continue here tomorrow!
+- Let's get started with the CA certs:
+    - Generate key: `openssl genrsa -out ca.key 2048`
+    - Generate CSR: `openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr`
+    - Sign certificates: `openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt`
+    - Since this is for the CA, it's self signed with the own key from the CA.
 
-101: TLS in Kubernetes: Certificate creation
-
-Let's get started with the CA certs:
-Generate key: openssl genrsa -out ca.key 2048
-Generate CSR: openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr
-Sign certificates: openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
-Since this is for the CA, it's self signed with the own key from the CA.
-
-Now let's do it for the admins:
-openssl genrsa -out admin.key 2048
-openssl req -new -key admin.key -subj "/CN=kube-admin/O=system:masters" -out admin.csr
-openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt
+- Now let's do it for the admins:
+    - `openssl genrsa -out admin.key 2048`
+    - `openssl req -new -key admin.key -subj "/CN=kube-admin/O=system:masters" -out admin.csr`
+    - `openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt`
 
 Using O=system:masters is important above as it defines the certificate as meant for an admin user
 
-When using kubectl, you can create a file named kube-config.yaml with kind: Config and configure your certificates in there.
-We'll look at kube-config.yaml later.
+- When using kubectl, you can create a file named kube-config.yaml with kind: Config and configure your certificates in there.
+- We'll look at kube-config.yaml later.
 
-Whenever you configure a server or a client with certificates, you also need to distribute/specify a copy of ca.crt.
-The certificate for the kube-apiserver requires a openssl.cnf file as it's referred to by a bunch of names
+- Whenever you configure a server or a client with certificates, you also need to distribute/specify a copy of ca.crt.
+- The certificate for the kube-apiserver requires a openssl.cnf file as it's referred to by a bunch of names
+- Each kubelet service also requires it's own certificate, named after it's host machne (ex: node03)
 
-Each kubelet service also requires it's own certificate, named after it's host machne (ex: node03)
+### 118: View certificate details
+- It's important to know how the cluster was set up. (The hard way or kubeadm).
+- Both use different methods to manage certificates
+- If you deploy it from scratch, you create all the certificates by yourself.
+- In this example we'll look at a cluster provisioned by kubeadm.
 
+- In an environment set up by kubeadm, you can find the certificates for the kube-api server in the pod definition under
+- `/etc/kubernetes/manifests/kube-apiserver.yaml`
 
-102: View certificate details
-It's important to know how the cluster was set up. (The hard way or kubeadm).
-Both use different methods to manage certificates
-If you deploy it from scratch, you create all the certificates by yourself.
-In this example we'll look at a cluster provisioned by kubeadm.
-
-In an environment set up by kubeadm, you can find the certificates for the kube-api server in the pod definition under
-/etc/kubernetes/manifests/kube-apiserver.yaml
-
-To decode a certificate and view details:
-openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
+- To decode a certificate and view details:
+- `openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout`
 
 If kubernetes is broken for some reason and you can't use kubectl logs to see the logs, you have to go one later down and use docekr to see the logs (docker logs mycontainer)
-
-(Follow up from Dani: There's definitely some learning to be done as far as troubleshooting a broken cluster (as in when you can't use kubectl)
 
 
 105: Certificates API

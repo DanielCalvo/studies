@@ -71,55 +71,112 @@ You can also do something like: `docker run --entrypoint sleep_v2 ubuntu-sleeper
     - args is analogous to CMD
 
 
-67: Configure Environment Variables in applications
-You can set environment variables as a key-value under env on your deployment/pod/etc yaml definition
-You can also set them on a configmap or a secret
+### 82: Practice test - Commands and Arguments
+Q: Create a pod with the ubuntu image to run a container to sleep for 5000 seconds. Modify the file ubuntu-sleeper-2.yaml.
+A:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: ubuntu-sleeper-2
+spec:
+  containers:
+  - name: ubuntu
+    image: ubuntu
+    command: ["sleep", "5000"]
+```
+
+Q: Create a pod using the file named 'ubuntu-sleeper-3.yaml'. There is something wrong with it. Try to fix it!
+A:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-sleeper-3
+spec:
+  containers:
+  - name: ubuntu
+    image: ubuntu
+    command:
+      - "sleep"
+      - "1200" #<- quotes were missing
+```
 
 
-68: Configuring configmaps in applications
-Having too many environment variables set up on a pod definition file will become unwieldy very quickly (duplication over all files & a lot of repeating yourself)
-We can take that out of the pod definition and put it on a ConfigMap! :D
+### 83: Configure Environment Variables in applications
+- You can set environment variables as a key-value under env on your deployment/pod/etc yaml definition
+- You can also set them on a configmap or a secret
 
-There are two phases when creating a configmap:
-1. Create the configmap and define variables you want
-2. Inject these variables into the pod
+### 84: Configuring configmaps in applications
+- Having too many environment variables set up on a pod definition file will become unwieldy very quickly (duplication over all files & a lot of repeating yourself)
+- We can take that out of the pod definition and put it on a ConfigMap! :D
 
-Just like any Kubernetes object, there are two ways of creating a configmap.
-Imperative: kubectl create configmap
-Declarative: kubectl create/apply -f
+- There are two phases when creating a configmap:
+    1. Create the configmap and define variables you want
+    2. Inject these variables into the pod
 
-Creating a configMap imperatively:
-kubectl create configmap myconfigname --from-literal=mykey=myvalue
-kubectl create configmap myconfigname --from-file=pathtomyfile
+- Just like any Kubernetes object, there are two ways of creating a configmap.
+- Imperative: `kubectl create configmap`
+- Declarative: `kubectl create/apply -f`
 
-kubectl get configmaps
-kubectl describe configmaps
-kubectl describe configmap myconfigmap
+- Creating a configMap imperatively:
+- `kubectl create configmap myconfigname --from-literal=mykey=myvalue`
+- `kubectl create configmap myconfigname --from-file=pathtomyfile`
+
+- Other commands:
+- `kubectl get configmaps`
+- `kubectl describe configmaps`
+- `kubectl describe configmap myconfigmap`
+- See [./84_configmap.yaml](./84_podwithconfigmap.yaml) and [./84_configmap.yaml](./84_configmap.yaml) 
 
 
-69: Practice test: Environment variables
-You can't edit environment variables of a running pod :(
-(Follow up from Dani: Creating a pod loading the configs from a configmap was really tough. You need to work on this!
+### 85: Practice test: Environment variables
+Q: Create a new ConfigMap for the 'webapp-color' POD. Use the spec given on the right.
+A: 
+```yaml
+apiVersion: v1
+data:
+  APP_COLOR: darkblue
+kind: ConfigMap
+metadata:
+  name: webapp-config-map
+```
 
+Q: Update the environment variable on the POD use the newly created ConfigMap
+A: 
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    name: webapp-color
+  name: webapp-color
+spec:
+  containers:
+  - envFrom:
+    - configMapRef:
+        name: webapp-config-map
+    image: kodekloud/webapp-color
+    name: webapp
+```
+### 86: Configure secrets in applications
+- Secrets are very similar fom configmaps, except they're stored on a encoded format
 
-70: Configure secrets in applications
-Secrets are very similar fom configmaps, except they're stored on a encoded format
+- You can also create a secret imperatively and declaratively:
+- `kubectl create secret generic mysecret --from-literal=mysecret=myvalue --from-literal=mysecret1=myvalue1`
+- `kubectl create -f`
 
-You can also create a secret imperatively and declaratively:
-kubectl create secret generic mysecret --from-literal=mysecret=myvalue --from-literal=mysecret1=myvalue1
-kubectl create -f
+- To generate a secret to put on a secret file, do:
+- `echo "mysecret" | base64`
 
-To generate a secret to put on a secret file, do:
-echo "mysecret" | base64
+- To decode the secret:
+- `echo "bXlzZWNyZXQK" | base64 --decode`
 
-To decode the secret:
-echo "bXlzZWNyZXQK" | base64 --decode
+- To see secrets:
+- `kubectl get secrets`
 
-To see secrets:
-kubectl get secrets
-
-To see the actual values of the secrets:
-kubectl get secret mysecret -o yaml
+- To see the actual values of the secrets:
+- `kubectl get secret mysecret -o yaml`
 
 
 71: A note about secrets
@@ -128,44 +185,68 @@ Author explains that the way secrets are set up in Kubernetes isn't the safest o
 
 
 72: Practice test - Secrets
-(Follow up from Dani: Why did the test accept a secret created imperatively, but not descriptively? What did you mess up? :thinking:)
-kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-literal=DB_User=root --from-literal=DB_Password=password123
+Q: Create a new Secret named 'db-secret' with the data given(on the right).
+A: `kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-literal=DB_User=root  --from-literal=DB_Password=password123`
 
-(Follow up from Dani: Try adding secrets to other objects other than pods, such as Deployments and DaemonSets)
+Q: Configure webapp-pod to load environment variables from the newly created secret.
+A:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    name: webapp-pod
+  name: webapp-pod
+spec:
+  containers:
+  - image: kodekloud/simple-webapp-mysql
+    imagePullPolicy: Always
+    name: webapp
+    envFrom:
+      - secretRef:
+          name: db-secret
+```
 
+### 91: Practice test - Multiple container pods
+Q: Create a multi-container pod with 2 containers.
+A: 
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: yellow
+spec:
+  containers:
+  - image: busybox
+    name: lemon
+  - image: redis
+    name: gold
+```
 
-74: Multi container pods
-You can have your microservice container and a side car container (such as a log shipper) inside the same pod.
-This is because both containers need to scale up and down together.
-They share the same network space, which means they can refer to each other as local host.
-They both have access to the same volumes as defined in the pod definition.
+Q: The 'app'lication outputs logs to the file /log/app.log. View the logs and try to identify the user having issues with Login.
+A: `kubectl logs -f app --namespace=elastic-stack`
 
+Q: Edit the pod to add a sidecar container to send logs to ElasticSearch. Mount the log volume to the sidecar container.
+A: Meh it was a long pod definition with 2 containers and 2 volume mounts, nothing too fancy
 
-75: Practice test - Multiple container pods
-(Follow up from Dani: How do you change the default namespace so you can do "kubectl get pods" from a different namespace without having to specify a namespace?)
+### 92: Multi-container pods design patterns
+- There are three multi container POD design patterns: Sidecar, Adaptor and Ambassador
 
+### 93: initContainers
+- When running a multi container pod, all pods are expected to stay alive at all times.
+- If any container fails, the entire pod restarts.
 
-76: Multi-container pods design patterns
-There are three multi container POD design patterns: Sidecar, Adaptor and Ambassador
+- You can specify a type of container inside a pod named initContainer. Inside the spec, instead of being inside "containers" it's inside "initContainers". Check [./93_initcontainer.yaml](./93_initcontainer.yaml)
 
+- The initContainer container will run first, before the regular containers start. This can be useful if you need to do some sort of set up before your main container starts (such as cloning a repo)
+- You can have multiple containers listed under initContainer. They will run sequentially.
 
-77: initContainers
-When running a multi container pod, all pods are expected to stay alive at all times.
-If any container fails, the entire pod restarts.
+- If any of the initContainers fail to succeed, Kubernetes will restart the pod repeatedly until the initContainer(s) succeed.
 
-You can specify a type of container inside a pod named initContainer. Inside the spec, instead of being inside "containers" it's inside "initContainers". Check 77_initcontainer.yaml
+### 94: Practice test - init Containers
+Q: Update the pod red to use an initContainer that uses the busybox image and sleeps for 20 seconds
+A: This was very easy, initContainers takes the same arguments as Containers under the pod definition 
 
-The initContainer container will run first, before the regular containers start. This can be useful if you need to do some sort of set up before your main container starts (such as cloning a repo)
-You can have multiple containers listed under initContainer. They will run sequentially.
-You can use initContainers to wait for
-
-If any of the initContainers fail to succeed, Kubernetes will restart the pod repeatedly until the initContainer(s) succeed.
-
-(Follow up from Dani: Can you do this with deployments as well? Hey maybe you should give all the concepts below a read, maybe they cover more things that you don't know!)
-(Follow up from Dani: Doublecheck/redo initContainers, the katakoda lab was not recognizing them for some reason!)
-More reading material is available here: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
-
-79: Self healing applications:
-Kubernetes by default restarts pods when they crash.
-But I remember liveliness probes and readiness probes and other things
-(Follow up from Dani: Can you take a look at this later?)
+### 95: Self healing applications:
+- Kubernetes by default restarts pods when they crash.
+- But I remember liveliness probes and readiness probes and other things

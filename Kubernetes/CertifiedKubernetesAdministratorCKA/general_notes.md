@@ -34,6 +34,14 @@ Exam tips: https://training.linuxfoundation.org/wp-content/uploads/2019/05/Impor
 
 #### Section 5:
 - Can you investigate all kubectl subcommands?
+- (Follow up from Dani: Creating a pod loading the configs from a configmap was really tough. You need to work on this!
+- What objects can you find on the kube-system namespace that you can copy and paste around?
+- Give pod design patterns a google! 
+- Give liveness and readiness probes a look, even though these are only part of the CKAD course
+
+#### Section 7:
+- (Follow up from Dani: There's definitely some learning to be done as far as troubleshooting a broken cluster (as in when you can't use kubectl)
+
 
 
 Check the FAQ here to mentally prepare a list of commands you'll use:
