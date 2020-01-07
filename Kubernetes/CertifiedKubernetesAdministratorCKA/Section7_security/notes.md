@@ -157,92 +157,181 @@ Using O=system:masters is important above as it defines the certificate as meant
 - To decode a certificate and view details:
 - `openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout`
 
-If kubernetes is broken for some reason and you can't use kubectl logs to see the logs, you have to go one later down and use docekr to see the logs (docker logs mycontainer)
+If kubernetes is broken for some reason and you can't use kubectl logs to see the logs, you have to go one later down and use docker to see the logs (docker logs mycontainer)
+
+### 120: Practice test - view certificates
+Q: Identify the certificate file used for the kube-api server
+A:    
+- `ps aux | grep kube-apiserver | grep crt | grep api`
+- `/etc/kubernetes/pki/apiserver.crt`
+
+Q: Identify the Certificate file used to authenticate kube-apiserver as a client to ETCD Server
+A: `/etc/kubernetes/pki/apiserver-etcd-client.crt`
+
+Q: Identify the key used to authenticate kubeapi-server to the kubelet server
+A: `/etc/kubernetes/pki/apiserver-kubelet-client.crt`
+
+Q: Identify the ETCD Server Certificate used to host ETCD server
+A: `/etc/kubernetes/pki/etcd/server.crt`
+
+Q: What is the Common Name (CN) configured on the Kube API Server Certificate?
+A: `openssl x509 -in file-path.crt -text -noout`
+A: `Subject: CN=kube-apiserver`
+
+(There are a few questions here just like the above one. Just read common certificate fields)
+
+Q: What is the Common Name (CN) configured on the ETCD Server certificate?
+A: `openssl x509 -in server.crt -text -noout`
+
+Q: How long, from the issued date, is the Kube-API Server Certificate valid for?
+A: 1 year
+
+(ca.crt is valid for 10 years)
+
+Q: Kubectl suddenly stops responding to your commands. Check it out! Someone recently modified the /etc/kubernetes/manifests/etcd.yaml file
+A: Changed cert path on etcd.yaml
+
+Q: The kube-api server stopped again! Check it out. Inspect the kube-api server logs and identify the root cause and fix the issue.
+A: 
 
 
-105: Certificates API
-Kubernetes has an API call that can sign CSRs for us!
-We can create a kubernetes object named CertificateSigningRequest.
-pacman is the package m
-Let's create all the things for a user namedpacman is the package m Jane.
-openssl genrsa -out jane.key 2048
-openssl req -new -key jane.key -subj "/CN=jane" -out jane.csr
-See 105_CSR.yaml for an example of a CertificateSigningRequest object (syntax might be a bit off, didn't test it)
-kubectl apply -f 105_CSR.yaml
-kubectl get csr
-kubectl certificate approve jane
-kubectl get csr jane -o yaml #Certificate will be part of the output
+### 121: Certificates API
+- Kubernetes has an API call that can sign CSRs for us!
+- We can create a kubernetes object named CertificateSigningRequest.
+-  pacman is the package m
+- Let's create all the things for a user namedpacman is the package m Jane.
+    - `openssl genrsa -out jane.key 2048`
+    - `openssl req -new -key jane.key -subj "/CN=jane" -out jane.csr`
 
-All certificate related operations are carried out by the controller manager.
+- See [./121_CSR.yaml](./121_CSR.yaml) for an example of a CertificateSigningRequest object (syntax might be a bit off, didn't test it)
+    - `kubectl apply -f 105_CSR.yaml`
+    - `kubectl get csr`
+    - `kubectl certificate approve jane`
+    - `kubectl get csr jane -o yaml #Certificate will be part of the output`
 
-107: Certificate quiz:
-(Follow up from Dani: Can you generate a CertificateSigningRequest from memory? It's a tough one)
-kubectl certificate approve akshay
-kubectl certificate deny agent-smith
+- All certificate related operations are carried out by the controller manager.
+
+### 122: Certificate quiz:
+Q: Create a CertificateSigningRequest object with the name akshay with the contents of the akshay.csr file
+A:
+```yaml
+apiVersion: certificates.k8s.io/v1beta1
+kind: CertificateSigningRequest
+metadata:
+  name: jane
+spec:
+  groups:
+    - system:authenticated
+  usages:
+    - digital signature
+    - key enciperhment
+    - server auth
+  request: | #cat akshay.csr | base64
+    LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ1ZqQ0NBVDRDQVFBd0VURVBN
+    QTBHQTFVRUF3d0dZV3R6YUdGNU1JSUJJakFOQmdrcWhraUc5dzBCQVFFRgpBQU9DQVE4QU1JSUJD
+    Z0tDQVFFQXdWblFiRzV6cUpBcDNieFV6R2lkYkY2UHFVdG1YOUhlSUFaeFQyYy8vOW9JCmNQWHFh
+    bHRRRFNnUUEvanhSN3NDZnl5a0VKQ2taQVZFc3ducDNLZkVoRHVjQTg2QVZ3VHFhZEFoOTVqdkxQ
+    UlAKcjhHUzhGMXZFaE9LVzRIbzJLLzlEN1FuMktOdmg2bU03dEpPd2RsT0Z0TG8rTm9GaVF6bTJ6
+    SGpLeUwvUFViSwpzL05oRXAyRitTV0ZLeHRpT3BZUVlKNTh0citrOTRDcmhtYmRCSmdxMm50Q2JO
+    YzVlYXo4L0NMWllPVEIzZ0ZtCnRsdlBHN3QrVjZaZnJJdUF1Z1ZWd0dYSFNBbFRzQWM3cTNkOG0v
+    ZWdtbXdyMjUxVkVBUnl3b2JOcVd5TTJJRVcKUUNNS1Flb3d1UW5kMVpHWTRaOEgwai9sZTFRbWZq
+    WkRxZnRQTGxEYzd3SURBUUFCb0FBd0RRWUpLb1pJaHZjTgpBUUVMQlFBRGdnRUJBQUdzVjlhVGJ5
+    Y0orbmY1VnJST1dqVzU0ZVJESnd3Rm4rRkVwZmlYZFBTcnVYTFdzUkR5ClJhQzVOTVBlSFpNNXFD
+    akQvaFRxdFI5bVJiUDhURWMrRjRLa1NGYnVaako5TG5aR3dSeHV4T1VYNnJIUjNWSTgKSHhOa3Qz
+    WnZONXR6MkJPLzZXaWw2UkVjbFpsN0ovNkZMUnZhSTUwM2pKUWlqSytSR0YzV201bXhLcGYxOGdw
+    RwpzYzRVZE1oUVI1NG9vT1BVdnUwT2NJcVZlcS82SWw5R0M0MWVQcTVjd2tCbG9QdkkxQ0x3MHI3
+    QjR2ZFVjU3hnCmFablZQa3BnT0dDMXZXTkJNNEtDU3p0dlJCQUNBd29FOG9RQk9CdWUyZGlvQzR1
+    bmZFZXhLb1Y3TVRaZk1kL3gKdTZHakZxQzZwNk83RlZ2ZFJXNU45SkN5ajVUTTlaUjJmRVk9Ci0t
+    LS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQo=
+```
+A: `kubectl apply -f akshay.yaml`
+
+Q: What is the Condition of the newly created Certificate Signing Request object?
+A: `kubectl get csr` (Pending)
+   
+Q: Approve the CSR Request
+A: `kubectl certificate approve akshay`
+
+Q: That doesn't look very right. Reject that request.
+A: `kubectl certificate deny agent-smith`
+   
+Q: Delete the request:
+A: `kubectl delete csr agent-smith`
 
 
-107: KubeConfig
-By default, kubectl looks for a file with the path $HOME/.kube/config which will contain the adress of the cluster and your login credentials
-The config file has 3 sections: Clusters, Contexts and Users.
-Clusters: Has configs related to the different clusters you might have access to (dev, prod, gcloud, whatever)
-Users: The user accounts with which you have access to these clusters. These users might have different privileges on different clusters
-Contexts: Defines which user account will be used to acccess each cluster. ex: dev@google, admin@production and so on.
+### 123: KubeConfig
+- By default, kubectl looks for a file with the path $HOME/.kube/config which will contain the adress of the cluster and your login credentials
+- The config file has 3 sections: Clusters, Contexts and Users.
+- Clusters: Has configs related to the different clusters you might have access to (dev, prod, gcloud, whatever)
+- Users: The user accounts with which you have access to these clusters. These users might have different privileges on different clusters
+- Contexts: Defines which user account will be used to acccess each cluster. ex: dev@google, admin@production and so on.
 
-The server specification (address:port) goes into the Clusters section.
-The keys and certificates go into the users section.
-You then create a context specifying to use certain credentials on a certain cluster.
-You can specify a default context on kubeconfig.
+- The server specification (address:port) goes into the Clusters section.
+- The keys and certificates go into the users section.
+- You then create a context specifying to use certain credentials on a certain cluster.
+- You can specify a default context on kubeconfig.
 
-Have a look at 107_kubeconfig.yaml for an example. It's pretty straightforward.
+- Have a look at 107_kubeconfig.yaml for an example. It's pretty straightforward.
 
-You can use kubectl to view and modify the config file too.
-kubectl config view
-kubectl config view --kubeconfig=my-custom-config
-kube config use-context prod-user@production #This will reflect on the config file
+- You can use kubectl to view and modify the config file too.
+- `kubectl config view`
+- `kubectl config view --kubeconfig=my-custom-config`
+- `kube config use-context prod-user@production` This will reflect on the config file
 
-You can update your config file using other variations of the kubectl command:
-kubectl config -h
+- You can update your config file using other variations of the kubectl command:
+- `kubectl config -h`
 
-You can also specify a namespace under a context definition in config.
-You can have a path to a certificate for a cluster in the config, or you can have the certificate in base64 in the config.
+- You can also specify a namespace under a context definition in config.
+- You can have a path to a certificate for a cluster in the config, or you can have the certificate in base64 in the config.
 
+### 124: Practice test - Kubeconfig
+Q: Where is the default kubeconfig file located in the current environment?
+A: /root/.kube/config
 
-110: API Groups
-Whatever operations we've done so far to the cluster, we've been interacting with the API server, one way or the other.
-For instance, to get the version of your cluster, you can:
-curl https://kube-master:6433/version
-To get a list of pods you can:
-curl https://kube-master:6433/api/v1/pods
+Q: I would like to use the dev-user to access test-cluster-1. Set the current context to the right one so I can do that.
+A: Manually create the context on the ~/.kube/config file:
+```yaml
+- name: dev-user@test-cluster-1
+  context:
+    cluster: test-cluster-1
+    user: dev-user
+```   
+A: Then run: `kubectl config use-context dev-user@test-cluster-1`
 
-The Kubernetes API is grouped into multiple endpoints depending on their purpose:
-(/metrics, healthz, /version, /api, /apis, /logs and so on)
-(Follow up from Dani: Can you investigate all API endpoints and interact with them later?)
-In this section, we focus on the APIs responsible for the cluster functionality, which are /api and /apis
-Core API: /api
-named API: /apis
+### 126 : API Groups
+- Whatever operations we've done so far to the cluster, we've been interacting with the API server, one way or the other.
+- For instance, to get the version of your cluster, you can:
+- `curl https://kube-master:6433/version`
+- To get a list of pods you can:
+- `curl https://kube-master:6433/api/v1/pods`
 
-The core group is where all core functionality exists
-(v1/namespaces, v1/pods, v1/rc, v1/events, v1/endpoints, v1/nodes, v1/secrets and a bunch of other endpoints)
+- The Kubernetes API is grouped into multiple endpoints depending on their purpose:
+    - (/metrics, healthz, /version, /api, /apis, /logs and so on)
+- In this section, we focus on the APIs responsible for the cluster functionality, which are /api and /apis
+    - Core API: /api
+    - named API: /apis
 
-The named group /apis is slightly more organized (according to author) and moving forward all k8s functionality will be here.
-(/apps, /extensions, /storage.k8s.io, /authentication.k8s.io, /certificates.k8s.io)
+- The core group is where all core functionality exists
+    - (v1/namespaces, v1/pods, v1/rc, v1/events, v1/endpoints, v1/nodes, v1/secrets and a bunch of other endpoints)
 
-Within apps you have:
-/apps/v1/deployments
-/apps/v1/replicasets
-/apps/v1/statefulsets
+- The named group /apis is slightly more organized (according to author) and moving forward all k8s functionality will be here.
+    - (/apps, /extensions, /storage.k8s.io, /authentication.k8s.io, /certificates.k8s.io)
 
-And a bunch more or endpoints!
+- Within apps you have:
+    - /apps/v1/deployments
+    - /apps/v1/replicasets
+    - /apps/v1/statefulsets
+- And a bunch more endpoints!
 
-Each resource (like /apis/apps/v1/deployments) has a set of actions associated with them (such as list, get, create, delete, update, watch)
-The API reference can tell you what the API group is for each object.
+- Each resource (like /apis/apps/v1/deployments) has a set of actions associated with them (such as list, get, create, delete, update, watch)
+- The API reference can tell you what the API group is for each object.
 
-You can also access your API to see the supported API groups:
-curl http://localhost:6443 -k
-curl http://localhost:6443/apis -k | grep "name"
+- You can also access your API to see the supported API groups:
+- `curl http://localhost:6443 -k`
+- `curl http://localhost:6443/apis -k | grep "name"`
 
-A note on using curl to directly access the API: You have to authenticate! So you'll probably have to do something like:
-curl http://localhost:6443 -k --key admin.key --cert admin.crt --cacert ca.crt
+- A note on using curl to directly access the API: You have to authenticate! So you'll probably have to do something like:
+- curl http://localhost:6443 -k --key admin.key --cert admin.crt --cacert ca.crt
 
 You can also do this: kubectl proxy
 Which will start a proxy on 127.0.0.1:8001, using your certificates and config files to connect to the cluster for you.
@@ -252,61 +341,74 @@ However, do note: kube proxy is NOT the same as kubectl proxy
 
 In the next section, we can see how we use parts of the API and verbs to allow or deny access to users.
 
+### 127: RBAC
+- First of all, we create a role object. [./127_developer-role.yaml](./127_developer-role.yaml) You then apply the role:
+- `kubectl apply -f 127_developer-role.yaml`
+- A role has apiGroups, resources and verbs. These determine what actiosn you can take with which resources on the cluster
+- When we have our role object set up, we need to create a role binding. [./127_devuser-developer-binding](./127_devuser-developer-binding)
+- Do note that these apply to the default namespace.
 
-111: RBAC
-First of all, we create a role object. Please see 111-developer-role.yaml. You then apply the role:
-kubectl apply -f 111_developer-role.yaml
-When we have our role object set up, we need to create a role binding. See 111_devuser-developer-binding.yaml
-Do note that these apply to the default namespace.
-(Follow up from Dani: How to create other users in other namespaces?)
+- To view roles and role bindings:
+    - `kubectl get roles`
+    - `kubectl get rolebindings`
+    - `kubectl describe role developer`
+    - `kubectl describe rolebinding devuser-developer-binding`
 
-To view roles and role bindings:
-kubectl get roles
-kubectl get rolebindings
-kubectl describe role developer
-kubectl describe rolebinding devuser-developer-binding
+- You can also use this:
+    - `kubectl auth can-i create deployments`
+    - `kubectl auth can-i delete nodes`
 
-You can also use this:
-kubectl auth can-i create deployments
-kubectl auth can-i delete nodes
+- That's pretty cool! It'll return a boolean saying if you can or can not execute the specified action
+- You can even test an user's permission:
+    - `kubectl auth can-i create deployments --as dev-user`
+    - `kubectl auth can-i create pods --as dev-user`
+    - `kubectl auth can-i create pods --as dev-user --namespace test`
 
-That's pretty cool! It'll return a boolean saying if you can or can not execute the specified action
-You can even test an user's permission:
-
-kubectl auth can-i create deployments --as dev-user
-kubectl auth can-i create pods --as dev-user
-kubectl auth can-i create pods --as dev-user --namespace test
-
-You can even go one level down and restrict someone's access to something with certain names. For instance, you could restrict a role to interact only with the pods named "blue" and "orange"
-See 111_resource-names.yaml
-
-112: Practice test: RBAC
-(Follow up from Dani: When confused, can I query the API directly to obtain answers?)
-(Follow up from Dani: Can you create role binding from memory? Can you accurately copy and paste one from the system?)
-(Follow up from Dani: It got really boring copy and pasting roles and rolebindings around. Do some exercises on these subjects later if you feel like it)
+- You can even go one level down and restrict someone's access to something with certain names. For instance, you could restrict a role to interact only with the pods named "blue" and "orange"
+- See [./127_resource-names.yaml](./127_resource-names.yaml)
 
 
-113: Cluster Roles.
-There are Cluster Roles and Cluster Role bindings! Uh-oh!
-Roles and RoleBindings are namespaced, meaning they're created within namespaces.
-If you don't specify a namespace, they're created in the default namespace.
-Namespaces as we've been seeing until now, can isolate some resources, but not all of them!
-You can't divide nodes in namespaces and we've been seeing until now. Those are cluster wide or cluster scoped resources. They cannot be associated to any particular namespace.
+### 128: Practice test - RBAC
+Q: Inspect the environment and identify the authorization modes configured on the cluster.
+A: `cat kube-apiserver.yaml | grep auth`
 
-Resources are categorized as: Namespaced or Clusterscoped
+Q: How many roles exist in the default namespace?
+A: `kubectl get roles` 
 
-Namespaced resources: pods, replicasets, jobs, services, secrets, configmaps (the ones we've seen so far!)
-Cluster scoped resources: nodes, PVs, clusterroles, clusterrolebindings, certificatesigningrequests, namespaces)
+Q: What are the resources the weave-net role in the kube-system namespce is given access to?
+A: `kubectl describe role weave-net --namespace kube-system`
 
-To see the full list of what is namespaced and what is cluster scoped, do:
-kubectl api-resources --namespaced=true
-kubectl api-resources --namespaced=false
+Q: Which account is the weave-net role assigned to it?
+A: kubectl describe clusterrolebinding weave-net --namespace kube-system
 
-You can use cluster roles to give users to things like nodes and persistent volumes.
-See 113_cluster-role.yaml for an example of a cluster role.
-And 113_cluster-role-binding.yaml for an example of a binding.
+Q: A user dev-user is created. User's details have been added to the kubeconfig file. Inspect the permissions granted to the user. Check if the user can list pods in the default namespace.
+A: `kubectl auth can-i get pods --as=dev-user`
 
-They're very similawr to the namespaced roles and rolebindings.
+Q: Create the necessary roles and role bindings required for the dev-user to create, list and delete pods in the default namespace.
+A:
+
+
+
+### 129: Cluster Roles and Role Bindings
+- There are Cluster Roles and Cluster Role bindings! Uh-oh!
+- Roles and RoleBindings are namespaced, meaning they're created within namespaces.
+- If you don't specify a namespace, they're created in the default namespace.
+- Namespaces as we've been seeing until now, can isolate some resources, but not all of them!
+- You can't divide nodes in namespaces and we've been seeing until now. Those are cluster wide or cluster scoped resources. They cannot be associated to any particular namespace.
+
+- Resources are categorized as: Namespaced or Clusterscoped
+    - Namespaced resources: pods, replicasets, jobs, services, secrets, configmaps, roles, rolebindings (the ones we've seen so far!)
+    - Cluster scoped resources: nodes, PVs, clusterroles, clusterrolebindings, certificatesigningrequests, namespaces)
+
+- To see the full list of what is namespaced and what is cluster scoped, do:
+- `kubectl api-resources --namespaced=true`
+- `kubectl api-resources --namespaced=false`
+
+- You can use cluster roles to give users to things like nodes and persistent volumes.
+    - See [./129_cluster-role.yaml](./129_cluster-role.yaml)for an example of a cluster role.
+    - And [./129_cluster-role-binding](./129_cluster-role-binding) for an example of a binding.
+
+- They're very similar to the namespaced roles and rolebindings.
 
 
 114: Practive: Cluster roles and cluster role bindings
@@ -314,58 +416,154 @@ kubectl get clusterroles --all-namespaces
 (Follow up from Dani: You skipped the cluster role binding practice session. Do it later if you're feeling like it)
 
 
-115: Image security
-When you specify on a pod:
-image:nginx
-Kubernetes actually interprets this as:
-image: docker.io/nginx/nginx
+### 131: Image security
+- When you specify on a pod:
+    - image:nginx
+- Kubernetes actually interprets this as:
+    - image: docker.io/nginx/nginx
 
-To pull an image from a private registry, first you have to create a secret with the login credentials for the registry:
-
+- To pull an image from a private registry, first you have to create a secret with the login credentials for the registry:
+```
 kubectl create secret docker-registry regcred \
     --docker-server=private-registry.io \
     --docker-username=myuser \
     --docker-password=mypassword \
     --docker-email=myemail
-(Follow up from Dani: Can you create this secret from memory?)
+```
+
+### 132: Practice test - Image Security
+Q: Create a secret object with the credentials required to access the registry
+A:
+```
+kubectl create secret docker-registry private-reg-cred \
+    --docker-server=myprivateregistry.com:5000 \
+    --docker-username=dock_user \
+    --docker-password=dock_password \
+    --docker-email=dock_user@myprivateregistry.com
+```
+
+Q: Configure the deployment to use credentials from the new secret to pull images from the private registry
+A: Inside deployment specs:
+```yaml
+    spec:
+      imagePullSecrets:
+      - name: private-reg-cred
+      containers:
+      - image: myprivateregistry.com:5000/nginx:alpine
+        imagePullPolicy: IfNotPresent
+        name: web
+```
 
 
-117: Security Contexts
-You can ask a pod to run as a certain user id. Check 117_seccontext_pod.yaml.
-This is supported to be set for all the containers in the pod, or you can set it on an individual container in the pod.
-Depends on which part of the spec you put it.
-Capabilities apparently allows you to give certain priviledges to the process running inside the pod, but not root rights.
-
-If you don't specify a user for a container (either during build or at launch for k8s) it'll run as root
+### 133: Security Contexts
+- You can ask a pod to run as a certain user id. Check 117_seccontext_pod.yaml.
+- This is supported to be set for all the containers in the pod, or you can set it on an individual container in the pod.
+- Depends on which part of the spec you put it.
+- Capabilities apparently allows you to give certain priviledges to the process running inside the pod, but not root rights.
+- If you don't specify a user for a container (either during build or at launch for k8s) it'll run as root
 
 118: Practice test, security policy.
 Set the policy for the entire pod but for some reason it didn't get picked up. Tried to put it inside a container and it crashed.
 (Follow up from Dani: If you re-do this with the user specified under a container only (not the entire pod) you should be able replicate the failure. Maybe your understanding of yaml isn't that good!)
 
+###134: Practice test - Security Contexts
+Q: What is the user used to execute the sleep process within the 'ubuntu-sleeper' pod?
+A: `kubectl exec ubuntu-sleeper whoami`
 
-119: Network Policy
-From a webserver, traffic coming from users is an Ingress traffic.
-Traffic leaving the cluster is of type egress.
+Q: Edit the pod 'ubuntu-sleeper' to run the sleep process with user ID 1010.
+A: Container Spec:
+```yaml
+spec:
+  containers:
+  - command:
+    - sleep
+    - "4800"
+    image: ubuntu
+    imagePullPolicy: Always
+    name: ubuntu
+    securityContext:
+      runAsUser: 1010
+```
 
-To recap in Kubernetes:
-Each Pod has an ip address.
-Each node has an ip address.
-Each service has an ip address.
+Q: Update pod 'ubuntu-sleeper' to run as Root user and with the 'SYS_TIME' capability.
+A: 
+```yaml
+spec:
+  containers:
+  - command:
+    - sleep
+    - "4800"
+    image: ubuntu
+    imagePullPolicy: Always
+    name: ubuntu
+    resources: {}
+    securityContext:
+      capabilities:
+        add: ["SYS_TIME"]
+```
 
-By default, all pods on the cluster can reach each other through the Kubernetes virtual networks.
-k8s is configured by default with an "All Allow" rule
+Q: Now try to run the below command in the pod to set the date: date -s '19 APR 2012 11:14:00'
+A: `kubectl exec -it ubuntu-sleeper -- date -s '19 APR 2012 11:14:00'`
 
-Imagine you have this:
 
-Frontend <> API server <> Database.
+### 135: Network Policy
+- From a webserver, traffic coming from users is an Ingress traffic.
+- Traffic leaving the cluster is of type egress.
 
-Your frontend should not (and has no reason to) connect to your database directly. It has to go through your backend API first.
-You can implement a network policy to allow traffic to the database only from the backend server.
-A NetworkPolicy is another object in a k8s cluster.
-You link a NetworkPolicy to one or more pods.
+- To recap in Kubernetes:
+    - Each Pod has an ip address.
+    - Each node has an ip address.
+    - Each service has an ip address.
 
-We use labels and matchLabels to link pods to policies.
+- By default, all pods on the cluster can reach each other through the Kubernetes virtual networks.
+- k8s is configured by default with an "All Allow" rule
 
-Not all network solutions support network policies.
+- Imagine you have this:
+
+- Frontend <> API server <> Database.
+    - Your frontend should not (and has no reason to) connect to your database directly. It has to go through your backend API first.
+    - You can implement a network policy to allow traffic to the database only from the backend server.
+    - A NetworkPolicy is another object in a k8s cluster.
+    - You link a NetworkPolicy to one or more pods.
+
+- We use labels and matchLabels to link pods to policies.
+- Not all network solutions support network policies.
 
 (Follow up from Dani: The sample yaml given on this one was very crappy. Research and redo the text exercises on lecture 120!)
+
+### 136 Practice test - Network Policy:
+Q: Create a network policy to allow traffic from the 'Internal' application only to the 'payroll-service' and 'db-service'
+A: 
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: internal-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      name: internal
+  policyTypes:
+  - Egress
+  - Ingress
+  ingress:
+    - {}
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          name: mysql
+    ports:
+    - protocol: TCP
+      port: 3306
+
+  - to:
+    - podSelector:
+        matchLabels:
+          name: payroll
+    ports:
+    - protocol: TCP
+      port: 8080
+  ```
+ 

@@ -15,7 +15,7 @@ spec:
       containers:
         - name: redis123
           image: redis
-  replicas: 3
+  replicas: 4
   selector:
     matchLabels:
       type: front-end

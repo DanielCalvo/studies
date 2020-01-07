@@ -6,6 +6,6 @@ spec:
   accessModes:
     - ReadWriteOnce
   capacity:
-    stoage: 1Gi
+    storage: 1Gi
   hostPath: #This gets replaced with cloud options like awsElasticBlockStore
     path: /tmp/data #Not to be used in production!

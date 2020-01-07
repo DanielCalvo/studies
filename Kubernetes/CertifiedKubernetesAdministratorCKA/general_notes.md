@@ -1,11 +1,12 @@
 ### Pre-exam checklist
+- Try doing all the practive sections without checking your course resources, just checking the kubernetes reference as allowed per exam
 - Don't forget to run the browser compatibility tool on whatever system you're going to use before doing the exam!
 - Use the code - DEVOPS15 - while registering for the CKA or CKAD exams at Linux Foundation to get a 15% discount.
 - Exam Curriculum (Topics): https://github.com/cncf/curriculum
 - Exam Tips: http://training.linuxfoundation.org/go//Important-Tips-CKA-CKAD
-
 When done with the course, check the handbook to see if there's anything you missed:
 - Candidate Handbook: https://www.cncf.io/certification/candidate-handbook
+
 
 ### FOLLOW UPS FROM LATER:
 #### Section 2
@@ -41,8 +42,16 @@ Exam tips: https://training.linuxfoundation.org/wp-content/uploads/2019/05/Impor
 
 #### Section 7:
 - (Follow up from Dani: There's definitely some learning to be done as far as troubleshooting a broken cluster (as in when you can't use kubectl)
+- The TLS troubleshooting at lecture was very boring, reapproch at the future if you feel like
+- (Follow up from Dani: Can you investigate all API endpoints and interact with them later?)
+- (Follow up from Dani: How to create other users in other namespaces?)
+- Redo the lecture 128 practice test if you feel like it, you forgot to differentiate between roles and roles bindings and cluster roles and cluster role bindings 
+- (Follow up from Dani: It got really boring copy and pasting roles and rolebindings around. Do some exercises on these subjects later if you feel like it)
+- Redo the practice test for network policies if you're feeling like it (the hands on part requires a lot of copying and pasting)
 
-
+#### Section 8:
+- Not really exam related, but it would be interesting to see how the Container Storage Interface talks to EBS on AWS.
+- (Follow up from Dani: The explanation here was nice, but very generic. I think you should try implementing a storage solution on cloud and/or on premise and seeing how this works)
 
 Check the FAQ here to mentally prepare a list of commands you'll use:
 https://www.cncf.io/certification/cka/
