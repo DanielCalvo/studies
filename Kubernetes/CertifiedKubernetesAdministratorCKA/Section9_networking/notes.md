@@ -282,32 +282,63 @@ A: `kubectl describe configmap coredns -n kube-system`
 - Ex: mysql.payroll.svc.cluster.local
 
 
-149: Practive test - explore DNS
-(Follow up from Dani: How do you list objects seeing which namespaces they're from?)
+### 173: Ingress
+- When you create a load balancer in gcp, k8s requests a load balancer for google (?)
+- This LB has an external IP that can be used to access the app.
+- Remember that you need to pay for each LB as they have a public IP!
+- The ingress allows users to access your applications based on what HTTP url or HTTP name they reach.
+- And at the same time, implement SSL security!
+- Think of an ingress as a layer 7 load balancer for HTTP.
+- k8s does not come with an ingress controller by default.
+- Ingresses available: nginx, contour, haproxy, traefix, istio and GCE (from google)
+- The solution you deploy is called an ingress controller.
+- The set of rules you configure for this ingress are named ingress resources
 
-150: Ingress
-When you create a load balancer in gcp, k8s requests a load balancer for google (?)
-This LB has an external IP that can be used to access the app.
-Remember that you need to pay for each LB as they have a public IP!
-The ingress allows users to access your applications based on what HTTP url or HTTP name they reach.
-And at the same time, implement SSL security!
-Think of an ingress as a layer 7 load balancer for HTTP.
-k8s does not come with an ingress controller by default.
-Ingresses available: nginx, contour, haproxy, traefix, istio and GCE (from google)
+- Have a look at 173_nginxingress.yaml and 173_nginxnodeport.yaml
+- Please note that missing here is also a configmap required for the nginx config and a ServiceAccount for nginx
 
-Have a look at 150_nginxingress.yaml and 150_nginxnodeport.yaml
-Please note that missing here is also a configmap required for the nginx config and a ServiceAccount for nginx
+- You can route users based on if they reach things like
+- http://myapp/url1
+- http://myapp/url2
 
-You can route users based on if they reach things like
-myapp/url1
-myapp/url2
+Or if they visit http://myapp.com or http://myotherapp.com
 
-or if they visit myapp.com or myotherapp.com
+- Don't forget you can:
+- `kubectl get ingress`
 
-Don't forget you can:
-kubectl get ingress
+- You can have multiple rules for a single ingress, regardless of name or url path.
 
-You can have multiple rules for a single ingress, regardless of name or url path.
-(Follow up from Dani: ingress configuration is very large, perhaps you should have a file with multiple examples?)
-(Follow up from Dani: Run commands from vim, also learn tmux to split your terminal)
-(Follow up from Dani: Remember! The ingress needs to be on the same namespace as the service!)
+### 174: Practice test - Ingress 1
+Q: We have deployed Ingress Controller, resources and applications. Explore the setup.
+A: `kubectl get all --all-namespaces`
+`kubectl get ingress --all-namespaces`
+
+Q: Which namespace is the Ingress Controller deployed in?
+A: `kubectl get all --all-namespaces`
+Note that Ingress controller != Ingress resource
+
+Q: What is the name of the Ingress Controller Deployment?
+A: `kubectl get deployments`
+(nginx-ingress-controller)
+
+Q:
+A:
+
+Q:
+A:
+
+Q:
+A:
+
+Q:
+A:
+
+Q:
+A:
+
+Q:
+A:
+
+### 175: Ingress - Annotations and rewrite target
+
+### 176: Practive test - Ingress 2 

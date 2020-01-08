@@ -53,6 +53,12 @@ Exam tips: https://training.linuxfoundation.org/wp-content/uploads/2019/05/Impor
 - Not really exam related, but it would be interesting to see how the Container Storage Interface talks to EBS on AWS.
 - (Follow up from Dani: The explanation here was nice, but very generic. I think you should try implementing a storage solution on cloud and/or on premise and seeing how this works)
 
+#### Section 9:
+- Try traefik as an ingress!
+- (Follow up from Dani: ingress configuration is very large, perhaps you should have a file with multiple examples?)
+- (Follow up from Dani: Run commands from vim, also learn tmux to split your terminal)
+- (Follow up from Dani: Remember! The ingress needs to be on the same namespace as the service!)
+
 Check the FAQ here to mentally prepare a list of commands you'll use:
 https://www.cncf.io/certification/cka/
 
