@@ -321,24 +321,155 @@ Q: What is the name of the Ingress Controller Deployment?
 A: `kubectl get deployments`
 (nginx-ingress-controller)
 
-Q:
-A:
+Q: Which namespace are the applications deployed in?
+A: `kubectl get all --all-namespaces`
 
-Q:
-A:
+Q: Which namespace is the Ingress Resource deployed in?
+A: `kubectl get ingress --all-namespaces`
 
-Q:
-A:
+Q: What is the Host configured on the ingress-resource? The host entry defines the domain name that users use to reach the application like www.google.com
+A: `kubectl describe ingress --namespace app-space` (all hosts)
 
-Q:
-A:
+Q: What backend is the /wear path on the Ingress configured with?
+A: `kubectl describe ingress --namespace app-space`
 
-Q:
-A:
+Q: If the requirement does not match any of the configured paths what service are the requests forwarded to?
+A: `kubectl describe ingress --namespace app-space` default backend
 
-Q:
-A:
+Q: You are requested to change the URLs at which the applications are made available. Make the video application available at /stream.
+A: `kubectl edit ingress ingress-wear-watch --namespace app-space`
+
+Q: You are requested to add a new path to your ingress to make the food delivery application available to your customers. Make the new application available at /eat.
+A: `kubectl edit ingress ingress-wear-watch --namespace app-space`
+
+Q: Create an ingress for the pay app
+A: 
+```yaml
+apiVersion: v1
+items:
+- apiVersion: extensions/v1beta1
+  kind: Ingress
+  metadata:
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    creationTimestamp: "2020-01-08T22:31:16Z"
+    name: ingress-pay
+    namespace: critical-space
+  spec:
+    rules:
+    - http:
+        paths:
+        - backend:
+            serviceName: pay-service
+            servicePort: 8282
+          path: /pay
+```
 
 ### 175: Ingress - Annotations and rewrite target
+- Sample rewrite url rule:
+```yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test-ingress
+  namespace: critical-space
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /pay
+        backend:
+          serviceName: pay-service
+          servicePort: 8282
+```
 
-### 176: Practive test - Ingress 2 
+```yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: rewrite
+  namespace: default
+spec:
+  rules:
+  - host: rewrite.bar.com
+    http:
+      paths:
+      - backend:
+          serviceName: http-svc
+          servicePort: 80
+        path: /something(/|$)(.*)
+```
+
+### 176: Practice test - Ingress 2 
+Q: We have deployed two applications. Explore the setup.
+A: `kubectl get all --all-namespaces`
+
+Q: Let us now deploy an Ingress Controller. First, create a namespace called 'ingress-space'
+A: `kubectl create namespace ingress-space`
+
+Q: The NGINX Ingress Controller requires a ConfigMap object. Create a ConfigMap object in the ingress-space.
+A: `kubectl create configmap nginx-config -n ingress-space`
+
+Q: The NGINX Ingress Controller requires a ServiceAccount. Create a ServiceAccount in the ingress-space.
+A: `kubectl create serviceaccount ingress-serviceaccount -n ingress-space`
+
+Q: We have created the Roles and RoleBindings for the ServiceAccount. Check it out!
+A: `kubectl describe rolebindings ingress-role-binding -n ingress-space`
+`kubectl describe roles ingress-role -n ingress-space`
+
+Q: Let us now deploy the Ingress Controller. Create a deployment using the file given.
+A:
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-controller
+  namespace: ingress-space
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nginx-ingress
+  template:
+    metadata:
+      labels:
+        name: nginx-ingress
+    spec:
+      serviceAccountName: ingress-serviceaccount
+      containers:
+        - name: nginx-ingress-controller
+          image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
+          args:
+            - /nginx-ingress-controller
+            - --configmap=$(POD_NAMESPACE)/nginx-configuration
+            - --default-backend-service=app-space/default-http-backend
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+```
+TO FINISH:
+
+Q: Let us now create a service to make Ingress available to external users.
+A:
+
+Q: Create the ingress resource to make the applications available at /wear and /watch on the Ingress service.
+A: 
+
+
+

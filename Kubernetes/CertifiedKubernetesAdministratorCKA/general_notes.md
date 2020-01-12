@@ -59,6 +59,11 @@ Exam tips: https://training.linuxfoundation.org/wp-content/uploads/2019/05/Impor
 - (Follow up from Dani: Run commands from vim, also learn tmux to split your terminal)
 - (Follow up from Dani: Remember! The ingress needs to be on the same namespace as the service!)
 
+#### Section 13:
+- It would be helpful to explore all the flags for all the kubectl commands (`kubectl logs -f --previous` seemed helpful)
+- Explore and map out the documentation pages!
+- Give the docs a thorough look! Map it out!
+
 Check the FAQ here to mentally prepare a list of commands you'll use:
 https://www.cncf.io/certification/cka/
 
