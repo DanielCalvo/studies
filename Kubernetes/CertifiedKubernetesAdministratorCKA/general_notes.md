@@ -67,6 +67,9 @@ Exam tips: https://training.linuxfoundation.org/wp-content/uploads/2019/05/Impor
 Check the FAQ here to mentally prepare a list of commands you'll use:
 https://www.cncf.io/certification/cka/
 
+#### Section 14:
+- I did not manage to get json path queries working, they were confusing! Revisit later
+
 Kodekloud and Katakoda seem worth a look!
 
 It would be nice to have a sample config of a pod with two containers somewhere.
