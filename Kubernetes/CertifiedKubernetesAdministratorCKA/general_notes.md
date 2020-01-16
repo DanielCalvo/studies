@@ -69,6 +69,7 @@ https://www.cncf.io/certification/cka/
 
 #### Section 14:
 - I did not manage to get json path queries working, they were confusing! Revisit later
+- Give custom output and columns and loops a revisit, they're difficult to work with.
 
 Kodekloud and Katakoda seem worth a look!
 

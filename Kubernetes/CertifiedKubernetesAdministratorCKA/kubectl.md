@@ -20,6 +20,7 @@
 
 #### get
 - Display one or many resources
+    - Maybe explain here all the options you can have, one per line? The --sort one completely escaped me...
 
 #### edit
 - Edit a resource on the server

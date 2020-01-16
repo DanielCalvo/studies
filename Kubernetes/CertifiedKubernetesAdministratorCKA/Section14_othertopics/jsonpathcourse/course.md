@@ -119,4 +119,54 @@ Sample jsonpath queries:
 6. `*.*.*.model`
 7. `$.employee.payslips.*.amount`
 8. `$.*.*.*.*.firstname`
-9. ``
+9. `???`
+
+### 7: JSON PATH - Part 3, Lists
+- `$[0]`
+- `$[3]`
+- `$[0,3]`
+- `$[0:3]`
+- `$[0:8:2]` (START:END:STEP)
+- `$[-1]` or `$[-1:0]` (last element, depends on JSONPATH implementation)
+- `$[-3:]` (Last 3 elements)
+
+### 8: Labs - JSON PATH - Lists
+1. `$[0]`
+2. `$[0,4]`
+3. `$[0:5]`
+4. `$[2:7]`
+5. `$[-1:]`
+6. `$[6:]`
+7. `$[3:9]`
+8. `$[-1:]`
+9. `$[-3:]`
+10. `$[91:97]`
+11. `$.[0:5].phone`
+12. `$.[-5:].age`
+
+### 9: JSON PATH Use case - Kubernetes
+- JSONPATH can be useful when working with k8s to filter through large datasets (imagine thousands of pods)
+- To get output in JSON: `kubectl get pods -o json`
+- Look at the json
+- Create the JSON PATH query based on that JSON to get the output you want, ex:
+- `kubectl get pods -o=jsonpath=.items[0].spec.containers[0].image`
+- When learning, author recommends getting the output from kubectl in json, then copying it to a jsonpath editor online and playing with the query until you get the output
+- Sample query: `kubectl get nodes -o=jsonpath='{.items[*].status.capacity.cpu}'`
+- You can combine queries: `kubectl get nodes -o=jsonpath='{.items[*].metadata.name}{"\n"}{.items[*].status.capacity.cpu}'`
+- Custom columns: `kubectl get nodes -o=custom-columns=NODE:.metadata.name, CPU:.status.capacity.cpu`
+- `kubectl get nodes --sort-by=.status.capacity.cpu`
+
+### 10: Labs - JSON PATH - Kubernetes
+6. `$.kind`
+7. `$.metadata.name`
+8. `$.spec.nodeName`
+9.  `$.spec.containers.*`
+10. `$.spec.containers.*.image`
+11. `$.status.phase`
+12. `$.status.containerStatuses[0].state.waiting.*.`
+13. `$.status.containerStatuses[1].restartCount`
+14. `$.status.containerStatuses[?(@.name == 'redis-container')].restartCount`
+
+### 11: Labs - JSON PATH - Kubernetes - 2
+3. `*.metadata.name`
+4. `$.users.*.name`
