@@ -148,4 +148,59 @@ A:
 - `systemctl restart kubelet`
 - `kubectl uncordon node01`
 
-### 105: Backup and Restore methods
+### 106: Backup and Restore methods 
+- On the ETCD cluster is there all the cluster related information is stored!
+- Persistent volumes on the cluster are also a candidate for backups
+- A good practice is to store your yaml definitions on a source code repository
+- Possible backup of everything on the cluster: `kubectl get all --all-namespaces -o yaml > all-deploy-services.yaml`
+- Velero is good for backups
+
+#### ETCD Backup
+- ETCD has a datadir configured by the `--data-dir` parameter
+- `etcdctl` also has a snapshot feature: `etcdctl snapshot save snapshot.db`
+- `etcdctl snapshot status status snapshot.db` 
+- To restore your cluster from this backup: 
+    - `service kube-apiserver stop`
+    - `etcdctl snapshot restore snapshot.db \
+    --data-dir xxx \
+    --initial-cluster xxx
+    --initial-cluster-token xxx
+    --initial-advertise-peer-urls xxx`
+- When you run the above command, a new data directory will be created
+- Then remember to change the following settings on etcd:
+    - `--initial-cluster-token xxxx`
+    - `--data-dir`
+- Then:
+    - `systemctl daemon-reload`
+    - `service etcd restart`
+    - `service kube-apiserver start`
+
+- With all the etcd commands, remember to specify `--endpoints, --cacert, --cert, --key`
+- If you're using a managed k8s solution, just get the yamls, you may not even have access to the etcd cluster
+
+### 107: Practice test - Backup and Restore Methods
+Q: What's the version of etcd on the cluster?
+A: `kubectl exec -it etcd-master -n kube-system sh`
+`etcd --version`
+
+Q: At what address do you reach the ETCD cluster from your master node?
+A: `kubectl describe pod etcd-master -n kube-system`
+`--listen-client-urls=https://127.0.0.1:2379,https://172.17.0.48:2379`
+
+Q: Where is the ETCD server certificate file located?
+Q: Where is the ETCD CA Certificate file located?
+A: `kubectl describe pod etcd-master -n kube-system`
+
+Q: Backup etcd!
+A: `etcdctl backup --data-dir=/var/lib/etcd --backup-dir=./bkp`
+
+Q: Luckily we took a backup. Restore the original state of the cluster using the backup file.
+A: https://github.com/mmumshad/kubernetes-the-hard-way/blob/master/practice-questions-answers/cluster-maintenance/backup-etcd/etcd-backup-and-restore.md
+
+### 108: Certification Exam Tip!
+- The exam won't tell you if what you did is correct or not
+- If the questions asks you to create a pod with a certain image, validate it yourself by doing `kubectl describe pod`
+
+### 109: References
+- https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster
+- https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/recovery.md

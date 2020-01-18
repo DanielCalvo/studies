@@ -18,6 +18,8 @@ When done with the course, check the handbook to see if there's anything you mis
 - Bookmark for the exam: https://kubernetes.io/docs/reference/kubectl/conventions/ and make sure to familiarize yourself with the generator commands!
 - (Follow up from Dani: Carefully study the output of kubectl get services to know exactly what everything means. Give that a go on kubectl describe services too)
 - See imperactive commands with kubectl on lecture 35
+- To test GateOne: `docker run -p 443:8000 dcwangmit01/gateone`
+
 
 #### Section 3
 - A pod failed to start because the scheduler wasn't running. What components are always running on vanilla k8s? (corends, etc, proxy, what else? ) (Follow up from Dani: Which pods from Kubernetes should be available on a default install of Kubernetes?)
@@ -40,6 +42,9 @@ Exam tips: https://training.linuxfoundation.org/wp-content/uploads/2019/05/Impor
 - Give pod design patterns a google! 
 - Give liveness and readiness probes a look, even though these are only part of the CKAD course
 
+#### Section 6:
+- ETCD backup is pretty insane to memorize and... the official doc seems lacking?
+
 #### Section 7:
 - (Follow up from Dani: There's definitely some learning to be done as far as troubleshooting a broken cluster (as in when you can't use kubectl)
 - The TLS troubleshooting at lecture was very boring, reapproch at the future if you feel like
@@ -58,6 +63,10 @@ Exam tips: https://training.linuxfoundation.org/wp-content/uploads/2019/05/Impor
 - (Follow up from Dani: ingress configuration is very large, perhaps you should have a file with multiple examples?)
 - (Follow up from Dani: Run commands from vim, also learn tmux to split your terminal)
 - (Follow up from Dani: Remember! The ingress needs to be on the same namespace as the service!)
+
+#### Section 10:
+- Skim Kelsey's k8s the hardway one last time just to make sure you remember more or less how it goes
+- Maybe watch all of Mumshad's videos on this section, they could be helpful
 
 #### Section 13:
 - It would be helpful to explore all the flags for all the kubectl commands (`kubectl logs -f --previous` seemed helpful)
@@ -89,3 +98,5 @@ Post course:
 CKA search on reddit
 Go through all the docs: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
 
+Put on your inbox later:
+- RAFT protocol, CAP theorem
