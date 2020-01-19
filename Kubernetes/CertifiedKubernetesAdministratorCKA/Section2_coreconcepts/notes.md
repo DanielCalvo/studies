@@ -1,8 +1,3 @@
-
-### Before moving on
-- Recheck lecture 8 with "Resources for this lecture"
-- There might be something useful there, the taints & tolerations pdf appeared interesting!
-
 ### 9: Cluster architecture
 - Cluster consists of a set of nodes. There are worker nodes and master nodes.
 - Worker node: Hosts applications as containers

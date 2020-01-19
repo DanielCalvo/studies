@@ -91,8 +91,7 @@ Usually certificates that are public keys are named .pem or .crt.
 Usually private keys are named .key or -key.pem.
 Private keys have the word "key" in them usually, either as an extension or part of the file name.
 
-
-### 116: TLS in Kubernetes. Yay for lecture 100! We're halfway there!
+### 116: TLS in Kubernetes.
 - Three types of certificates:
     - Root certificates (from the CA)
     - Server certificates (from the server)
@@ -124,7 +123,7 @@ Client components, the clients can be:
 - You can even have more than one, one for all the components in the cluster, and another one for ETCD and apiserver (or just ETCD)
 - For now we'll just stick to one CA for everything.
 
-### 117: TLS in Kubernetes: Certificate creation -- Continue here tomorrow!
+### 117: TLS in Kubernetes: Certificate creation
 - Let's get started with the CA certs:
     - Generate key: `openssl genrsa -out ca.key 2048`
     - Generate CSR: `openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr`

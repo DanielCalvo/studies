@@ -57,7 +57,7 @@ A: `kubectl cordon node03`
 - https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md
 - https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api_changes.md
 
-### 103: Cluster upgrade process (stopped here)
+### 103: Cluster upgrade process
 - No component in the cluster can be at a version higher than kube-apiserver
 - The versions of certain services can be lower than others, but only in a specific way. Let's assume that kube-apiserver is at version X.
 
