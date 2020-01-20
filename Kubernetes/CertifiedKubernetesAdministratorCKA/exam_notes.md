@@ -85,8 +85,42 @@
 
 ### 133: Practice test - Image security
 
-### 135 Practice test - Security contexts
+### 135: Practice test - Security contexts
 
-### 137 Practice test - Network Policy
+### 137: Practice test - Network Policy
 
 ### 148: Practice test: Persistent Volumes and Persistent Volume Claims
+OK. Do again if you wanna be faster. Read on the theory to better understand the relationship between PVs and PVCs if you want to
+
+### 161: Practice test - Explore Kubernetes Environment
+- OK
+
+### 164: Practice test - Explore CNI Weave
+
+### 166: Practice test - Explore CNI Weave - 2
+
+### 167: Practice test - Deploy network solution
+
+### 170: Practice test - Service Networking
+
+### 173: Practice test - Explore DNS
+
+### 175: Practice test - Ingress - 1
+ 
+### 177: Practice test - Ingress - 2
+
+### 203: Practice test - Deploy a Kubernetes Cluster using Kubeadm
+
+### 212: Practice test - Application Failure
+
+### 215: Practice test - Control Plane Failure
+
+### 218: Practice test - Worker Node Failure
+
+### 223: Practice test - Advanced Kubectl Commands
+
+### 225: Mock Exam - 1
+
+### 226: Mock Exam - 2
+
+### 228: Mock Exam - 3
