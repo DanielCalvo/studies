@@ -96,14 +96,19 @@ OK. Do again if you wanna be faster. Read on the theory to better understand the
 - OK
 
 ### 164: Practice test - Explore CNI Weave
+- OK
 
 ### 166: Practice test - Explore CNI Weave - 2
+- OK
 
 ### 167: Practice test - Deploy network solution
+- OK
 
 ### 170: Practice test - Service Networking
+- OK. Do again if you want to memorize that you have to look at logs all the time.
 
 ### 173: Practice test - Explore DNS
+- Stopped at the last question, was too tired. Answer the last 5 questions again!
 
 ### 175: Practice test - Ingress - 1
  
