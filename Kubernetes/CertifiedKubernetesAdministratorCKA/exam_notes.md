@@ -111,10 +111,13 @@ OK. Do again if you wanna be faster. Read on the theory to better understand the
 - OK
 
 ### 175: Practice test - Ingress - 1
- 
+- OK
+
 ### 177: Practice test - Ingress - 2
+- OK
 
 ### 203: Practice test - Deploy a Kubernetes Cluster using Kubeadm
+- OK. Run it again with flannel if you're curious, exam uses flannel.
 
 ### 212: Practice test - Application Failure
 

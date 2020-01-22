@@ -283,7 +283,7 @@ A: `kubectl describe configmap coredns -n kube-system`
 
 
 ### 173: Ingress
-- When you create a load balancer in gcp, k8s requests a load balancer for google (?)
+- When you create a load balancer in gcp, k8s requests a load balancer from google
 - This LB has an external IP that can be used to access the app.
 - Remember that you need to pay for each LB as they have a public IP!
 - The ingress allows users to access your applications based on what HTTP url or HTTP name they reach.
