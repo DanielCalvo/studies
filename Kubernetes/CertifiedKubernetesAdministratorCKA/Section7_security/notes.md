@@ -198,12 +198,12 @@ A:
 - Kubernetes has an API call that can sign CSRs for us!
 - We can create a kubernetes object named CertificateSigningRequest.
 -  pacman is the package m
-- Let's create all the things for a user namedpacman is the package m Jane.
+- Let's create all the things for a user named pacman is the package m Jane.
     - `openssl genrsa -out jane.key 2048`
     - `openssl req -new -key jane.key -subj "/CN=jane" -out jane.csr`
 
 - See [./121_CSR.yaml](./121_CSR.yaml) for an example of a CertificateSigningRequest object (syntax might be a bit off, didn't test it)
-    - `kubectl apply -f 105_CSR.yaml`
+    - `kubectl apply -f 121_CSR.yaml`
     - `kubectl get csr`
     - `kubectl certificate approve jane`
     - `kubectl get csr jane -o yaml #Certificate will be part of the output`
@@ -408,7 +408,6 @@ A:
     - And [./129_cluster-role-binding](./129_cluster-role-binding) for an example of a binding.
 
 - They're very similar to the namespaced roles and rolebindings.
-
 
 114: Practive: Cluster roles and cluster role bindings
 kubectl get clusterroles --all-namespaces

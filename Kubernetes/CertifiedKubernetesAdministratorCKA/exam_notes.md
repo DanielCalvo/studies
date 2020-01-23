@@ -120,10 +120,13 @@ OK. Do again if you wanna be faster. Read on the theory to better understand the
 - OK. Run it again with flannel if you're curious, exam uses flannel.
 
 ### 212: Practice test - Application Failure
+- OK
 
 ### 215: Practice test - Control Plane Failure
+- OK. Do again if you want to further memorize things
 
 ### 218: Practice test - Worker Node Failure
+- OK
 
 ### 223: Practice test - Advanced Kubectl Commands
 
