@@ -80,10 +80,12 @@
 ### 123: Practice test - Certificates API
 
 ### 125: Practice test - Kubeconfig
+- OK
 
 ### 129: Practice test - RBAC
 
 ### 133: Practice test - Image security
+- OK
 
 ### 135: Practice test - Security contexts
 
