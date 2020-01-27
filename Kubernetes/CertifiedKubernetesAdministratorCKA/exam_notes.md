@@ -146,3 +146,4 @@
 - JSONPath with range some more with spaces and/or tabs
 - NetworkPolicies breh
 - Iterate over `kubectl api-resources`
+- Go through kubectl with just code examples, no lenghty explanations
