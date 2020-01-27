@@ -83,16 +83,19 @@
 - OK
 
 ### 129: Practice test - RBAC
+- OK
 
 ### 133: Practice test - Image security
 - OK
 
 ### 135: Practice test - Security contexts
+- OK
 
 ### 137: Practice test - Network Policy
+- OK
 
 ### 148: Practice test: Persistent Volumes and Persistent Volume Claims
-OK. Do again if you wanna be faster. Read on the theory to better understand the relationship between PVs and PVCs if you want to
+- OK. Do again if you wanna be faster. Read on the theory to better understand the relationship between PVs and PVCs if you want to
 
 ### 161: Practice test - Explore Kubernetes Environment
 - OK
@@ -131,9 +134,15 @@ OK. Do again if you wanna be faster. Read on the theory to better understand the
 - OK
 
 ### 223: Practice test - Advanced Kubectl Commands
+- OK. Practice queries more if you feel like it.
 
 ### 225: Mock Exam - 1
-
+- OK - 100
 ### 226: Mock Exam - 2
+- Redo CSR/RBAC and pod DNS - 70
 
 ### 228: Mock Exam - 3
+- Your ass got whooped by service accounts, cluster roles and cluster role bindings
+- JSONPath with range some more with spaces and/or tabs
+- NetworkPolicies breh
+- Iterate over `kubectl api-resources`

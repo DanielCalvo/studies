@@ -16,7 +16,7 @@
 ### Basic Commands (Intermediate)
 
 #### explain
-- Documentation of resources
+- Documentation of resources. Explains what fields are possible under which config settings. Very handy!
 
 #### get
 - Display one or many resources

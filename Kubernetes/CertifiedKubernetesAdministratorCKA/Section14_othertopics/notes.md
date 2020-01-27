@@ -81,3 +81,23 @@ A: You need to do a loop with custom output for this one. This one is tough!
 Q: Use a JSON PATH query to identify the context configured for the aws-user in the my-kube-config context file and store the result in /opt/outputs/aws-context-name.
 A: This requires a query, aka `[?()]`. This one is tough! 
 
+### Extra: JSON Path practice
+- `kubectl config view -o jsonpath='{range .users[*]}{.name}{"\n"}{end}`
+- `kubectl get pod kube-dns-79868f54c5-7jxxf -o jsonpath='{range .spec.containers[*]}{.name}{"\n"}{end}'`
+- `kubectl get pod kube-dns-79868f54c5-7jxxf -o jsonpath='{.spec.containers[?(@.name == "kubedns")].image}'`
+
+Q: Sort all containers on the cluster by alphabetic order
+A:
+`kubectl get pods -o jsonpath="{range .items[*]}{.metadata.name}{'\n'}{end}"`
+`kubectl get pods -o jsonpath="{range .items[*]}{range .spec.containers[*]}{.name}{'\n'}{end}{end}" --sort-by=.metadata.name`
+
+Q: Show me the name of containers (not pods) which have a resource requirement of 100m CPU
+A:
+
+Q: Show the me resource requirements of all pods
+A:
+
+Q: Show me all pods sorted by creation timestamp
+A: `kubectl get pods -o custom-columns=NAME:.metadata.name,CREATED_AT:.metadata.creationTimestamp`
+
+Q: List all the images of all the pods in the initialized state
