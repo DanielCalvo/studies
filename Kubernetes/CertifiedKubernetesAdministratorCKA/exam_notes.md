@@ -14,16 +14,16 @@
 - OK
 
 ### 37: Practice test - Imperative commands
-- Mostly OK, misread some questions. Might do again
+- OK
 
 ### 43: Practice test - Manual scheduling
 - OK
 
-### 45: Practive test - Labels and Selectors
+### 45: Practice test - Labels and Selectors
 - OK
 
-### 47: Practice test - Taints and Tolerations
-- OK, redo for further practice & speed if you feel like it
+### 48: Practice test - Taints and Tolerations
+- OK
 
 ### 51: Practice test - Node Affinity
 - OK
@@ -51,7 +51,7 @@
 - OK
 
 ### 83: Practice test - Commands and Arguments
-- OK, do it again if you to learn more the difference between commands and args
+- OK
 
 ### 86: Practice test - Environment variables
 - OK
@@ -75,14 +75,18 @@
 - etcd backup restore with etcdctl is difficult. You need to be able to backup & restore only with the standard doc!
 
 ### 121 : Practice test - View certificates
-- Certificate generation was tough. Re-approach this with your own cluster and generate some certs! (like new kube-api cert from CA)
+- Renewing a certificate with openssl was very difficult with the standard doc. Not sure if they're gonna ask about that on the exam...
 
 ### 123: Practice test - Certificates API
+- OK
 
 ### 125: Practice test - Kubeconfig
 - OK
 
 ### 129: Practice test - RBAC
+- OK
+
+### 131: Cluster roles and Role Bindings
 - OK
 
 ### 133: Practice test - Image security
@@ -95,7 +99,7 @@
 - OK
 
 ### 148: Practice test: Persistent Volumes and Persistent Volume Claims
-- OK. Do again if you wanna be faster. Read on the theory to better understand the relationship between PVs and PVCs if you want to
+- OK. 
 
 ### 161: Practice test - Explore Kubernetes Environment
 - OK
