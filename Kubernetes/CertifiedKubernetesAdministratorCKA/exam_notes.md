@@ -99,7 +99,7 @@
 - OK
 
 ### 148: Practice test: Persistent Volumes and Persistent Volume Claims
-- OK. 
+- OK
 
 ### 161: Practice test - Explore Kubernetes Environment
 - OK
@@ -114,7 +114,7 @@
 - OK
 
 ### 170: Practice test - Service Networking
-- OK. Do again if you want to memorize that you have to look at logs all the time.
+- OK
 
 ### 173: Practice test - Explore DNS
 - OK
@@ -126,16 +126,16 @@
 - OK
 
 ### 203: Practice test - Deploy a Kubernetes Cluster using Kubeadm
-- OK. Run it again with flannel if you're curious, exam uses flannel.
+- OK - Run it again with flannel if you're curious, exam uses flannel.
 
 ### 212: Practice test - Application Failure
-- OK
+- OK - Redo!
 
 ### 215: Practice test - Control Plane Failure
-- OK. Do again if you want to further memorize things
+- OK - Redo!
 
 ### 218: Practice test - Worker Node Failure
-- OK
+- OK. Redo!
 
 ### 223: Practice test - Advanced Kubectl Commands
 - OK. Practice queries more if you feel like it.
