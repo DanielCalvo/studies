@@ -10,7 +10,7 @@
 - Exam Tips: http://training.linuxfoundation.org/go//Important-Tips-CKA-CKAD
 When done with the course, check the handbook to see if there's anything you missed:
 - Candidate Handbook: https://www.cncf.io/certification/candidate-handbook
-- To test GateOne: `docker run -p 443:8000 dcwangmit01/gateone`
+- To test GateOne: `docker run -p 443:443 dcwangmit01/gateone`
 
 ### To review
 - Exam curriculum and resources: https://www.cncf.io/certification/cka/

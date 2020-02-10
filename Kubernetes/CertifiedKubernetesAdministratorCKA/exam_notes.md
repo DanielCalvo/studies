@@ -144,6 +144,7 @@
 - OK - 100
 ### 226: Mock Exam - 2
 - Redo CSR/RBAC and pod DNS - 70
+- Pod DNS: How?
 
 ### 228: Mock Exam - 3
 - Your ass got whooped by service accounts, cluster roles and cluster role bindings
@@ -151,3 +152,9 @@
 - NetworkPolicies breh
 - Iterate over `kubectl api-resources`
 - Go through kubectl with just code examples, no lenghty explanations
+
+### Extra:
+- When done with Mock exams 2 and 3, make a list of what they covered, and deduce what they did not cover, and practice with that too!
+
+### Things you have to memorize, no two ways about it:
+- `ETCDCTL_API=3 ./etcdctl snapshot save snapshot.db --cacert /etc/ssl/etcd/ca.crt --cert /etc/ssl/etcd/client.crt --key /etc/ssl/etcd/client.key` 
