@@ -16,7 +16,7 @@ import (
 //I think I should put Yak references on the code in hopes they think I'm cool...
 
 func main() {
-	fmt.Println("It's yak time!1!one")
+	//fmt.Println("It's yak time!1!one")
 
 	//file := os.Args[1]
 	//number, err := strconv.Atoi(os.Args[2])
