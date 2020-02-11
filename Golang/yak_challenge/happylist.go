@@ -15,6 +15,7 @@ type Mylist struct {
 	CurrentValue int
 	File         *os.File
 	Scanner      *bufio.Scanner
+	isFinished   bool //set this later instead of -1 or EOF or whatevs
 }
 
 func (m *Mylist) Initiate(filePath string) error {
