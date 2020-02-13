@@ -65,7 +65,7 @@ func (m *Happylist) GetNextValue() error {
 	if !m.IsScanning {
 		err = errors.New("EOF")
 		m.CurrentValue = -1
-		return err
+		return err //Improve this, it's unclear, why are you setting like 3 values in here
 	}
 	m.CurrentValue, err = strconv.Atoi(m.Scanner.Text())
 	if err != nil {
@@ -88,6 +88,8 @@ func main() {
 	filePath := flag.String("filepath", "", "Filesystem path to an unsorted list")
 	num := flag.Int("num", 10, "The amount of results to display")
 	flag.Parse()
+
+	//set tmpWorkDir and linesPerTmpFile as flags too!
 
 	if *filePath == "" {
 		fmt.Println("You must provide a filepath to an unsorted list")
@@ -142,6 +144,7 @@ func main() {
 		Int, err := strconv.Atoi(scanner.Text())
 		if err != nil {
 			fmt.Println(err) //I think one of the requirements goes here
+			//Do I put a continue in here?
 		}
 		intSlice = append(intSlice, Int)
 
