@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -11,34 +10,11 @@ import (
 	"strconv"
 )
 
-func SaveChunkSorted(lines []int, filePath string) error {
-
-	//If you have this: {1,6,8,2,4}
-	//After this sort you'll have: {8,6,4,2,1}
-	sort.Sort(sort.Reverse(sort.IntSlice(lines)))
-
-	f, err := os.Create(filePath)
-	if err != nil {
-		fmt.Printf("error creating file: %v", err)
-		return err
-	}
-
-	defer f.Close()
-	for _, num := range lines {
-		_, err = f.WriteString(fmt.Sprintf("%d\n", num))
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-type HappySorter []Happylist
-
-func (a HappySorter) Len() int           { return len(a) }
-func (a HappySorter) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a HappySorter) Less(i, j int) bool { return a[i].CurrentValue < a[j].CurrentValue }
-
+//A happylist(TM) is a large list, arranged in decreasing order, stored on a file.
+//After initiating it with a file path with happylist.Initiate(), you can:
+//See it's current value (line) on happylist.CurrentValue
+//Advance to it's next value (line) with happylist.GetNextValue()
+//See if you have reached the end of this happylist with happylist.IsScanning
 type Happylist struct {
 	filePath     string
 	CurrentValue int
@@ -54,55 +30,79 @@ func (m *Happylist) Initiate(filePath string) error {
 		return err
 	}
 	m.Scanner = bufio.NewScanner(m.File)
-	m.GetNextValue()
-
+	err = m.GetNextValue()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func (m *Happylist) GetNextValue() error {
 	var err error
 	m.IsScanning = m.Scanner.Scan()
-	if !m.IsScanning {
-		err = errors.New("EOF")
-		m.CurrentValue = -1
-		return err //Improve this, it's unclear, why are you setting like 3 values in here
+	if m.IsScanning == false { //Scanner.Scan() returns false on end of file
+		return nil
 	}
+
 	m.CurrentValue, err = strconv.Atoi(m.Scanner.Text())
 	if err != nil {
 		return err
-		fmt.Println("Error", err)
 	}
 	return nil
 }
 
-//Thanks wikipedia, very cool:
-//https://en.wikipedia.org/wiki/External_sorting
-//https://en.wikipedia.org/wiki/Merge_algorithm#K-way_merging
+//The sort interface is implemented for a slice of happylists.
+//This allows us to sort a slice of happylists by CurrentValue
+type HappySorter []Happylist
 
-//make the upper limit a variable
-//use int64s for the argument and all else! Your generator has an int64...
-//I think I should put Yak references on the code in hopes they think I'm cool...
+func (a HappySorter) Len() int           { return len(a) }
+func (a HappySorter) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a HappySorter) Less(i, j int) bool { return a[i].CurrentValue < a[j].CurrentValue }
+
+//SaveChunkSorted is used on the first of the problem to save a large unordered list into smaller, ordered lists
+func SaveChunkSorted(lines []int, filePath string) error {
+
+	//If you have this: {1,6,8,2,4}
+	//After this sort you'll have: {8,6,4,2,1}
+	sort.Sort(sort.Reverse(sort.IntSlice(lines)))
+
+	f, err := os.Create(filePath)
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+	for _, num := range lines {
+		_, err = f.WriteString(fmt.Sprintf("%d\n", num))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
 func main() {
 
 	filePath := flag.String("filepath", "", "Filesystem path to an unsorted list")
-	num := flag.Int("num", 10, "The amount of results to display")
+	resultNum := flag.Int("num", 10, "The amount of results to display")
+	tmpWorkDir := flag.String("tmpworkdir", "/tmp/lists/", "Directory in which to store temporary files")
+	linesPerFile := flag.Int("linesPerFile", 500000, "Amount of lines per temporary file")
+	sortedFilePath := flag.String("sortedfilepath", "/tmp/sorted.txt", "Filesystem path to an unsorted list")
+
 	flag.Parse()
 
-	//set tmpWorkDir and linesPerTmpFile as flags too!
-
 	if *filePath == "" {
-		fmt.Println("You must provide a filepath to an unsorted list")
+		fmt.Println("You must provide at least a filepath to an unsorted list")
 		fmt.Println("Ex: go run main.go -filepath=/tmp/unsorted_list.txt")
 		os.Exit(1)
 	}
 
-	if *num <= 0 {
+	if *resultNum <= 0 {
 		fmt.Println("ERROR: Number of top results must be bigger than 0")
 		os.Exit(1)
 	}
 
-	if *num >= 30000000 {
+	if *resultNum > 30000000 {
 		fmt.Println("ERROR: Maximum number of top results must be less or equal than 30000000")
 		os.Exit(1)
 	}
@@ -125,81 +125,139 @@ func main() {
 		os.Exit(1)
 	}
 
-	//General variable set up:
-	tmpWorkDir := "/tmp/split_tmp/"
-	linesPerTmpFile := 500000
+	//Quietly attempt to remove files from previous execution if they were the same as this one
+	_ = os.RemoveAll(*tmpWorkDir)
+	_ = os.Remove(*sortedFilePath)
 
 	//Part 1: Sorting
-	if _, err := os.Stat(tmpWorkDir); os.IsNotExist(err) {
-		os.Mkdir(tmpWorkDir, 0755)
+	_, err = os.Stat(*tmpWorkDir)
+
+	if os.IsNotExist(err) {
+		err = os.Mkdir(*tmpWorkDir, 0755)
+		if err != nil {
+			fmt.Println("Could not create temporary directory at:", *tmpWorkDir)
+		}
 	}
 
 	lineCounter := 0
+	fileCounter := 0
+	totalLineCounter := 0
 	scanner := bufio.NewScanner(file)
 	var intSlice []int
-	fileNameCounter := 1
 
 	for scanner.Scan() {
+		totalLineCounter++
 		lineCounter++
 		Int, err := strconv.Atoi(scanner.Text())
 		if err != nil {
-			fmt.Println(err) //I think one of the requirements goes here
-			//Do I put a continue in here?
+			fmt.Println("WARN: Invalid line", totalLineCounter)
+			continue
 		}
 		intSlice = append(intSlice, Int)
 
-		if lineCounter == linesPerTmpFile {
-			err = SaveChunkSorted(intSlice, tmpWorkDir+strconv.Itoa(fileNameCounter)+".txt")
+		if lineCounter == *linesPerFile {
+			err = SaveChunkSorted(intSlice, *tmpWorkDir+strconv.Itoa(fileCounter)+".txt")
 			if err != nil {
-				fmt.Println(err)
+				fmt.Println("Could not save temporary file at:", *tmpWorkDir+strconv.Itoa(fileCounter)+".txt")
+				panic(err)
 			}
 
 			lineCounter = 0
 			intSlice = nil
-			fileNameCounter++
+			fileCounter++
 		}
 	}
-	// This will almost never reach lineCounter == linesPerTmpFile on the last loop iteration, so we save the leftovers:
-	err = SaveChunkSorted(intSlice, tmpWorkDir+strconv.Itoa(fileNameCounter)+".txt")
+	// This will almost never reach lineCounter == *linesPerFile on the last loop iteration, so we save the leftovers:
+	err = SaveChunkSorted(intSlice, *tmpWorkDir+strconv.Itoa(fileCounter)+".txt")
+	if err != nil {
+		fmt.Println("Could not save temporary file at:", *tmpWorkDir+strconv.Itoa(fileCounter)+".txt")
+		panic(err)
+	}
+
+	//Part 2: Merging
+	//Wikipedia explains this well: https://en.wikipedia.org/wiki/Merge_algorithm#K-way_merging
+
+	//A happylist(TM) is a sorted list in decreasing order with additional functionality (see top of this file)
+	var happylists []Happylist
+
+	files, err := ioutil.ReadDir(*tmpWorkDir)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	//Part 2: Merging
-	var happylists []Happylist
-
-	files, err := ioutil.ReadDir(tmpWorkDir)
-	if err != nil {
-		panic(err)
-	}
-	//throw error if no files to resize?
+	//Populate a slice of happylists with initiated happylists
 	for _, v := range files {
 		h := Happylist{}
-		h.Initiate(tmpWorkDir + v.Name())
+		err = h.Initiate(*tmpWorkDir + v.Name())
+		if err != nil {
+			fmt.Println("Error initiating happylist with argument:", *tmpWorkDir+v.Name())
+			panic(err)
+		}
 		happylists = append(happylists, h)
 	}
 
-	f, err := os.Create("/tmp/sorted.txt")
+	//Create the file that will contain the final sorted list:
+	finalFile, err := os.Create(*sortedFilePath)
 	if err != nil {
-		fmt.Printf("error creating file: %v", err)
-		return
+		fmt.Println("Could not create file with final sorted list at", *sortedFilePath)
+		panic(err)
 	}
-	defer f.Close()
+	defer finalFile.Close()
 
+	//Iterate over our sorted lists until we reach the desired number of results
+	results := 0
 	for {
-		sort.Sort(sort.Reverse(HappySorter(happylists)))
-		_, err = f.WriteString(fmt.Sprintf("%d\n", happylists[0].CurrentValue))
 
-		happylists[0].GetNextValue()
-
-		//if a list has no more elements to scan, we remove it from our list of lists
-		if happylists[0].IsScanning == false {
-			_, happylists = happylists[0], happylists[1:]
-		}
-
+		//If there are no more sorted lists on the slice of sorted lists, all lists have been merged
 		if len(happylists) == 0 {
 			break
 		}
+
+		//Sort our slice of sorted lists, the element with the highest CurrentValue will be first
+		sort.Sort(sort.Reverse(HappySorter(happylists)))
+
+		//Write the current value of this element to the final sorted list
+		_, err = finalFile.WriteString(fmt.Sprintf("%d\n", happylists[0].CurrentValue))
+		results++
+
+		//If we have the number of results requested by the user, we don't need to continue iterating over the sorted lists.
+		if results == *resultNum {
+			break
+		}
+
+		//Advance CurrentValue to the next element of that sorted list
+		err = happylists[0].GetNextValue()
+		if err != nil {
+			fmt.Println("Error converting to Integer on", happylists[0].File.Name(), "or got non EOF value from file:", happylists[0].CurrentValue)
+			panic(err)
+		}
+
+		//If there is no next CurrentValue on that sorted list (scanner at EOF) we have reached its end.
+		//remove it from the slice of happylists so we no longer iterate over it
+		if happylists[0].IsScanning == false {
+			_, happylists = happylists[0], happylists[1:]
+		}
 	}
-	//Hey, don't forget cleanup!
+
+	err = finalFile.Close()
+	if err != nil {
+		fmt.Println("Could not close file with final sorted list", finalFile)
+		panic(err)
+	}
+
+	finalFile, err = os.Open(*sortedFilePath)
+	if err != nil {
+		fmt.Println("Could not open file with final sorted list at", *sortedFilePath)
+		panic(err)
+	}
+
+	//Part 3: Displaying results
+
+	//If you had 100 unsorted elements and asked for the top 5, you'll get the top 5.
+	//If you had 10 unsorted elements and asked for the top 20, you'll get the top 10, there were no more elements :(
+	finalScanner := bufio.NewScanner(finalFile)
+
+	for finalScanner.Scan() {
+		fmt.Println(finalScanner.Text())
+	}
 }
