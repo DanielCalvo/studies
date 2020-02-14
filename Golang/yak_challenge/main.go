@@ -73,7 +73,7 @@ func SaveChunkSorted(lines []int, filePath string) error {
 
 	defer f.Close()
 	for _, num := range lines {
-		_, err = f.WriteString(fmt.Sprintf("%d\n", num))
+		_, err = f.WriteString(fmt.Sprintf("%d\n", num)) //Free newline on the last element!
 		if err != nil {
 			return err
 		}
@@ -167,7 +167,9 @@ func main() {
 			fileCounter++
 		}
 	}
-	// This will almost never reach lineCounter == *linesPerFile on the last loop iteration, so we save the leftovers:
+	//This will almost never reach lineCounter == *linesPerFile on the last loop iteration, so we save the leftovers
+	//There could also be an `if lineCounter > 0` or similar logic to avoid creating empty files, but that introduced a bug
+	//And I have to get back to my actual job...
 	err = SaveChunkSorted(intSlice, *tmpWorkDir+strconv.Itoa(fileCounter)+".txt")
 	if err != nil {
 		fmt.Println("Could not save temporary file at:", *tmpWorkDir+strconv.Itoa(fileCounter)+".txt")
@@ -204,14 +206,9 @@ func main() {
 	}
 	defer finalFile.Close()
 
-	//Iterate over our sorted lists until we reach the desired number of results
+	//Iterate over our sorted lists until we reach the desired number of results or run out of elements in the happylists(TM)
 	results := 0
-	for {
-
-		//If there are no more sorted lists on the slice of sorted lists, all lists have been merged
-		if len(happylists) == 0 {
-			break
-		}
+	for len(happylists) > 0 && results < *resultNum {
 
 		//Sort our slice of sorted lists, the element with the highest CurrentValue will be first
 		sort.Sort(sort.Reverse(HappySorter(happylists)))
@@ -219,11 +216,6 @@ func main() {
 		//Write the current value of this element to the final sorted list
 		_, err = finalFile.WriteString(fmt.Sprintf("%d\n", happylists[0].CurrentValue))
 		results++
-
-		//If we have the number of results requested by the user, we don't need to continue iterating over the sorted lists.
-		if results == *resultNum {
-			break
-		}
 
 		//Advance CurrentValue to the next element of that sorted list
 		err = happylists[0].GetNextValue()
@@ -239,19 +231,12 @@ func main() {
 		}
 	}
 
-	err = finalFile.Close()
-	if err != nil {
-		fmt.Println("Could not close file with final sorted list", finalFile)
-		panic(err)
-	}
-
-	finalFile, err = os.Open(*sortedFilePath)
-	if err != nil {
-		fmt.Println("Could not open file with final sorted list at", *sortedFilePath)
-		panic(err)
-	}
-
 	//Part 3: Displaying results
+	_, err = finalFile.Seek(0, 0) //Return to the beginning of the file with the final list
+	if err != nil {
+		fmt.Println("Could not return to the beginning of the file with the final sorted list")
+		panic(err)
+	}
 
 	//If you had 100 unsorted elements and asked for the top 5, you'll get the top 5.
 	//If you had 10 unsorted elements and asked for the top 20, you'll get the top 10, there were no more elements :(
