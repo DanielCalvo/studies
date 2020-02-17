@@ -13,7 +13,6 @@
     - CloudWatch Integrations
 
 ### 35. What is high availability and Scalability?
-
 - Scalability means that an application/system can handle greater loads by adapting
 - There are two kinds of scalability
     - Vertical scalability  
