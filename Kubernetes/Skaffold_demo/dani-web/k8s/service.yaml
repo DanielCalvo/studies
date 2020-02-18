@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dani-web
+  labels:
+    app: dani-web
+spec:
+  ports:
+    - port: 80
+      name: dani-web
+  selector:
+    app: dani-web

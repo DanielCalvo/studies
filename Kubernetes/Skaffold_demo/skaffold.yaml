@@ -1,0 +1,15 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+build:
+  artifacts:
+    - image: vioseven/dani-web
+      context: ./dani-web/
+deploy:
+  kubectl:
+    manifests:
+      - ./dani-web/k8s/*
+portForward:
+  - resourceType: deployment
+    resourceName: dani-web
+    port: 80
+    localPort: 80

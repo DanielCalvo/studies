@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dani-web
+  labels:
+    app: dani-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dani-web
+  template:
+    metadata:
+      labels:
+        app: dani-web
+    spec:
+      containers:
+        - name: dani-web
+          image: vioseven/dani-web
+          ports:
+            - containerPort: 80

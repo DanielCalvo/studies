@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations: {}
+  name: dani-ingress
+  namespace: default
+spec:
+  rules:
+    - http:
+        paths:
+          - backend:
+              serviceName: dani-web
+              servicePort: 80
+            path: "/"
