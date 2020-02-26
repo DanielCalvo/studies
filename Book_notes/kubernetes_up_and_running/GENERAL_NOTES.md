@@ -226,13 +226,6 @@ Continue on page 146
 
 You need to at least review this part!
 
-
-
-
-
-
-
-
 General feel of the book:  
 A bit heavy on the Jargon and the theory so far.  
 Examples are not comprehensive, just a "to do this, run this"  

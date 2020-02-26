@@ -44,6 +44,4 @@ ReplicaSet: Used by deployments. You usually don't interact with this directly
 
 
 
-
-
 You stopped on page 53
