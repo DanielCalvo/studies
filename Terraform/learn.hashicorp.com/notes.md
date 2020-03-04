@@ -1,0 +1,1 @@
+- Find a way to achieve the persistency of the terraform state
