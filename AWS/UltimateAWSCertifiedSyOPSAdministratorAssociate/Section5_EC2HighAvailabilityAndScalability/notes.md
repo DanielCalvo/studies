@@ -362,6 +362,15 @@ A load balancer can be multi-az
 - You can also suspend ReplaceUnhealthy
 - You can use the CLI to set instance health: `aws autoscaling set-instance-health --instance-id <ID> --health-status Unhealthy`
 
+```shell script
+#!/bin/bash
+yum update -y
+yum install -y httpd
+systemctl start httpd.service
+systemctl enable httpd.service
+echo "Hello from host: $(hostname -f)" >> /var/www/html/index.html
+```
+
 ##### Note on AZ rebalance
 - When there is an imbalance on the AZ spread
 - AZRebalance = launch new instance then terminate old instance
