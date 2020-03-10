@@ -1,1 +1,0 @@
-Terraform keeps attributes of all the resources you create, you can use these atributes to do things!

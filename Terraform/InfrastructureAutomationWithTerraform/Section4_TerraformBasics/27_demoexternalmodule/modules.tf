@@ -14,4 +14,3 @@ module "consul" {
 output "consul-output" {
   value = module.consul.server_address
 }
-
