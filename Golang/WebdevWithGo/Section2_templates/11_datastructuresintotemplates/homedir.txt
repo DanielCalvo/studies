@@ -1,6 +1,0 @@
-{{- range .}}
-The name of my server: {{.Name}}
-{{- range .UsedPrograms}}
-Used programs on this server: {{.}}
-{{- end}}
-{{- end}}

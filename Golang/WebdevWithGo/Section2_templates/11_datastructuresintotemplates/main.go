@@ -12,7 +12,7 @@ type server struct {
 }
 
 func main() {
-	tpl, err := template.ParseFiles("/home/daniel/PycharmProjects/studies/Golang/WebdevWithGo/Section2_Templates/11_datastructuresintotemplates/myservers.txt")
+	tpl, err := template.ParseFiles("/home/daniel/PycharmProjects/studies/Golang/WebdevWithGo/Section2_templates/11_datastructuresintotemplates/myservers.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,16 +32,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	//err = tpl.Execute(os.Stdout, 42)
-	//if err != nil{
-	//	log.Fatal(err)
-	//}
-
-	//people := []string{"Mike", "Joe", "Jane"}
-	//err = tpl.Execute(os.Stdout, people)
-	//if err != nil{
-	//	log.Fatal(err)
-	//}
-
 }

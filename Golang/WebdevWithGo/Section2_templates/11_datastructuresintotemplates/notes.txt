@@ -1,4 +1,0 @@
-6: Understanding templates
-
-STD library has two packages: text/template and html/template
-The HTML one has some more additional functionality.
