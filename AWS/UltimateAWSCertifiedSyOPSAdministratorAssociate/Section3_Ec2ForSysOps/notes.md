@@ -41,7 +41,7 @@ Follow ups
 
 #### Hands on
 - EC2 dashboard > Placement groups > Create placement groups (with the strategy you want)
-- When creating an EC2 instance, you can select the placement group
+- When creating an EC2 instance, you can select the placement group on on Step 3: Instance details
 - Cluster is not available for t2.micro instances :(
 
 ### 8. EC2 Shutdown behaviour and termination protection

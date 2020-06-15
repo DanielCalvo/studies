@@ -2,12 +2,8 @@
 - Follow up on better understanding the difference between CNAMES and ALIAS, Stephan's explanation was a bit ambigious
 - Rewatch lectures 195 to better understand domain delegaton and lecture 187 to better understand CNAME vs ALIAS
 
-### 182. Section introduction 
-- Yay we'll check a bunch of stuff! DNS is cool. There are graphs!
-- Also 3rd party domains
-
-### 183. Route 53 Overview
-- Managed DNS
+### 75. Route 53 Overview
+- Route53 is a Managed DNS
 - DNS is a collection of records and rules that help clients understand how to reach a server through a URL
 - Most common records:
     - A
@@ -17,30 +13,32 @@
 - Route 53 can use public domain names that own (or buy)
 - Private domain names that can be resolved only by your instances in your vpc (ex  myapp.company.internal)
 
-#### Advanced features:
+#### Route53 has Advanced features such as:
 - Load Balancing
-- Health checks
-- Routing policies
+- Health checks (although limited)
+- Routing policies: Simple, failover, geolocation, latency, weighted and multi value
 - You pay 0.50 USD per hosted zone
 
-### 184. Route 53 Hands on
+### 76. Route 53 Hands on
 - Global service
 - Added an A record through the UI, very easy
 
-### 185. Route 53 - EC2 setup
+### 77. Route 53 - EC2 setup
 - Created an instance in Ireland and one in N. Virginia and one in Tokyo
 - Created an application load balancer in Ireland pointing to one of those EC2 instances
 
-### 186. Route 53 - TTL
+### 78. Route 53 - TTL
+- When you make a request to a DNS server, you receive the response from the DNS server (like the IP associated with the name) but also the TTL number, which represents a time
+- Whenever you make a DNS change, it will not take place right away, it will take place when the TTL expires on the client side
 - TTL: Time a client caches a DNS response as to not overwhelm a DNS server
 - High TLL: About 24h. Less traffic on DNs, but possible chance of outdated records
 - Low TTL: About 60 seconds. Lots of traffic on DNS, but records will be outdated for less time, also easy to change records 
-- The `dig` command line tool show's the TTL. Neat, I didn't know that.
+- The `dig` command line tool show's the TTL as cached on your local. Neat, I didn't know that.
 
-### 187. CNAME vs Alias
+### 79. CNAME vs Alias
 - Popular question at the exam!
-- AWS resources (load balancer, cloud front, etc) expose an AWS URL (ex: lb-123.us-east-2.elb.amazonaws.com) but you want that to be myapp.mydomain.com
-- CNAME Points a URL to another URL (app.mydomain.com > blabla.anything.com)
+- AWS resources (load balancer, cloud front, etc) expose an AWS hostname f(ex: lb-123.us-east-2.elb.amazonaws.com) but you want that to be myapp.mydomain.com
+- CNAME Points a hostname to another hostname (app.mydomain.com > blabla.anything.com)
 - CNAMES are only for non root domains! (ex: Needs to be something.mydomain.com, it can not be mydomain.com)
 - You can't cant CNAME from myrootdomain.com into a load balancer, for instance
 - ALIAS points a URL to an AWS resource (app.mydomain.com > blabla.anything.com)
