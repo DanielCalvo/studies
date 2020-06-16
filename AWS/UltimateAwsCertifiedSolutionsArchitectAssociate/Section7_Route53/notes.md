@@ -6,54 +6,78 @@
 - Route53 is a Managed DNS
 - DNS is a collection of records and rules that help clients understand how to reach a server through a URL
 - Most common records:
-    - A
-    - AAAA
-    - CNAME: URL to URL
-    - ALIAS: URL to AWS resource
-- Route 53 can use public domain names that own (or buy)
-- Private domain names that can be resolved only by your instances in your vpc (ex  myapp.company.internal)
+    - A: Hostname to IPv4
+    - AAAA: Hostname to IPv6
+    - CNAME: Hostname to hostname
+    - ALIAS: Hostname to AWS resource
+
+- Route53 can use:
+    - Public domain names you own (or buy)
+        - application.mypublicdomain.com
+    - Private domain names that can be resolved by your instances in your VPCs
+        - application.company.internal
+        
 
 #### Route53 has Advanced features such as:
-- Load Balancing
+- Load Balancing (through DNS, also called client load balancing)
 - Health checks (although limited)
 - Routing policies: Simple, failover, geolocation, latency, weighted and multi value
-- You pay 0.50 USD per hosted zone
+- You pay 0.50 USD per month per hosted zone
 
 ### 76. Route 53 Hands on
 - Global service
+- Bought a domain!
 - Added an A record through the UI, very easy
 
 ### 77. Route 53 - EC2 setup
-- Created an instance in Ireland and one in N. Virginia and one in Tokyo
+- Created an instance in Ireland with user data for a web server and one in N. Virginia and one in Tokyo
 - Created an application load balancer in Ireland pointing to one of those EC2 instances
 
 ### 78. Route 53 - TTL
+- TTL (Time to Live) is the time a client caches a DNS response as to not overload a DNS server
 - When you make a request to a DNS server, you receive the response from the DNS server (like the IP associated with the name) but also the TTL number, which represents a time
 - Whenever you make a DNS change, it will not take place right away, it will take place when the TTL expires on the client side
-- TTL: Time a client caches a DNS response as to not overwhelm a DNS server
-- High TLL: About 24h. Less traffic on DNs, but possible chance of outdated records
+- High TLL: About 24h. Less traffic on DNS, but possible chance of outdated records
 - Low TTL: About 60 seconds. Lots of traffic on DNS, but records will be outdated for less time, also easy to change records 
 - The `dig` command line tool show's the TTL as cached on your local. Neat, I didn't know that.
+- TTL is mandatory for DNS records by the way
 
 ### 79. CNAME vs Alias
 - Popular question at the exam!
 - AWS resources (load balancer, cloud front, etc) expose an AWS hostname f(ex: lb-123.us-east-2.elb.amazonaws.com) but you want that to be myapp.mydomain.com
-- CNAME Points a hostname to another hostname (app.mydomain.com > blabla.anything.com)
-- CNAMES are only for non root domains! (ex: Needs to be something.mydomain.com, it can not be mydomain.com)
-- You can't cant CNAME from myrootdomain.com into a load balancer, for instance
-- ALIAS points a URL to an AWS resource (app.mydomain.com > blabla.anything.com)
-- It works both for root domains and nonroot domains
-- Alias is free of charge and has a native health check
-- Possible exam question: "We want to point mydomain.com to our load balancer, do you use CNAME or Alias?" You use alias! CNAMEs don't support root domains!
+- CNAME: 
+    - CNAME Points a hostname to another hostname (app.mydomain.com > blabla.anything.com)
+    - **CNAMES are only for non root domains!** (ex: Needs to be something.mydomain.com, it can not be mydomain.com)
+    - You can't cant CNAME from myrootdomain.com into a load balancer, for instance
+Alias: 
+    - Points a hostname to an AWS resource (app.mydomain.com > blabla.anything.com)
+    - **Aliases work both for root domains and nonroot domains**
+    - Alias is free of charge 
+    - Has capabilities for native health checks
+- Differences, as far as the exam is concerned:
+    - If you have a root domain, then you have to use an alias
+    - If it's a non root domain you can use either
+    - Possible exam question: "We want to point mydomain.com to our load balancer, do you use CNAME or Alias?" You use Alias! CNAMEs don't support root domains!
 
-### 188. Routing policy - Simple
+#### Hands on
+- Created a CNAME pointing to a LB
+- Created an Alias record pointing to a LB
+- Alias is free though
+- And Alias has the health check functionality
+- If you try to create a CNAME to a root zone you get an error (CNAME not permitted at apex in zone)
+
+### 80. Routing policy - Simple
 - Maps a domain name to a URL
 - Use it when you need to redirect to a single resource
 - You can't attach health checks to a simple routing policy
 - If multiple values are returned, a random one is chosen by the client
 
-### 189. Routing policy - weighted
+### 81. Routing policy - weighted
 - Controls the % of requests that will go to a specific endpoint
+- So you can have like
+    - Entry a.myapp.com with a weight of 70
+    - Entry b.myapp.com with a weight of 20
+    - Entry c.myapp.com with a weight of 10
 - You can assign different IP addresses with different weights to a name entry
 - Sum doesn't have to be 100, AWS will sum and work with the average
 - Helpful to test 1% of traffic on a new app version for example 
@@ -61,30 +85,46 @@
 - Can be associated with health checks, so if one instance isn't working properly you can stop sending traffic to it
 
 #### Hands on
-- New address entry, routing policy > weighted
+- New address entry, down below on the right menu there's the option for routing policy
+    - Routing policy > Weighted
 - Add multiple records to the same name with different weights. Neat!
+- You can associate with a health check
 - When you use dig, you just get one address as a response, you're not aware of the weighted mechanism on the client side
 
-### 190. Routing policy - latency
+### 82. Routing policy - latency
 - Will redirect the user to the server that has the least latency to him
 - Helpful when latency of users is a priority 
+- Latency is evaluated in terms of user to designated AWS region
+- A user in Germany may be directed to the US (if that's the lowest latency)
 
 #### Hands on
 - New address entry, routing policy > latency
+- Adding the DNS record you specify in which region it is (like eu-west-1)
 - Depending on your geographical location, you will get a different DNS response, which will be the one with the lowest latency from you
 
-### 191. Route 53 health checks
-- An instance/endpoint is considered unhealthy if it fails 3 health checks in a row 
-- Default health check interval is 30 seconds. It can be changed, but this incurs higher costs.
+### 83. Route 53 health checks
+- An instance/endpoint is considered unhealthy if it fails 3 health checks in a row (by default)
+    - It is considered healthy if it passes 3 health checks in a row
+- Default health check interval is 30 seconds. It can be changed (to a fast health check of 10s) but this incurs higher costs.
 - In the background on Amazon's side, about 15 health chekers will check the endpoint health
+    - On the average you'll have one request every 2 seconds
 - You can have HTTP, TCP and HTTPS health checks (no SSL verification)
 - You can integrate these healthchecks with cloudwatch if you wanted to
 - Health checks can be linked to Route 53 queries, so the behaviour of route 53 can change depending on what the health checks result
 
 #### Hands on
+- On the route 53 main page, on the left menu click on Health Checks
+- Configure a health check
+    - Monitoring an endpoint
+    - Specify an IP address (but could be a domain name)
+    - You can specify also a port umber, protocol and path (in case of http)
+    - On advanced can also set check interval, failure threshold and a few other details
+    - You can also create an alarm when the health check fails
 - Created 3 health checks on route 53
 
-### 192. Routing policy - failover
+--- You stopped here
+
+### 84. Routing policy - failover
 - You have a main EC2 instance and a failover one
 - Route 53 has a health check pointing to the primary instance
 - If the route check fails, it'll point you to the failover instance
