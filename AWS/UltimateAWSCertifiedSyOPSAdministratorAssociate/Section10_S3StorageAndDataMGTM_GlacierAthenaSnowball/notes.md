@@ -177,7 +177,7 @@
 - Amazon Glacier (there's a dedicated lecture for it)
 
 #### S3 Standard
-- High durability  (99.999999999%) of objects across multiple AZ
+- High durability (99.999999999%) of objects across multiple AZ
 - If you store 10.000.000 (ten million) objects in Amazon S3, you can on average expect to incur a loss of a single object once every 10.000 years
 - 99.99% availability over a given year
 - S3 is designed to be hosted across multiple AZs so it can sustain 2 concurrent facility failures

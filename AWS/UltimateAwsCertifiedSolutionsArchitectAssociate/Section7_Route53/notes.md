@@ -124,17 +124,17 @@ Alias:
 
 --- You stopped here
 
-### 84. Routing policy - failover
-- You have a main EC2 instance and a failover one
+### 84. Routing policy - Failover
+- You have a main EC2 instance and a failover one meant for disaster recovery
 - Route 53 has a health check pointing to the primary instance
 - If the route check fails, it'll point you to the failover instance
 
 #### Hands on
 - New address entry, routing policy > failover
-- When creating the main A rentry, set the failover type to primary and associate it with a healthcheck
+- When creating the main A entry, set the failover type to primary and associate it with a healthcheck
 - Create the second entry with the same name on the name entry and the routing policy of failover, type secondary. The secondary failover doens't need a health check
 
-### 193. Routing policy - Geolocation
+### 85. Routing policy - Geolocation
 - Different from latency based!
 - Routing based on user location 
 - Ex: Traffic that originates from the UK should go to this specific IP
@@ -146,7 +146,7 @@ Alias:
 - Remember to create multiple A entries to the same name with different geolocation settings so different people from different places get different results from your DNS 
 - Don't forget to create a default routing policy at the end!
 
-### 194. Routing policy - Multi Value
+### 86. Routing policy - Multi Value
 - Use when you want to route traffic to multiple resources
 - You can associate a route 53 health check with errors
 - Returns up to 8 healthy records for each multi value query
@@ -156,11 +156,16 @@ Alias:
 #### Hands on
 - New address entry, routing policy > Multivalue answer, associate it with a healthcheck
 - Create a bunch of records with the same name and multivalue routing policy!
+- In the end you have a bunch of A entries associated with their respective health checks
+    - When a client does a DNS query, route53 returns only addresses for record entries that are healthy. Neat.
 
-### 195. 3rd party domains & Route 53
-- Route 63 is also a registrar!
+### 87. 3rd party domains & Route 53
+- Route53 is also a registrar!
+- Other famous registrars: GoDaddy and Google Domains
 - A domain name registrar as an organization that manages the reservation of internet domain names
 - Remember: Domain Registrar != DNS
+
+#### 3rd Party Registrar with AWS Route53
 - If you buy your domain on a 3rd party website, you can still use Route 53!
     - Create a hosted zone in route 53
     - Update NS records on the 3rd party website to use route 53 name servers
@@ -168,7 +173,10 @@ Alias:
 #### Hands on
 - Go on google domains and on the settings, set google domains to use a custom name server, and in there set the AWS name servers
 - Possible exam question: "How do you integrate a third party domain with route 53?" Create your domain elsewhere but have the name servers point to your AWS route 53 hosted zone
+- To recap: You can have your domain hosted elsewhere and the name servers pointing to AWS, and on AWS you can have your hosted zones.
 
-### 196. Section clean up
+### 88. Section clean up
+- Delete all the name records and instances you created!
 
 ### Quiz
+- 6/6
