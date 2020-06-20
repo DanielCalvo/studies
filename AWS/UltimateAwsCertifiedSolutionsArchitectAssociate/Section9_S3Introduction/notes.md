@@ -314,22 +314,5 @@ There's 3 types of security.
     - ex: DELETE 200 -> GET 200 (it's eventually consistent, if you wait a few seconds, it'll be gone)
 - Note: There is no way to request "strong consistency" in S3
 
-
-
-
-
-When something is done in S3, it can take a bit of time to replicate and to be active. There are two types of consistency you get on S3: 
-#### Read after write consistency for PUTS of new objects
-- When you use the put object API and the object did not exist before, as soon as the object is written, we can retrieve it
-
-- This is true only if you did not do a GET before the object was uploaded to see if it existed, you may get a 404 because you are eventually consistent. The previous result gets cached. You need to wait a bit.
-- ex: 
-
-#### Eventual consistency for DELETES and PUTS of existing objects
-- If you read an object after updating it, you might get the older version, ex: 
-
-In other words:
-- As soon as you write, you can retrieve it
-- If you overwrite an object or delete an object you get eventual consistency, you might get an older version or might be able to get the object after it was deleted just for a short time.
-
 ### Quiz!
+- Pending!
