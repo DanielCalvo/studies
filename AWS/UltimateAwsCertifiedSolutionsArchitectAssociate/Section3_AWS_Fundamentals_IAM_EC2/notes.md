@@ -33,7 +33,7 @@ Chapter status: Redo lectures 28 and 29
 - Policies: Define what users, groups and roles can do!
 - IAM has a global view!
 - MFA is available
-- IAM has predefined "maaged policies"
+- IAM has predefined "managed policies"
 - We'll see more on IAM policies in the future
 - It's best to give users the minimal amount of permissions they need to do the job! Least privilege principle
 
