@@ -33,11 +33,14 @@
 - Review which EBS volume types give what IOPS values, 'cause I forgot
 
 ### Section 6
+- Quiz: 15/15
+- Rewatch the encryption and security lecture (also the auth part with IAM and tokens)
 - RDS
 - Aurora
 - ElastiCache
 
 ### Section 7
+- Quiz: 7/7
 - Route53
 
 ### Section 8
@@ -66,18 +69,23 @@
 
 ### Section 13
 - Quiz: 3/4
-- Have another look at the snowball lecture (136()
+- Have another look at the snowball lecture (136)
 - Snowball
 - Storage Gateway
 - Amazon FSx
 
 ### Section 14
+- Quiz: 11/12
+- Have another read at kinesis and apache kafka because that was tough to understand
+- Rewatch the SQS lecture, I forgot what the visibility time out thing is
 - AWS SQS
 - AWS SNS
 - Kinesis
 - AmazonMQ
 
 ### Section 15
+- Quiz: 9/9
+- Review cognito, it's confusing
 - Lambda
 - DynamoDB
 - API Gateway
@@ -87,6 +95,8 @@
 - Architecture discussions
 
 ### Section 17
+- Quiz: 6/8
+- Look at Aurora and Neptune again
 - RDS
 - Aurora
 - ElastiCache
@@ -98,6 +108,8 @@
 - ElasticSearch
 
 ### Section 18
+- Quiz: 7/8
+- Revire cloudwatch metrics and cloudwatch alarms
 - CloudWatch 
 - CloudTrail
 - AWS Config
