@@ -120,7 +120,7 @@
 
 ### 43. Application Load Balancer (ALB) with Hands On
 - The application load balancer is layer 7 (HTTP)
-- It allows you to load balance multiple HTTO applications across machines
+- It allows you to load balance multiple HTTP applications across machines
 - Machines are grouped in Target Groupes
 - It also allows you to route to multiple applications on the same machine
 - Supports HTTP/2 and WebSockets. Supports redirects (HTTP to HTTPS for example)  
@@ -303,7 +303,7 @@ An ASG has:
  - It's possible to scale your ASG based on a CloudWatch alarm
  - An Alarm monitors a metric (such as average CPU)
  - Metrics are computed for the overall ASG instances (not from just a single instance!)
- - Basec on the alarm
+ - Based on the alarm
     - You can create scale-out policies to increase the number of instances
     - You can create scale-in policies to decrease the number of instances
 
@@ -325,7 +325,7 @@ An ASG has:
 #### ASG Brain Dump
 - Scaling policies can be things like CPU, Network or can can be custom metrics or based on a schedule (if you know your load patterns)
 - ASG can use Launch Configurations or Launch Templates (newer)
-- To update an ASG, you must provide a new launch configuration / launch template. EC2 instances will be replaced over tiem
+- To update an ASG, you must provide a new launch configuration / launch template. EC2 instances will be replaced over time
 - IAM roles attached to an ASG will get assigned to EC2 instances
 - ASG are free. You pay for the underlying resources being launched
 - Having instances under an ASG means that if they get terminated for whatever reason, the ASG will automatically create new ones as a replacement. Extra safety!

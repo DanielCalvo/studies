@@ -165,7 +165,7 @@
 - I can look at when I deleted an instance or an S3 bucket
 - You can filter by events and you can also create a trail, but creating a trail seems to be out of scope
 
-### 194. [SAA-C02] AWS Config - Overview0
+### 194. [SAA-C02] AWS Config - Overview
 - Helps with auditing and recording compliance of your AWS resources
 - Records configurations and changes over time
 - Can store all of this configuration data into S3 (you could analyze it with Athena!)

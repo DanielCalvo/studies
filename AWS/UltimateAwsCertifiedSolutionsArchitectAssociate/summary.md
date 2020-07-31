@@ -1,10 +1,7 @@
-### Overall
+## Overall
 - Read the docs for each chapter on top of Stephane's explanations
     - Make sure to find the docs for each service described by Stephane and go through them carefully 
 - It would be neat for you to come up with architectures (theoretical ones) and implement them yourself! Especially the serverless ones
-
-### Section 4
-- Do an ASG with LB by hand to see if you got most of it in your head
 
 ## Summary of services
 
@@ -17,14 +14,11 @@
 - ENIs
 
 ### Section 4
-- Quiz: 16/20
+- Quiz: 20/20
 - ELB
 - CLB
 - ALB
 - NLB
-- Do a quick recap on what load balancers expose (dns, ips, etc)
-- HAve a look at what can be a target group for an ALB
-- What the hell are scaling policies? I completely forgot
 
 ### Section 5
 - Quiz: 7/7
@@ -115,6 +109,8 @@
 - AWS Config
 
 ### Section 19
+- Quiz: 4/5
+- Man this whole chapter is really difficult to remember
 - STS
 - Identity Federation
 - Cognito
@@ -124,6 +120,8 @@
 - AWS SSO
 
 ### Section 20
+- Quiz: 9/10 (misread a question)
+- Do the hands-ons later
 - KMS
 - SSM
 - AWS Secrets Manager
@@ -133,6 +131,7 @@
 - AWS Firewall Manager
 
 ### Section 21
+- Quiz: 6/10. Fricking trick questions. Maybe give this whole thing a rewatch
 - VPC
 - Subnets
 - NAT Instances
@@ -151,10 +150,13 @@
 - Transit Gateway
 
 ### Section 22
+- Quiz: 4/4
 - DMS
 - Data Sync
 
 ### Section 24
+- Quiz: 15/16
+- Look at EMR and Glue again, I keep forgetting. Check ECS + IAM too
 - CICD
 - CloudFormation
 - ECS
@@ -165,3 +167,7 @@
 - ElasticTranscoder
 - AWS Workspaces
 - AppSync
+
+#### Section 25
+- Quiz: 1/17
+- Trusted Advisor

@@ -38,11 +38,48 @@
 - https://www.aws.training/Certification
 
 ### 285. Save 50% on your AWS Exam Cost
-- Only if you have done an exam before :()
+- Only if you have done an exam before :(
 
 ### 286. Get an Extra 30 minutes on your AWS Exam - Non Native English Speakers Onlyfunctionality
 - Don't forget to request ESL +30 MINUTES!
 
+
+#### Stuff I forgot
+- Amazon EMR
+    - Elastic Map Reduce
+    - Helps creating hadoop clusters
+    - If you see hadoop, if you see spark, if you see big data processing, think EMR
+- Glue: Does ETL (Extract, transform, load). If you see Glue, think ETL- Serverless, provisions apache spark
+- AppSync
+    - A service to store and sync data cross mobile and web apps in real time
+    - Managed GraphQL
+    - On the exam: Synchronizing data between mobile and web apps in real time, it's either cognito sync or app sync
+- AWS ElasticSearch: Not serverless (you have to define an instance size)
+- Redshift: Analytics and data warehousing
+- Have another look at ElastiCache: Ok!
+- Lambda limits: 15 minutes execution, up to 3gig memory, 512mb disk in /tmp (container)
+- SSE-C: Key is managed by you and sent on header on S3 upload to that it is encrypted server side
+- Have a look at RDS multi-az VS stand by or whatever it was: Done!
+- Review the difference between pilot light and warm standby real quick 'cause I don't remember well
+
+#### Less common network services
+- VPC Endpoint: Allows you to connect to AWS services (S3, DynamoDB, RDS, etc) using a private network instead of the public www network
+- Site to Site VPN: Makes your corporate network and an AWS VPC look like they're in the same network. You need to set up a customer gateway on your DC, and then on the VPC side you provision a VPN gateway, and then in between the VPN gateway and the customer gateway, you set up a Site to Site VPN Connection
+- Site to Site VPN: Links VPN Gateway (AWS) and Customer Gateway (on prem)
+- VPN Gateway: What you set between a VPN Gateway on AWS and a Customer Gateway on prem
+- Customer gateway: Endpoint on the on prem datacenter that can be used on a Site to Site VPN
+---
+- Direct Connect: Provides a dedicated private connection (non-internet) from a remote network to your VPC. Used when you need better network connectivity
+- Direct Connect Gateway: Direct Connect to one or more VPC in many regions 
+---
+AWS PrivateLink: Secure & Scalable way to expose a service to 1000s of VPC
+VPN CloudHub: Provides secure communication between sites, if you have multiple VPN connections
+Transit Gateway: Star gateway between all your VPC and on prem infrastructure. Hub and star
+
 ### Practice Test 1
+- Double check the exotic networking classes again (vpc peering? Direct Connect Gateway? site to site vpn?)
 
 ### Practice Test 2: Extra Questions 
+- Forgot what spot fleet was
+- CloudHSM?
+- Review AWS Shield and AWS WAF
