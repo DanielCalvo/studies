@@ -1,0 +1,2 @@
+- Spawns on default VPC and default SG
+- In this case the default SG has port 80 open, so it works!

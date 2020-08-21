@@ -11,7 +11,7 @@ type hotdog int
 //Type handler interface: Any type that has a method with this signature: ServerHTTP(ResponseWriter, *Request)
 
 func (m hotdog) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "anything you want")
+	fmt.Fprintln(w, "Any code you want can go in this function")
 
 }
 

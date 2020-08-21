@@ -5,11 +5,11 @@ import (
 	"io/ioutil"
 )
 
-//func check(e error) {
-//	if e != nil {
-//		panic(e)
-//	}
-//}
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
 
 func main() {
 	filelocation := "/home/daniel/PycharmProjects/studies/Golang/simple_things/myfile.txt"
