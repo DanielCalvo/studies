@@ -221,110 +221,252 @@ Summary of study topics as described here: https://learn.hashicorp.com/tutorials
 
 ##### Use Modules From the Registry
 - https://learn.hashicorp.com/tutorials/terraform/module-use
-- 
+- See LINK 
 
 ##### Build a Module
 - https://learn.hashicorp.com/tutorials/terraform/module-create
-- 
+- See LINK
 
 ##### Share Modules in the Private Module Registry
 - https://learn.hashicorp.com/tutorials/terraform/module-private-registry
-- 
+- Terraform allows you to create and share modules privately through their private module registry
+- It is linked to terraform cloud
+- Not too hyped on these commercial offerings...
 
 ##### Separate Development and Production Environments
 - https://learn.hashicorp.com/tutorials/terraform/organize-configuration
-- 
+- Cool, check [./051_UseModules/03_SeparateEnvironments](./051_UseModules/03_SeparateEnvironments) for an example with a module for different environments
 
 #### 052. Finding and using modules documentation
 - https://www.terraform.io/docs/registry/modules/use.html
+- Open this: https://registry.terraform.io/
+- Search!
+- Many cool ones for AWS here: https://registry.terraform.io/providers/hashicorp/aws/latest
+    - EKS
+    - VPC
+    - RDS
+- And so on...
 
 #### 053. Module versioning documentation
 - https://www.terraform.io/docs/configuration/modules.html#module-versions
+- When using modules from a module registry, it is recommended to explicitly specify the version
+- Much like you would not use `latest` on a production Dockerfile
+- Versions are available for module shosted on the terraform registry or terraform cloud's private module registry
+- Modules sourced from local file paths do not support versioning since they're loaded from the same source repository
 
 #### 054. Input Variables documentation
 - https://www.terraform.io/docs/configuration/variables.html
+- Input variables serve as parameters for a Terraform module
+- Each variable accepted by a module must be declarted in a variable block
+- Simple variable types:
+    - string
+    - number
+    - bool
+- Complex variables:
+    - list(<TYPE>)
+    - set(<TYPE>)
+    - map(<TYPE>)
+    - object({<ATTR NAME> = <TYPE>, ... })
+    - tuple([<TYPE>, ...])
+- You can also document the purpose of your variables:
+```hcl-terraform
+variable "image_id" {
+  type        = string
+  description = "The id of the machine image (AMI) to use for the server."
+}
+```
 
 #### 055. Calling a child module documentation
 - https://www.terraform.io/docs/configuration/modules.html#calling-a-child-module
+- Welp, to call a module, add the `module $MODULE_NAME { }` block
+- Inside the module block, you indicate the source of the module, as well as variable names
+- All modules require a source argument
 
 ### 06. Read and write configuration
 #### 061. Resources describe infrastructure objects
 - https://www.terraform.io/docs/configuration/resources.html
+- The most important element in terraform!
+- Resources are things: EC2 instances, VPCs, security groups, RDS databases and so on
+- Syntax is: resource "resource_type" resource_name
+    ex: `resource "aws_instance" "web"`
+- Each resource type is implemented by a provider (ex: AWS)
+- Terraform has the documentation for each resource type
+- You can use expressions to access information about resources in the same module, using the `RESOURCE_TYPE.NAME.ATTRIBUTE` syntax
+- About dependencies: Some resources must be processes before others, and most of these dependencies are handled automatically by terraform
+- However, when you want to be explicit about this dependency, you can use the `depends_on` meta-argument
+- Meta arguments:
+    - depends_on, for specifying hidden dependencies
+    - count, for creating multiple resource instances according to a count
+    - for_each, to create multiple instances according to a map, or set of strings
+    - provider, for selecting a non-default provider configuration
+    - lifecycle, for lifecycle customizations
+    - provisioner and connection, for taking extra actions after resource creation
+- Meta arguments are pretty cool!
 
 #### 062. Data sources let Terraform fetch and compute data
 - https://www.terraform.io/docs/configuration/data-sources.html
+- Data resources allow data to be fetched or computed to be used elsewhere in terraform
+- Use of data resources allows terraform to make use of informaton defined outside terraform, or defined by other terraform configs
+- There are some examples in [./062_DataSources](./062_DataSources)
 
 #### 063. Resource addressing lets you refer to specific resources
 - https://www.terraform.io/docs/internals/resource-addressing.html
+- You can refer to certain resources either by number: `module.module_name[resource_index]`
+- Or by key: `module.foo[0].module.bar["a"]`
+- Check [./062_DataSources](./062_DataSources)
 
 #### 064. Named values let you reference values
 - https://www.terraform.io/docs/configuration/expressions.html#references-to-named-values
+- You can refer named values in a variety of ways
+- Most of them are too specific to be done one by one, so here's a list:
+    - <RESOURCE TYPE>.<NAME>
+    - data.<DATA TYPE>.<NAME>
+    - var.<NAME>
+    - local.<NAME>
+    - module.<MODULE NAME>.<OUTPUT NAME>
+    - path.module
+    - path.root
+    - path.cwd
+    - terraform.workspace
 
 #### 065. Complex types let you validate user-provided values
 - https://www.terraform.io/docs/configuration/types.html#complex-types
+- Collection types
+    - list(...)
+    - map(...)
+    - set(...)
+- Structural types
+    - object(...)
+    - tuple(...)
+- TODO: Write some config with these if you're feeling like it
 
 #### 066. Built in functions help transform and combine values
 - https://www.terraform.io/docs/configuration/functions.html
+- <FUNCTION NAME>(<ARGUMENT 1>, <ARGUMENT 2>)
+- There are a lot of them: numerical, string, collection, encoding, filesystem, data & time, hash & cryptop, IP Network and Type conversions
+- TODO: Have a look at the most interesting ones
 
 #### 067. Dynamic blocks allow you to construct nested expressions within certain configuration blocks
 - https://www.terraform.io/docs/configuration/expressions.html#dynamic-blocks
+- A dynamic block acts much like a for expression, but produces nested blocks for each element of that complex value
+- In theory it looks nice, but I couldn't make it work, the docs were confusing apparently :(
+- TODO: Actually try again at a later date
 
 #### 068. Vault Provider for Terraform
 - https://www.terraform.io/docs/providers/vault/index.html
+- Allows you to read, write from and configure hashicorp vault
+- Don't put your secrets in Terraform!
+- You can use (sensitive) terraform configs to put secrets into vault
+- You can also integrate terraform to read secrets from vault
 
 
 ### 07. Manage state
 #### 071. State locking documentation
 - https://www.terraform.io/docs/state/locking.html
+- If your backend supports it, terraform will lock your state for all operations that could write state
+- This happens automatically
+- Terraform has a force unlock command to unlock the state if this failed.
+- This commmand is dangerous! If you unlock the state when someone esle is holding the lock, it could cause multiple writes. This should only be used when you own the lock
 
 #### 072. Sensitive data in state documentation
 - https://www.terraform.io/docs/state/sensitive-data.html
+- Terraform state can contain sensitive data, depending on your resources
+- If you manage any form of sensitive data with terraform, treat the state itself as sensitive data.
+- Storing the state remotely can provide better seucrity
+    - Terraform cloud always encrypts the state at rest
+    - The S3 backend supports encryption at rest when the encrypt option is enabled
 
 #### 073. Reconcile state and real resources with refresh documentation
-- https://www.terraform.io/docs/commands/refresh.html
+-` https://www.terraform.io/docs/commands/refresh.html`
+- Used to refresh your terraform state with the state of your infrastructure in the cloud
+- Here's an example of how this works: 
+    - You write a terraform config with 1 ec2 instance
+    - You apply the config and now have 1 ec2 instance running on AWS and registed on your state
+    - You go on AWS and manually delete the instance
+    - You run `terraform refresh`
+    - This will see that the remote instance created by the apply previously is missing, and will refresh your local state to reflect the missing instance
 
 #### 074. Backends overview documentation
 - https://www.terraform.io/docs/backends/index.html
+- A backend in terraform defines how the state is stored and how an operation such as `apply` is executed.
+- You can have non-local file storage, and remote execution
+- Benefits are:
+    - Store state remotely
+    - Keep sensitive information off disk
+    - Remote operations
 
 #### 075. Local backend documentation
 - https://www.terraform.io/docs/backends/types/local.html
+- The local backend stores state on the local filesystem, locks that state using system APIs, and performs operations locally.
+- Every single config you wrote so far uses the local backend
 
 #### 076. Backend types documentation
 - https://www.terraform.io/docs/backends/types/index.html
+- There are various backend types: local, remote, s3, artifactory, etcd, http...
+- local and standard are enchanced backends (support remote operations) all others are standard
 
 #### 077. How to configure a backend documentation
 - https://www.terraform.io/docs/backends/config.html
-
+- To configure a backend, use the `backend {}` configuration section
+- When configuring a new backend for the first time, terraform gives you the option to migrate to your new backend
+- There's an example of an S3 backend at [./077_S3Backend](./077_S3Backend)
 
 ### 08. Debug in Terraform
 #### 081. Review the debugging documentation
 - https://www.terraform.io/docs/internals/debugging.html
-
+- Terraform has logs which can be enabled/adjusted by setting the `TF_LOG` environment variable to any value.
+- Can be set to: TRACE, DEBUG, INFO, WARN or ERROR
 
 ### 09. Understand Terraform Cloud and Enterprise
 #### 091.Terraform Cloud overview documentation
 - https://www.terraform.io/docs/cloud/index.html
+- Terraform Cloud is an application that helps teams use Terraform together
+- Large enterprises can purchase Terraform Enterprise, a self-hosted distribution of Terraform Cloud 
 
 #### 092.Understanding Workspaces and Modules resource
 - https://www.hashicorp.com/resources/terraform-enterprise-understanding-workspaces-and-modules/
+- Video is about terraform enterprise, bleh
+- A workspace is associated with a set of terraform configs
+- Sentinel: Hashicorp's policy as code framework, creates guardrails/sandboxes around thigns you can or cannot do with terraform
+- A workspace consists of:
+    - A terraform configuration
+    - Values for variables used by the configuration
+    - Persistent stored state for the resources managed by the config
+    - Historical state and run logs
+- Your app has its infrastructure: VPC, subnets, sg, iam, alb, asg, and so on
+- You can have different teams managing different layers of the infrastructure (net team = manages vpc and subnets)
+- You probably have more than one app, and more apps are likely to use the same structure/patterns!
+- Each app could become a workspace apparently
+- Benefits of terraform Modules:
+    - Reusable infrastructure code
+    - Better infrastructure organization
+    - Standardize infrastructure templates across org
 
 #### 093.CLI workspaces documentation
 - https://www.terraform.io/docs/state/workspaces.html
+- Certain backends support multiple named workspaces, allowing multiple states to be associated with a single configuration.
 
 #### 094.Terraform Cloud workspaces documentation documentation
 - https://www.terraform.io/docs/cloud/workspaces/index.html
+- Terraform Cloud manages infrastructure collections with workspaces instead of directories. A workspace contains everything Terraform needs to manage a given collection of infrastructure, and separate workspaces function like completely separate working directories
 
 #### 095.Module registry blog post
 - https://www.hashicorp.com/blog/hashicorp-terraform-module-registry/
+- The HashiCorp Terraform Module Registry gives Terraform users easy access to templates for setting up and running their infrastructure with verified and community modules
+- There's an example of this in: [./051_UseModules/01_FromTheRegistry](./051_UseModules/01_FromTheRegistry)
 
 #### 096.Module registry documentation
 - https://www.terraform.io/docs/cloud/registry/index.html
+- Terraform Cloud's private module registry helps you share Terraform modules across your organization.
 
 #### 097.Why Policy as Code? blog post
 - https://www.hashicorp.com/blog/why-policy-as-code/
+- Shameless plug to Sentinel, which allows you to define policies in a fashion similar to Terraform
 
 #### 098.Sentinel Policy as Code documentation
 - https://www.terraform.io/docs/cloud/sentinel/index.html
+- Sentinel is an embedded policy-as-code framework integrated with the HashiCorp Enterprise products. It enables fine-grained, logic-based policy decisions, and can be extended to use information from external sources.
 
 #### 099.Feature comparison pricing page (scroll down for feature matrix)
 - https://www.hashicorp.com/products/terraform/pricing/
+- Looks like sentinel is only available for paid users? :(

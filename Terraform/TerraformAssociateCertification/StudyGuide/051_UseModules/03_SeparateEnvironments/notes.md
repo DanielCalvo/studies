@@ -1,0 +1,2 @@
+- dev and prod are different instances of the same project
+- both use the `s3_website` module
