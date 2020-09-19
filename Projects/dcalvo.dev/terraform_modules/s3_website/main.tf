@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "dcalvo-dev-bucket" {
-  bucket = "dcalvo-dev-bucket"
+  bucket = var.bucket-name
   acl    = "private"
 
   website {
@@ -9,7 +9,7 @@ resource "aws_s3_bucket" "dcalvo-dev-bucket" {
 
   provisioner "local-exec" {
     when    = create
-    command = "aws s3 cp ../assets s3://${self.bucket} --recursive"
+    command = "echo Hello from ${var.domain-name} > index.html && aws s3 cp index.html s3://${var.bucket-name} && rm index.html"
   }
 
   provisioner "local-exec" {
@@ -38,12 +38,6 @@ resource "aws_s3_bucket_policy" "dcalvo-dev-bucket-bucket-policy" {
     ]
 }
 POLICY
-}
-
-//Do not destroy/remove from state -- manually configured on google domains
-resource "aws_route53_zone" "dcalvo-dev-zone" {
-  comment = "Written by Dani with Terraform"
-  name    =  var.domain-name
 }
 
 resource "aws_acm_certificate" "dcalvo-dev-cert" {
@@ -76,7 +70,7 @@ resource "aws_route53_record" "acm-validation-route53-dcalvo-dev" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = aws_route53_zone.dcalvo-dev-zone.zone_id
+  zone_id         = data.terraform_remote_state.dcalvo-dev-domain.outputs.zone_id
 }
 
 resource "aws_acm_certificate_validation" "acm-validation-dcalvo-dev" {
@@ -149,7 +143,7 @@ resource "aws_cloudfront_distribution" "dcalvo-dev-distribution" {
 
 
 resource "aws_route53_record" "dcalvo-dev-a" {
-  zone_id = aws_route53_zone.dcalvo-dev-zone.zone_id
+  zone_id = data.terraform_remote_state.dcalvo-dev-domain.outputs.zone_id
   name    = var.domain-name
   type    = "A"
 
