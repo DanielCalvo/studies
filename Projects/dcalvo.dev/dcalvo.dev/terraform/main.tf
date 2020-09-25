@@ -1,4 +1,4 @@
-data "terraform_remote_state" "dcalvo-dev-domain" {
+data "terraform_remote_state" "dcalvo-dev-zone" {
   backend = "s3"
   config = {
     bucket = "dani-terraform-states"
@@ -9,7 +9,13 @@ data "terraform_remote_state" "dcalvo-dev-domain" {
 
 module "s3_website" {
   source = "../../terraform_modules/s3_website"
-  domain-name = "dcalvo.dev"
-  bucket-name = "dcalvo-dev-bucket"
-  bucket-extra-provision-step = "?"
+  domain-name = var.domain-name
+  bucket-name = var.bucket-name
+}
+
+resource "null_resource" "populate-s3-bucket" {
+  depends_on = [module.s3_website]
+  provisioner "local-exec" {
+    command = "aws s3 cp ../assets s3://${var.bucket-name} --recursive"
+  }
 }

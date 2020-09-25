@@ -16,8 +16,3 @@ variable "bucket-name" {
     type = string
     default = ""
 }
-
-variable "bucket-provision-cmd" {
-    type = string
-    default = ""
-}
