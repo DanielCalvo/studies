@@ -1,2 +1,2 @@
 - This is a module used to set up S3 websites with Cloudfront and SSL on my personal projects
-- Documentation and some tidying up pending
+- Pending documentation and some tidying up
