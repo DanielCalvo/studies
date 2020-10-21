@@ -1,5 +1,13 @@
 Summary of study topics as described here: https://learn.hashicorp.com/tutorials/terraform/associate-study
 
+#### TODOs/pending/recaps
+- Examples with complex types at 065
+- Built in functions at 066 
+- Dynamic blocks at 067 
+- Summary of command line arguments and flags (maybe do it in another file?)
+- How do if statements work again?
+- There's also this: https://www.terraform.io/guides/index.html
+
 - [01. Learn about IaC](#01-learn-about-iac)
   * [011. Infrastructure as Code introduction video](#011-infrastructure-as-code-introduction-video)
   * [012. Infrastructure as Code in a Private or Public Cloud blog post](#012-infrastructure-as-code-in-a-private-or-public-cloud-blog-post)
@@ -370,13 +378,34 @@ variable "image_id" {
 - About dependencies: Some resources must be processed before others, and most of these dependencies are handled automatically by terraform
 - However, when you want to be explicit about this dependency, you can use the `depends_on` meta-argument
 - Meta arguments:
-    - depends_on, for specifying hidden dependencies
-    - count, for creating multiple resource instances according to a count
-    - for_each, to create multiple instances according to a map, or set of strings
-    - provider, for selecting a non-default provider configuration
-    - lifecycle, for lifecycle customizations
-    - provisioner and connection, for taking extra actions after resource creation
-- Meta arguments are pretty cool!
+
+##### count
+- See example in [./061_MetaArguments](./061_MetaArguments)
+
+##### depends_on
+- See example in [./061_MetaArguments](./061_MetaArguments)
+
+##### for_each
+- See example in [./061_MetaArguments](./061_MetaArguments)
+
+##### lifecycle
+- create_before_destroy: By default when certain changes are required by terraform, it deletes an object before creating a new one. This can change that behaviour: A new object can be created before the old one is destroyed
+- prevent_destroy: When set to true, causes terraform to reject a plan that would destroy this resource. Can be used as a safety mechanism for things like databases. However, makes certain configuration changes impossible
+- ignore_changes: Specifies resource arguments that terraform should ignore when planning updates to the associated remote object
+- See examples in [./061_MetaArguments](./061_MetaArguments)
+    
+##### provider
+- TODO
+
+##### provisioner and connection
+- You can run provisions on create, destroy and they can be local and remote, and there a few more settings
+- However, provisioners are a last resort. Please consider other alternatives before using a provisioner
+- See examples in [./061_MetaArguments](./061_MetaArguments)
+
+##### timeouts
+- Allows you customize how long operations can take before they're considered failed
+- See examples in [./061_MetaArguments](./061_MetaArguments)
+
 
 #### 062. Data sources let Terraform fetch and compute data
 - https://www.terraform.io/docs/configuration/data-sources.html
@@ -413,19 +442,17 @@ variable "image_id" {
 - Structural types
     - object(...)
     - tuple(...)
-- TODO: Write some config with these if you're feeling like it
 
 #### 066. Built in functions help transform and combine values
 - https://www.terraform.io/docs/configuration/functions.html
 - <FUNCTION NAME>(<ARGUMENT 1>, <ARGUMENT 2>)
-- There are a lot of them: numerical, string, collection, encoding, filesystem, data & time, hash & cryptop, IP Network and Type conversions
-- TODO: Have a look at the most interesting ones
+- There are a lot of them: numerical, string, collection, encoding, filesystem, data & time, hash & crypto, IP Network and Type conversions
+
 
 #### 067. Dynamic blocks allow you to construct nested expressions within certain configuration blocks
 - https://www.terraform.io/docs/configuration/expressions.html#dynamic-blocks
 - A dynamic block acts much like a for expression, but produces nested blocks for each element of that complex value
 - In theory it looks nice, but I couldn't make it work, the docs were confusing apparently :(
-- TODO: Actually try again at a later date
 
 #### 068. Vault Provider for Terraform
 - https://www.terraform.io/docs/providers/vault/index.html
@@ -490,7 +517,12 @@ variable "image_id" {
 #### 081. Review the debugging documentation
 - https://www.terraform.io/docs/internals/debugging.html
 - Terraform has logs which can be enabled/adjusted by setting the `TF_LOG` environment variable to any value.
-- Can be set to: TRACE, DEBUG, INFO, WARN or ERROR
+- The `TF_LOG` variable can be set to: TRACE, DEBUG, INFO, WARN or ERROR
+- Variables you need to know about for the exam: `TF_LOG` and `TF_LOG_PATH`
+- Ex:
+    - `export TF_LOG="TRACE"`
+    - `export TF_LOG_PATH="./tf.log"`
+    
 
 ### 09. Understand Terraform Cloud and Enterprise
 #### 091.Terraform Cloud overview documentation
