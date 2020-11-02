@@ -8,7 +8,7 @@ data "terraform_remote_state" "dcalvo-dev-zone" {
 }
 
 module "s3_website" {
-  source = "../../terraform_modules/s3_website"
+  source      = "../../terraform_modules/s3_website"
   domain-name = var.domain-name
   bucket-name = var.bucket-name
 }

@@ -7,6 +7,8 @@ Summary of study topics as described here: https://learn.hashicorp.com/tutorials
 - Summary of command line arguments and flags (maybe do it in another file?)
 - How do if statements work again?
 - There's also this: https://www.terraform.io/guides/index.html
+- Re-read this one last time later: https://www.terraform.io/docs/configuration/provider-requirements.html#local-names
+- What can you do on a local block again? Everything?
 
 - [01. Learn about IaC](#01-learn-about-iac)
   * [011. Infrastructure as Code introduction video](#011-infrastructure-as-code-introduction-video)
@@ -171,7 +173,42 @@ Summary of study topics as described here: https://learn.hashicorp.com/tutorials
 #### 022. Providers documentation
 - https://www.terraform.io/docs/configuration/providers.html
 - Configuration for providers (plugins to interact with remote systems, ex: AWS) is very straight forward
+- A provider's source address is its global identifier. It also specifies the primary location where Terraform can download it
+Source addresses consist of three parts delimited by slashes (/), as follows: `[<HOSTNAME>/]<NAMESPACE>/<TYPE>`
+- Child modules receive their provider configurations from the root module
+- Providers are plugins, each provider offering a set of resource types
+- Each terraform module must declare which providers it requires.
+- Provider requirements are declared in a required_providers block
 - You can define provider aliases for things like multi-region terraform configs
+- Configuring the AWS provider on terraform 0.13 and later:
+```hcl-terraform
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
+}
+
+# Configure the AWS Provider
+provider "aws" {
+  region = "us-east-1"
+}
+```
+- Configuring the AWS provider on AWS 0.12 and earlier:
+```hcl-terraform
+# Configure the AWS Provider
+provider "aws" {
+  version = "~> 3.0"
+  region  = "us-east-1"
+}
+
+# Create a VPC
+resource "aws_vpc" "example" {
+  cidr_block = "10.0.0.0/16"
+}
+```
 
 #### 023. Purpose of Terraform State documentation
 - https://www.terraform.io/docs/state/purpose.html
@@ -275,6 +312,9 @@ Summary of study topics as described here: https://learn.hashicorp.com/tutorials
 
 #### 044. Using local workspaces with workspace documentation
 - https://www.terraform.io/docs/state/workspaces.html
+- Workspaces are workspaces (duh) on the same directory, but each workspace has it's own terraform state
+- For local state, Terraform stores the workspace states in a directory called terraform.tfstate.d
+- For example, if you have the bar workspace, state will be at `terraform.tfstate.d/bar/terraform.tfstate`
 
 #### 045. Importing existing resources with import documentation
 - https://www.terraform.io/docs/commands/import.html

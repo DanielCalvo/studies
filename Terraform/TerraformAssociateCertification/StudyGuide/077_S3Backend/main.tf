@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "danidanibucket"
+    bucket = "danibucketsito"
     region = "eu-west-1"
     key = "statefile"
   }
