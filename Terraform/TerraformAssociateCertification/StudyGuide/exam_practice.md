@@ -132,7 +132,8 @@ Does terrasform have more environment variables like TF_LOG_PATH?
     - But if the arguments are in a list, it takes them like this: `min([1,454,2]...)`
 16. Dynamic Blocks allow us to dynamically construct repeatable nested blocks.
     - TODO: A good use case would try to be using it when defining a security group with repeating ingress rules
-20. Read this real quick: https://www.terraform.io/docs/commands/environment-variables.html
+20. Read this real quick: https://www.terrafins
+orm.io/docs/commands/environment-variables.html
     - `export TF_LOG=TRACE`
     - `export TF_LOG=`
     - `export TF_LOG_PATH=./terraform.log`
