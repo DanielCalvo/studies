@@ -1,3 +1,18 @@
+//Do not destroy -- domain names have to be manually changed on domains.google.com to point to Route53's domain servers every time this is created
+//resource "aws_route53_zone" "dcalvo-dev-zone" {
+//  comment = "Written by Dani with Terraform"
+//  name    =  "dcalvo.dev"
+//}
+
+data "terraform_remote_state" "dcalvo-dev-zone" {
+  backend = "s3"
+  config = {
+    bucket = "dani-terraform-states"
+    key    = "dcalvo.dev/dns-domain.tfstate"
+    region = "eu-west-1"
+  }
+}
+
 resource "aws_s3_bucket" "dcalvo-dev-bucket" {
   bucket = var.bucket-name
   acl    = "private"
@@ -58,11 +73,11 @@ resource "aws_acm_certificate" "dcalvo-dev-cert" {
 resource "aws_route53_record" "acm-validation-route53-dcalvo-dev" {
   provider = aws.us-east-1
   for_each = {
-    for dvo in aws_acm_certificate.dcalvo-dev-cert.domain_validation_options : dvo.domain_name => {
-      name   = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type   = dvo.resource_record_type
-    }
+  for dvo in aws_acm_certificate.dcalvo-dev-cert.domain_validation_options : dvo.domain_name => {
+    name   = dvo.resource_record_name
+    record = dvo.resource_record_value
+    type   = dvo.resource_record_type
+  }
   }
 
   allow_overwrite = true
@@ -70,7 +85,7 @@ resource "aws_route53_record" "acm-validation-route53-dcalvo-dev" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = data.terraform_remote_state.dcalvo-dev-domain.outputs.zone_id
+  zone_id         = data.terraform_remote_state.dcalvo-dev-zone.outputs.zone_id
 }
 
 resource "aws_acm_certificate_validation" "acm-validation-dcalvo-dev" {
@@ -84,7 +99,7 @@ resource "aws_cloudfront_origin_access_identity" "dcalvo-dev-origin-access-ident
 }
 
 resource "aws_cloudfront_distribution" "dcalvo-dev-distribution" {
-  aliases = [ var.domain-name ]
+  aliases = [var.domain-name]
 
   origin {
     domain_name = aws_s3_bucket.dcalvo-dev-bucket.bucket_regional_domain_name
@@ -143,7 +158,7 @@ resource "aws_cloudfront_distribution" "dcalvo-dev-distribution" {
 
 
 resource "aws_route53_record" "dcalvo-dev-a" {
-  zone_id = data.terraform_remote_state.dcalvo-dev-domain.outputs.zone_id
+  zone_id = data.terraform_remote_state.dcalvo-dev-zone.outputs.zone_id
   name    = var.domain-name
   type    = "A"
 
@@ -151,5 +166,12 @@ resource "aws_route53_record" "dcalvo-dev-a" {
     name                   = aws_cloudfront_distribution.dcalvo-dev-distribution.domain_name
     zone_id                = aws_cloudfront_distribution.dcalvo-dev-distribution.hosted_zone_id
     evaluate_target_health = true
+  }
+}
+
+resource "null_resource" "populate-s3-bucket" {
+  depends_on = [aws_s3_bucket.dcalvo-dev-bucket]
+  provisioner "local-exec" {
+    command = "aws s3 cp ../assets s3://${var.bucket-name} --recursive"
   }
 }

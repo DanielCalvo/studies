@@ -1,2 +1,0 @@
-- This is a module used to set up S3 websites with Cloudfront and SSL on my personal projects
-- Pending documentation and some tidying up
