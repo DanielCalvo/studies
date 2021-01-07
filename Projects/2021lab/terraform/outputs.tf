@@ -27,3 +27,15 @@ output "cluster_name" {
   description = "Kubernetes Cluster Name"
   value       = local.cluster_name
 }
+
+# Just testing from here on
+output "cluster_oidc_issuer_url" {
+  description = "Kubernetes Cluster Name"
+  value       = module.eks.cluster_oidc_issuer_url
+}
+
+data "aws_caller_identity" "current" {}
+
+output "account_id" {
+  value = data.aws_caller_identity.current.account_id
+}

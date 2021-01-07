@@ -1,0 +1,2 @@
+- This terraform to instantiate an ALB with TLS termination and a wildcard domain record pointing to it
+- The ALB points to a single EC2 instance in the backend

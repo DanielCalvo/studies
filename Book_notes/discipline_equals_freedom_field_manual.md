@@ -25,7 +25,7 @@
 - Discipline starts with waking up early. Discipline is about facing your fears so you can conquer them. Discipline means taking the hard Road. Discipline is your best friend... 
 
 ### Questions
-Question everything. Learn until you understand question yourself. It will lead to truth. 
+Question everything. Learn until you understand. Question yourself. It will lead to truth. 
 
 ### Fight
 - Fight weakness and fight fear. Give everyday everything you got.
@@ -205,7 +205,7 @@ Question everything. Learn until you understand question yourself. It will lead 
 ### Power naps
 
 ### The workouts
-- A workout doesn't have to bee too specific. Doing anything is better than doing nothing
+- A workout doesn't have to be too specific. Doing anything is better than doing nothing
 - It's a good idea to track your workouts
 
 ### Building a home gym

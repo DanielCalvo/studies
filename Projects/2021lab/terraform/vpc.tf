@@ -3,27 +3,19 @@ variable "region" {
   description = "AWS region"
 }
 
-provider "aws" {
-  version = ">= 2.28.1"
-  region  = "eu-west-1"
-}
+
 
 data "aws_availability_zones" "available" {}
 
 locals {
-  cluster_name = "training-eks-${random_string.suffix.result}"
-}
-
-resource "random_string" "suffix" {
-  length  = 8
-  special = false
+  cluster_name = "experimental-cluster"
 }
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "2.6.0"
 
-  name                 = "training-vpc"
+  name                 = "experimental"
   cidr                 = "192.168.0.0/16"
   azs                  = data.aws_availability_zones.available.names
   private_subnets      = ["192.168.1.0/24", "192.168.2.0/24", "192.168.3.0/24"]
