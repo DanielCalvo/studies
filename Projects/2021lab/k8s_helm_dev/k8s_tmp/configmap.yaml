@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: index
+data:
+  index.html: |
+    This is very unusual, but I'm putting the contents of index.html in a configmap

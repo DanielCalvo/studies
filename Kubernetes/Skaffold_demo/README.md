@@ -1,0 +1,2 @@
+- This was a demo I intended to make on one of my previous jobs in 2020 to push for k8s adoption
+- My employer at the time decided to converge on Hashicorp nomad, so this project was dropped halfway through

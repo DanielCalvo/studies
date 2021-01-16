@@ -32,9 +32,9 @@ module "eks" {
 
   worker_groups = [
     {
-      name                          = "worker-group-2"
+      name                          = "worker-group-1"
       instance_type                 = "t3.micro"
-      asg_desired_capacity          = 2
+      asg_desired_capacity          = 3
       additional_security_group_ids = [aws_security_group.all_worker_mgmt.id]
     },
   ]

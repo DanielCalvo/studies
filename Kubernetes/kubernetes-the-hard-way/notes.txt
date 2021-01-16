@@ -1,7 +1,4 @@
-
-￼
 0:11
-￼
 ￼
 4:07 PM
 ubuntuworker:
@@ -13,7 +10,6 @@ set hostname
 set ubuntuworker and ubuntucontroller on hostsfile
 
 Apparently network interfaces on worker node only get created when you launch a pod.
-
 
 To check:
 kubeadm

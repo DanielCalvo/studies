@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  drink: {{ quote .Values.favourite.drink }}
+  food: {{ .Values.favourite.food | quote }}
+  element: {{ .Values.favourite.element | quote | upper }}
+  {{- if eq .Values.favourite.drink "coffee" }}
+  mug: true
+  {{- end }}
+  {{- with .Values.liked }}
+  weather: {{ .weather }}
+  {{- end }}
+  toppings: |-
+    {{- range .Values.pizzaToppings }}
+    - {{ . | title | quote }}
+    {{- end }}
+  sizes: |-
+    {{- range tuple "small" "medium" "large" }}
+    - {{ . }}
+    {{- end }}
+  moretoppings: |-
+  {{- range $index, $topping := .Values.pizzaToppings }}
+  {{ $index }}: {{ $topping }}
+  {{- end }}
+
+  {{ $relname := .Release.Name }}
+  rel: {{ $relname }}
+
+  #You stopped on the looping over key/values, seems handy!

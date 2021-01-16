@@ -1,0 +1,18 @@
+favourite:
+  drink: coffee
+  food: bread
+  element: air
+liked:
+  weather: mild
+  water: fresh
+pizzaToppings:
+  - mushrooms
+  - cheese
+  - peppers
+  - onions
+
+mysubchart:
+  dessert: ice cream
+
+global:
+  salad: caesar

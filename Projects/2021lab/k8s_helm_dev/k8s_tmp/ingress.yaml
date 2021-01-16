@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: hello-kubernetes
+  name: hello-nginx
 #  annotations:
 #    alb.ingress.kubernetes.io/scheme: internet-facing
 #    kubernetes.io/ingress.class: alb
@@ -11,5 +11,5 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: hello-kubernetes
+              serviceName: hello-nginx
               servicePort: 80

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-nginx
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      name: hello-nginx
+  template:
+    metadata:
+      labels:
+        name: hello-nginx
+    spec:
+      volumes:
+        - name: index
+          configMap:
+            name: index
+      containers:
+        - name: hello-nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: index
+              mountPath: /usr/share/nginx/html

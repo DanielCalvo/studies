@@ -15,5 +15,16 @@
 Idea 1: Hmm, use helm to template your ingress?
 Idea 2: Get the ARN of your ingress using a data source in terraform and generate an ACM certificate from there?
 - What is your source of truth for your deployed branches? Hmm
-
 - I think you can do the above separately
+Idea 3: You can use helm to template your ingress resource to work with an external "source of truth" regarding which branches you have deployet to manage that on an ingress
+
+### Part 2
+1. Deploy all the infra with Terraform
+2. Deploy a helm chart with a deployment, service and ingress (you can also deploy it manually for now)
+3. Get the ARN of your ingress using a data source in terraform  <- Next step is here
+4. Point some DNS to your ALB so you can access your app with mylab.dcalvo.dev (wildcard dns later perhaps?)
+5. TLS setup: Generate a certificate for that domain, add the validations steps, and google how to terminate tls on an ALB with k8s
+
+### Reference notes:
+- https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html
+- https://github.com/kubernetes-sigs/aws-load-balancer-controller
