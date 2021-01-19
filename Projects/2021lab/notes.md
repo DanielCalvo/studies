@@ -25,6 +25,15 @@ Idea 3: You can use helm to template your ingress resource to work with an exter
 4. Point some DNS to your ALB so you can access your app with mylab.dcalvo.dev (wildcard dns later perhaps?)
 5. TLS setup: Generate a certificate for that domain, add the validations steps, and google how to terminate tls on an ALB with k8s
 
+### Misc notes
+- See if it's possible to use the ALB chart here instead of the helm incubator: https://aws.github.io/eks-charts/
+
 ### Reference notes:
 - https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html
 - https://github.com/kubernetes-sigs/aws-load-balancer-controller
+- Docs
+    - https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/
+
+
+### Off topic interesting ideas
+- https://aws.amazon.com/blogs/containers/api-gateway-as-an-ingress-controller-for-eks/
