@@ -1,0 +1,1 @@
+This was going to be used a trivago at some point in 2019, but the idea was later abandoned.

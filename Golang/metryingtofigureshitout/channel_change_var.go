@@ -9,8 +9,7 @@ import (
 //run loop, time loop execution
 //if more than 50 seconds have passed, call function to get new token
 
-
-func main(){
+func main() {
 	//var mynum int
 	//mynum = 10
 	//fmt.Println(mynum)

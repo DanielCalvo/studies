@@ -32,7 +32,7 @@ func main() {
 	}
 	fmt.Println(pwd)
 
-	yamlFile, err := ioutil.ReadFile(pwd + "/" + "parameters.yml")
+	yamlFile, err := ioutil.ReadFile("/home/daniel/Projects/studies/Golang/simple_things/metryingtofigureshitout/read_yaml/parameters.yml")
 	if err != nil {
 		fmt.Printf("Error reading YAML file: %s\n", err)
 		return

@@ -22,9 +22,13 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	t := time.Now()
 	fmt.Fprintln(w, "Current time: "+t.Format("20060102150405"))
 
+	fmt.Fprintln(w, "name:", os.Getenv("name"))
+	fmt.Fprintln(w, "surname:", os.Getenv("surname"))
+	fmt.Fprintln(w, "age:", os.Getenv("age"))
+
 }
 
 func main() {
 	http.HandleFunc("/", Index)
-	log.Fatal(http.ListenAndServe(":80", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

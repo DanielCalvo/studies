@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func genNumbersito(baseNum int) <-chan int {
+func genNumbersitoA(baseNum int) <-chan int {
 	out := make(chan int)
 	go func() {
 		for i := baseNum; i < baseNum+10; i++ {
@@ -21,7 +21,7 @@ func genNumbersito(baseNum int) <-chan int {
 	return out
 }
 
-func bytwo(num <-chan int, workerNum int) <-chan int {
+func bytwoA(num <-chan int, workerNum int) <-chan int {
 	out := make(chan int)
 	var wg sync.WaitGroup
 	wg.Add(workerNum)
@@ -43,8 +43,8 @@ func bytwo(num <-chan int, workerNum int) <-chan int {
 
 func main() {
 
-	numbersitos := genNumbersito(40)
-	twonumbersitos := bytwo(numbersitos, 3)
+	numbersitos := genNumbersitoA(40)
+	twonumbersitos := bytwoA(numbersitos, 3)
 
 	for n := range twonumbersitos {
 		log.Println(n)

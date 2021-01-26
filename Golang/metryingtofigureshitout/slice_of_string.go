@@ -9,4 +9,10 @@ func main() {
 
 	var ss []string
 	ss = append(ss, "grape", "banana", "apple")
+
+	var myslice []string
+	myslice = []string{"a", "b", "c"}
+
+	fmt.Println(myslice)
+	fmt.Println([]string{"a", "b", "c"})
 }
