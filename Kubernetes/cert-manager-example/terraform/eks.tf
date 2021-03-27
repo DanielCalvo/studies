@@ -20,9 +20,9 @@ module "eks" {
 
   worker_groups = [
     {
-      name                          = "worker-group-1"
-      instance_type                 = "t3.small"
-      asg_desired_capacity          = 2
+      name                 = "worker-group-1"
+      instance_type        = "t3.small"
+      asg_desired_capacity = 2
     },
   ]
 }

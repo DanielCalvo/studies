@@ -1,5 +1,3 @@
-
-
 resource "helm_release" "nginx-controller" {
   name       = "quickstart"
   chart      = "ingress-nginx"
