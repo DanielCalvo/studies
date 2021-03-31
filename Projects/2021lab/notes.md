@@ -1,3 +1,6 @@
+
+- This became obsolete. Re-evaluate & redo, or use it for something else, or archive
+
 ## ACTION PLAN
 ### Part 1
 - Create an EKS cluster, using
