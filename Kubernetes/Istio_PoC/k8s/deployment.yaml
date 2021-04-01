@@ -15,5 +15,5 @@ spec:
         app: kuard
     spec:
       containers:
-      - image: gcr.io/kuar-demo/kuard-amd64:blue
-        name: kuard-amd64
+      - image: paulbouwer/hello-kubernetes:1.9
+        name: khello-kubernetes

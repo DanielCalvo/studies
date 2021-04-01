@@ -5,7 +5,7 @@ variable "vpc_name" {
 
 variable "cluster_name" {
   description = "name of the eks cluster"
-  default     = "sample-eks-cluster"
+  default     = "saaample-eks-cluster"
 }
 
 //
