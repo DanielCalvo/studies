@@ -2,17 +2,17 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: kuard
-  name: kuard
+    app: hello-kubernetes
+  name: hello-kubernetes
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: kuard
+      app: hello-kubernetes
   template:
     metadata:
       labels:
-        app: kuard
+        app: hello-kubernetes
     spec:
       containers:
       - image: paulbouwer/hello-kubernetes:1.9

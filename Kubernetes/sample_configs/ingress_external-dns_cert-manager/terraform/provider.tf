@@ -2,7 +2,7 @@ terraform {
   required_version = ">= 0.12.0"
   backend "s3" {
     bucket = "dani-terraform-states"
-    key    = "external-dns-poc.tfstate"
+    key    = "ing-cert-dns.tfstate"
     region = "eu-west-1"
   }
 }

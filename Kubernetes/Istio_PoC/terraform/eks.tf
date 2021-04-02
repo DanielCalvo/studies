@@ -14,13 +14,16 @@ module "eks" {
     root_volume_type = "gp2"
   }
 
-  //Adding policies to everyone isn't the best, but it's the fastest way forward
-  workers_additional_policies = [aws_iam_policy.route-53-cert-manager-policy.arn]
+  //Adding policies to nodes isn't the best, but it's the fastest way forward
+  workers_additional_policies = [
+    aws_iam_policy.cert-manager-policy.arn,
+    aws_iam_policy.external-dns-policy.arn
+  ]
 
   worker_groups = [
     {
-      name                 = "worker-group-3"
-      instance_type        = "t3.small"
+      name                 = "worker-group-4"
+      instance_type        = "t3a.medium"
       asg_desired_capacity = 2
     }
   ]
