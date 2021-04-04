@@ -15,3 +15,30 @@
 - The istio yamls have a very nice example of using the HPA and limits!
 - For later on Istio: Explore the grafana dashboards!
 - Try not to make guesses with requests: Look at grafana to see how much CPU and memory your pods are using
+
+---
+
+# Leftover notes from the docs to process:
+
+## Concepts
+
+### Traffic management
+- Istio can help with:
+- Circuit breakers (timeouts and retries)
+- A/B testing
+- Canary rollouts / staged rollouts with traffic split by percentages
+- Failure recovery!
+- You can apply rules to traffic going in and out of your mesh
+- You can also add an external dependency to your mesh 
+
+- The resources for Istio traffic management are:
+	- Virtual services
+	- Destination rules
+	- Gateways
+	- Service entries
+	- Sidecars
+
+### Virtual Services
+- Virtual services along with destination rules are the building blocks of istio's traffic management
+- A virtual service lets you configure how a requests are routed to a service within an istio service mesh
+
