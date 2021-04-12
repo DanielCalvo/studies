@@ -1,4 +1,5 @@
 # Overview
+- Just going through: https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/
 - A quick overview of Kustomize's docs so I can have a rough idea of what functionalities the tool has!
 
 ### 1. bases

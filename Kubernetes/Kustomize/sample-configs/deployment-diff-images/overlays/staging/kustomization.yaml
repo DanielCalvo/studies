@@ -1,0 +1,5 @@
+bases:
+- ../../base
+images:
+- name: paulbouwer/hello-kubernetes
+  newTag: "3.6"
