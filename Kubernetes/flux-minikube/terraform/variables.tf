@@ -8,14 +8,14 @@ variable "repository_name" {
   default = "studies"
 }
 
-variable "repository_visibility" {
-  type    = string
-  default = "private"
-}
+//variable "repository_visibility" {
+//  type    = string
+//  default = "private"
+//}
 
 variable "branch" {
   type    = string
-  default = "main"
+  default = "master"
 }
 
 variable "target_path" {
