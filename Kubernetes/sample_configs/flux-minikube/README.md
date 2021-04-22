@@ -40,5 +40,8 @@ flux create whateveryouwant
 kubectl apply -f whateveryouwant.yaml
 ```
 
+### To troubleshoot flux
+kubectl get kustomization,helmrelease,helmrepository,gitrepository,helmchart --all-namespaces
+
 ### Resetting minikube
 minikube delete && minikube start --cpus=8 --memory=16384
