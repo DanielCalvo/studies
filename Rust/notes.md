@@ -4,3 +4,6 @@
 
 - Create a program that reads some string and prints it in uppercase
     - See how you handle type errors!
+
+### Assorted notes
+- `rustup doc` shows all the documentation that comes with rust! That's so cool! I can see why people like the language.
