@@ -1,10 +1,10 @@
 private_key
+id_rsa
 .idea/*
 *.log
 .*.swp
 .*
 !/.gitignore
-.vagrant
-LPIC_devops/vagrant/.vagrant
-OFFLINE_NOTES.TXT
+.terraform
+target
 */terraform.tfvars
