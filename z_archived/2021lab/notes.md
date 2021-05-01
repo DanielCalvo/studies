@@ -37,6 +37,5 @@ Idea 3: You can use helm to template your ingress resource to work with an exter
 - Docs
     - https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/
 
-
 ### Off topic interesting ideas
 - https://aws.amazon.com/blogs/containers/api-gateway-as-an-ingress-controller-for-eks/
