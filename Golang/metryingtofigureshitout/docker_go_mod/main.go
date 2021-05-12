@@ -2,23 +2,38 @@ package main
 
 import (
 	"fmt"
-	"github.com/DanielCalvo/markdownscanner/pkg/config"
-	"github.com/DanielCalvo/markdownscanner/pkg/mdscanner"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"os"
-	//"github.com/DanielCalvo/markdownscanner/pkg/mdscanner"
 )
+
+type Fileyaml struct {
+	One   string `yaml:"one"`
+	Two   string `yaml:"two"`
+	Three string `yaml:"three"`
+}
 
 func main() {
 	fmt.Println("hello world")
-	fmt.Println("repo:", os.Getenv("repo"))
 
-	c := config.Config{} //Set sane values for config if you find no file? (aka running from container in cmdline mode?)
-	repo, err := mdscanner.NewRepository(&c, "https://github.com/DanielCalvo/markdownscanner")
-
+	pwd, err := os.Getwd()
 	if err != nil {
 		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Println(pwd)
+
+	yamlFile, err := ioutil.ReadFile(pwd + string(os.PathSeparator) + "file.yaml")
+	if err != nil {
+		fmt.Printf("Error reading YAML file: %s\n", err)
+		return
 	}
 
-	fmt.Print(repo)
+	var fileyaml Fileyaml
+	err = yaml.Unmarshal(yamlFile, &fileyaml)
+	if err != nil {
+		fmt.Printf("Error parsing YAML file: %s\n", err)
+	}
 
+	fmt.Println(fileyaml)
 }

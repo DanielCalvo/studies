@@ -3,7 +3,7 @@
 
 - To build and run:
 ```shell
-docker build . -t docker_go_mod && docker run -e repo=https://github.com/someorg/somerepo docker_go_mod
+docker build . -t docker_go_mod && docker run docker_go_mod
 ```
 
 - Module setup:
