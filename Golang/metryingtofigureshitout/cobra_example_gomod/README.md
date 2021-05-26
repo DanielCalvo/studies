@@ -1,3 +1,4 @@
+### Getting this going
 On .bashrc set this env var
 - `export GO111MODULE=on`
 
@@ -9,3 +10,9 @@ Then:
 - `go get`
 
 Enable _Go Modules Integration_ on Goland and set environment to `GO111MODULE=on`
+
+### Cobra setup
+- `cobra init --pkg-name example`
+- `cobra add serve`
+- `cobra add config`
+- `cobra add create -p 'configCmd'`
