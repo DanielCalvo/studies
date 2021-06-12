@@ -1,0 +1,9 @@
+apiVersion: s3.aws.crossplane.io/v1beta1
+kind: Bucket
+metadata:
+  name: saaamplebucket09823481
+spec:
+  deletionPolicy: Delete
+  forProvider:
+    locationConstraint: eu-west-1
+    acl: private

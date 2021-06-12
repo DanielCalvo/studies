@@ -36,6 +36,7 @@ func main() {
 	repocontent, _, _ := client.Repositories.GetReadme(context.Background(), "DanielCalvo", "markdownscanner", nil)
 	fmt.Println(repocontent.GetContent())
 
+	//https://github.com/DanielCalvo/markdownscanner/blob/master/internal/config/config_test.go
 	io_reader, err := client.Repositories.DownloadContents(context.Background(), "DanielCalvo", "markdownscanner", "internal/config/config_test.go", nil)
 	if err != nil {
 		panic(err)

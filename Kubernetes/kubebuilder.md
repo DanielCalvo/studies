@@ -1,0 +1,1 @@
+- I need to go over the kubebuilder book with more patience!
