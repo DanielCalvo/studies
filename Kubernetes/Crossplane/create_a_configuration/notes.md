@@ -1,0 +1,3 @@
+- Crossplane.yaml: The metadata about the configuration
+- Definition.yaml: The XRD
+- Composition.yaml: The composition
