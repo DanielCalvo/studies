@@ -1,0 +1,49 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: example-aws
+  labels:
+    purpose: example
+    provider: aws
+spec:
+  compositeTypeRef:
+    apiVersion: example.org/v1alpha1
+    kind: CompositeS3Bucket
+  patchSets:
+  - name: metadata
+    patches:
+    - fromFieldPath: metadata.labels
+    - fromFieldPath: metadata.annotations[example.org/app-name]
+
+  - name: external-name
+    patches:
+    - type: FromCompositeFieldPath
+      fromFieldPath: metadata.annotations[crossplane.io/external-name]
+      policy:
+        fromFieldPath: Required
+
+  resources:
+    - name: bucket
+      base:
+        apiVersion: s3.aws.crossplane.io/v1beta1
+        kind: Bucket
+        spec:
+          deletionPolicy: Delete
+          forProvider:
+            locationConstraint: eu-west-1
+            acl: private
+      patches:
+        - type: PatchSet
+          patchSetName: metadata
+        - fromFieldPath: "metadata.uid"
+          toFieldPath: "metadata.name"
+          transforms:
+            - type: string
+              string:
+                fmt: "%s-bucketrino9875675"
+        - fromFieldPath: "spec.parameters.location"
+          toFieldPath: "spec.forProvider.locationConstraint"
+
+            #metadata.name
+            #spec.forProvider.locationConstraint
+            #both need to be patched form the XRD

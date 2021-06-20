@@ -1,0 +1,48 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: compositebuckets.example.org
+spec:
+  defaultCompositionRef:
+    name: example-aws
+  group: example.org
+  names:
+    kind: CompositeS3Bucket
+    plural: composites3buckets
+  claimNames:
+    kind: S3Bucket
+    plural: s3buckets
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                parameters:
+                  type: object
+                  properties:
+                    name:
+                      description: Bucket name
+                      type: string #Uh I think these types are not being validated, "stringr" worked
+                    location:
+                      description: Geographic location of this bucket
+                      type: string
+                  required:
+                    - name
+                    - location
+              required:
+                - parameters
+            # The status subresource can be optionally defined in the XRD
+            # schema to allow observed fields from the composed resources
+            # to be set in the composite resource and claim.
+  #          status:
+  #            type: object
+  #            properties:
+  #              address:
+  #                description: Address of this MySQL server.
+  #                type: string

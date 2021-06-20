@@ -1,0 +1,26 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: composites3buckets.aws.bucket.example.org
+  labels:
+    provider: aws
+    guide: quickstart
+    vpc: default
+spec:
+  compositeTypeRef:
+    apiVersion: bucket.example.org/v1alpha1
+    kind: S3Bucket
+  resources:
+    - name: Bucket
+      base:
+        apiVersion: s3.aws.crossplane.io/v1beta1
+        kind: Bucket
+        metadata:
+          name: saaamplebucket09823481
+        spec:
+          deletionPolicy: Delete
+          forProvider:
+            acl: private
+      patches:
+        - fromFieldPath: "spec.parameters.region"
+          toFieldPath: "spec.forProvider.locationConstraint"

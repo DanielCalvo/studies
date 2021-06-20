@@ -1,0 +1,14 @@
+apiVersion: bucket.example.org/v1alpha1
+kind: S3Bucket
+metadata:
+  name: s3bucketaaaaaa
+  namespace: default
+spec:
+  parameters:
+    region: eu-west-1
+#  compositionSelector:
+#    matchLabels:
+#      provider: aws
+#      vpc: default
+  compositionRef:
+    name: composites3buckets.aws.bucket.example.org

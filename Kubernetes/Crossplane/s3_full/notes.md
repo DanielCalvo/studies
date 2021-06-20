@@ -26,11 +26,7 @@ helm list -n crossplane-system
 kubectl get all -n crossplane-system
 ```
 
-### AWS Provider specific
-```shell
-- kubectl apply -f Provider.yaml
-- kubectl apply -f ProviderConfig.yaml 
-```
+### Uh I still need to process these
 
 --- Before all of this, the provider config needs to be ready!
 

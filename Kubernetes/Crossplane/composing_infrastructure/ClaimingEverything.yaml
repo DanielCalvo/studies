@@ -1,0 +1,27 @@
+# The MySQLInstance always has the same API group and version as the
+# resource it requires. Its kind is always suffixed with .
+apiVersion: example.org/v1alpha1
+kind: S3Bucket
+metadata:
+  # Infrastructure claims are namespaced.
+  namespace: default
+  name: example
+spec:
+  # The schema of the spec.parameters object is defined by the earlier example
+  # of an CompositeResourceDefinition. The location, storageGB, and version fields
+  # are patched onto the ResourceGroup, MySQLServer, and MySQLServerFirewallRule
+  # composed by the required MySQLInstance.
+  parameters:
+    name: aaaaaaaay
+    location: eu-west-1
+  # Support for a resourceRef is automatically injected into the schema of all
+  # resource claims. The resourceRef requests a CompositeMySQLInstance
+  # explicitly.
+  resourceRef:
+    apiVersion: example.org/v1alpha1
+    kind: CompositeS3Bucket
+    name: example
+  # Support for a writeConnectionSecretToRef is automatically injected into the
+  # schema of all published infrastructure claim resources. This allows
+  # the resource to write a connection secret containing any details required to
+  # connect to it - in this case the hostname, username, and password.

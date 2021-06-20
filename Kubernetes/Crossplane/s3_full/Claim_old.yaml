@@ -1,0 +1,8 @@
+apiVersion: example.org/v1alpha1
+kind: CompositeS3Bucket
+metadata:
+  name: my-s3
+  namespace: default
+spec:
+  compositionRef: #Let's use composition ref next try
+    name: mys3composition
