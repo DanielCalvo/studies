@@ -56,6 +56,10 @@
 ## Chapter 11: Stateful Service
 - Stopped here!
 
+## Chapter 13: Self Awareness
+- Kubernetes providers a downward API that allows you to gather information about the k8s environment that an app is running in!
+
+
 ## Chapter 22: Controler
 - A controler monitors a set of k8s resources in a given state
 - Kubernetes is a distributed state manager. You give it a desired state for a given component, and it will try to reconciliate that state
