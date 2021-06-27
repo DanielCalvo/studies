@@ -16,7 +16,7 @@
 - Gain perspective. Warriors have faced much worse. Gain control of what you can control. If the stress is something you can't control, embrace it. Figure out a way to take advantage.
 
 ### Destroyer mode
-- It takes both emotion and logic to reach your maximum potential. When one fails, you need to rely on the other. When it doesn't make any logical sense to go on that's when your user in motion comes your anger, your frustration, your fear, to push you further. When you're feelings are screaming that you have had enough. When you think you are going to break emotionally, override that emotion with concrete logic and willpower that says one thing: I don't stop.
+- It takes both emotion and logic to reach your maximum potential. When one fails, you need to rely on the other. When it doesn't make any logical sense to go on that's when your user in motion comes your anger, your frustration, your fear, to push you further. When your feelings are screaming that you have had enough. When you think you are going to break emotionally, override that emotion with concrete logic and willpower that says one thing: I don't stop.
 
 ### Until the end
 - It never finishes. You always have more to do. The enemy is always watching. Be relentless.
@@ -35,7 +35,7 @@ Question everything. Learn until you understand. Question yourself. It will lead
 - There are areas within yourself you cannot compromise. Work hard, train hard, improve yourself, do not rest on your laurels, face your demons, do not give up, give out or give in. Stand and maintain your self discipline
 
 ### Default aggressive
-- Agression: The unstoppable fighting spirit. The drive. The desire to achieve success. The will to win.
+- Aggression: The unstoppable fighting spirit. The drive. The desire to achieve success. The will to win.
 
 ### Nature vs Nurture
 - The people who are successful decide they are going to be successful.
@@ -108,7 +108,7 @@ Question everything. Learn until you understand. Question yourself. It will lead
 ### No more
 - No more excuses
 - No more "I'll start tomorrow" or "Just this once"
-- Through strenght, will and discipline, become you you want to be, become what you want to be
+- Through strenght, will and discipline, become who you want to be, become what you want to be
 - Only after that can you rest and say "no more"
 
 ### Staying motivated
