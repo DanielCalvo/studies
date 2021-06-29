@@ -38,7 +38,36 @@
 - The real work here is in determining what to automate, under what conditions, and how
 - SRE @ Google has a cap on how much a team member can spend on toil: 50%
 
+### Share Ownership with Developers
+- SRE bread and butter: Expertise around availability, latency, performance, efficiency, change management, monitoring, emergency response and capacity planning of the service(s) we're looking after
+- You can get a lot more done if you blur the lines. SRE can instrument javascript, product people can do SRE stuff
+
+### Use the same tooling, regardless of job function or title
+- Use the same tooling to manage a service, both for SRE and product people (this one's kinda vague though)
+
+### Narrow, rigid incentives narrow your success
+- Careful with incentives that are too narrow (just launch related or reliability related)
+- Early SRE engagement is good for services!
+
+### It's better to fix it yourself, don't blame someone else
+- Don't pass blame to other groups, that is the core problem with traditional engineering/ops
+- Encourage engineers to change code and config required to the product. Allow these teams to be radical within the limits of their mission, eliminating incentives to proceed slowly
+- Support blameless postmortems
+- Allow support to move away from products that are irredeemably operational difficult. People don't like doing that, will quit 
+
+### When can substitute for whether
+- The decision to give or withdraw support to a product can be based on "comparative operational characteristics"
+- A strong partnership with product development is critically important
+
+Further reading:
+- SRE book
+- Effective DevOps
+- Phoenix Project
+- Practice of cloud and sysadmin v2
+- Accelerate
+
 # Part I - Foundations
+- Basic foundations of SRE: SLOs, monitoring, alerting, toil reduction and simplicity 
 
 ## Chapter 2 - Implementing SLOs
 
@@ -51,6 +80,14 @@
 ## Chapter 5 - Alerting on SLOs
 
 ## Chapter 6 - Eliminating Toil
+
+### What is Toil?
+- Manual, repetitive, automatable, reactive, lacking enduring value, grows as fast as it's source (ex: disk full alerts grow with server numbers)
+- Toil can deflate team morale
+- Fix the root problem when possible: You can write a script to delete log files, but if you can stop generating overly verbose useless logs in the first place, that's better
+
+### Measuring toil
+
 
 ## Chapter 7 - Simplicity
 
