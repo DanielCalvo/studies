@@ -169,8 +169,10 @@ Further reading:
 ## Chapter 17 - Identifying and Recovering from Overload
 
 ## Chapter 18 - SRE Engagement Model
+- This seemed interesting with useful information on how to engage on project development and talking to other teams
 
 ## Chapter 19 - SRE: Reaching Beyond Your Walls
+- Hmm, this is probably interesting too!
 
 ## Chapter 20 - SRE Team Lifecycles
 
