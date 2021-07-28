@@ -1,4 +1,3 @@
-
 ## Chapter 14 - Configuration Design and Best Practices
 - Designing configuration with clarity and usability in mind is a good idea
 - A good configuration change interface allows for quick, confident and testable configuration changes
