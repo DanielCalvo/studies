@@ -1,3 +1,4 @@
+
 - Would be nice to have a "key takeaways" from each chapter
 
 # Part I - Foundations

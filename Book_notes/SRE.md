@@ -4,7 +4,13 @@
 
 ## Part I - Introduction
 ### Chapter 1 - Introduction
+- Errors budgets are meant to solve the conflict between developers and ops
+- We can then aim to spend our error budget getting maximum feature velocity. An outtage is no longer a bad thing, it's an expected feature of innovation
+- Hmm theres some interesting basic insights on alarming here
+- playbooks > winging it
+
 ### Chapter 2 - The Production Environment at Google, from the Viewpoint of an SRE
+
 
 ## Part II - Principles
 ### Chapter 3 - Embracing Risk
