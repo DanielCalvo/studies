@@ -1,0 +1,3 @@
+- Download Kafka
+- Change data directory for zookeper, start zookeper with defaults
+- Change data directory for kafka, start kafka with defaults

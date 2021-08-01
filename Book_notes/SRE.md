@@ -17,6 +17,18 @@
 ### Chapter 4 - Service Level Objectives
 ### Chapter 5 - Eliminating Toil
 ### Chapter 6 - Monitoring Distributed Systems
+- Let's read this next! 
+- Your monitoring system should address two questions: What's broken, and why?
+- Whitebox monitoring is essential for debugging
+
+- Four golden signals:
+    - Latency: How long it takes to serve a request
+    - Traffic: How much demand is being placed on your system
+    - Errors: The rate of request that fails
+    - Saturation: How much of your system resources are being used
+- Measuring all 4 signals and alerting a human when one of them is problematic is a good start
+- Worrying about your tail: Careful with averages. Some of your requests might take very long, but not show on an average. Historigrams per exponential boundaries are useful to track these
+
 ### Chapter 7 - The Evolution of Automation at Google
 ### Chapter 8 - Release Engineering
 ### Chapter 9 - Simplicity
@@ -37,7 +49,10 @@
 ### Chapter 22 - Addressing Cascading Failures
 ### Chapter 23 - Managing Critical State: Distributed Consensus for Reliability
 ### Chapter 24 - Distributed Periodic Scheduling with Cron
+
 ### Chapter 25 - Data Processing Pipelines
+
+
 ### Chapter 26 - Data Integrity: What You Read Is What You Wrote
 ### Chapter 27 - Reliable Product Launches at Scale
 
