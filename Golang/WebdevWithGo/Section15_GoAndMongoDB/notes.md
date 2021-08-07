@@ -1,0 +1,2 @@
+- Uh-oh we'll do MVC!
+- Erm, you know what, I should do relational databases first
