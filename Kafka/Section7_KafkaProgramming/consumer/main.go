@@ -28,6 +28,5 @@ func main() {
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
 		}
 	}
-
-	c.Close()
+	c.Close() //This is never reached apparently, the program just consumers indefinitely
 }

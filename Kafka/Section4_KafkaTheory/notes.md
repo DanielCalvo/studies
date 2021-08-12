@@ -7,7 +7,7 @@
 - Each message within a partition gets an incremental id called offset
 
 #### Topic example: truck gps
-- Comapany with many trucks and each truck has a gps
+- Company with many trucks and each truck has a gps
 - Each truck reports it's gps to kafka
 - Topic: trucks_gps
 - Each truck will send a message to 20 seconds (imagine so)
@@ -31,7 +31,7 @@
 ### 10. Topic Replication Factor
 - Topics should have a replication factor of > 1 (usually between 2 and 3)
 - This way if a broker is down, another broker can serve the data
-- At one time, only one broker can be a leder for a given partition, only that leader can receive and send data for a partition. The other brokers will synchronize the data
+- At one time, only one broker can be a leader for a given partition, only that leader can receive and send data for a partition. The other brokers will synchronize the data
 - One partition will have a leader and multiple ISR (in-sync replica)
 
 ### 11. Producers and message keys
@@ -48,11 +48,11 @@
 
 ### 12. Consumers and consumer groups
 - Consumers read data from a topic (identified by a name)
-- They know hich broker to read from. In case of failures, they know how to recover
+- They know which broker to read from. In case of failures, they know how to recover
 - Data is read in order within partitions
 
 #### Consumer groups
-- Consumer read data in consumer groups
+- Consume read data in consumer groups
 - Each consumer from a consumer group reads from exclusive partitions
 - If you have more consumers than partitions, some consumers will be inactive
 
@@ -66,12 +66,12 @@
 - You can choose when to commit your offsets
   - At most once: When the message is received
   - At least once (usually preferred): When the message is processed
-  - Exactly once: Only available from kafka-to-kafka. For external systens, you need to use an idempotent consumer
+  - Exactly once: Only available from kafka-to-kafka. For external systems, you need to use an idempotent consumer
   
 ### 14. Kafka Broker Discovery
 - Every kafka broker is called a bootstrap server. You only need to connect to one broker and you'll be connected to the entire server.
 - Each broker knows about all the brokers, topics and partitions
-- Kafka client does a metadata reqeust, a broker replies with all the cluster info. Noice!
+- A Kafka client does a metadata request, a broker replies with all the cluster info. Noice!
 
 ### 15. Zookeper
 - Manages brokers (keeps a list of them)
