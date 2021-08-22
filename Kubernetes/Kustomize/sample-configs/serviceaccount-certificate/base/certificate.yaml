@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: myapp-cert
+  namespace: istio-system
+spec:
+  commonName: replaced-by-overlay
+  dnsNames:
+    - replaced-by-overlay
+  issuerRef:
+    kind: ClusterIssuer
+    name: replaced-by-overlay
+  secretName: myapp-cert

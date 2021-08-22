@@ -1,0 +1,32 @@
+bases:
+- ../../base
+
+commonLabels:
+  env: dev
+commonAnnotations:
+  built-by: manually
+  release-version: v1.0
+
+patches:
+- path: deployment_patch.yaml
+  target:
+    kind: Deployment
+
+- target:
+    kind: ServiceAccount
+    name: myapp-service-account
+  patch: |-
+    - op: replace
+      path: /metadata/annotations/eks.amazonaws.com~1role-arn #wtf "~1" lol: https://github.com/kubernetes-sigs/kustomize/issues/1256#issuecomment-535007229
+      value: aws:239847:service-account-yo
+
+- target:
+    kind: Certificate
+  patch: |-
+    - op: replace
+      path: /spec/commonName
+      value: tomeme.istodream.com
+      path: /spec/dnsNames/0
+      value: tomeme.istodream.com
+      path: /spec/issuerRef/name
+      value: meme-issuer

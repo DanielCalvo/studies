@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy2
+spec:
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        key: value
+    spec:
+      containers:
+        - name: busybox
+          image: busybox

@@ -15,4 +15,4 @@ resources:
 #          image: nginx:latest
 
 patches:
-- path: patch.yaml
+- path: deployment_patch.yaml
