@@ -1,8 +1,6 @@
 bases:
 - ../../base
 
-commonLabels:
-  env: dev
 commonAnnotations:
   built-by: manually
   release-version: v1.0
