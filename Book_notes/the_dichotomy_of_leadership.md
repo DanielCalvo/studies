@@ -60,3 +60,38 @@ Find the balance between decentralized command and extreme ownership
     - A leader cannot stay there indefinitely. A leader must also look up and out -- toward senior leadership and the strategic mission to build relationships and influence strategic decisions
     
 # Part 3: Balancing yourself
+
+## Chapter 9: A leader and a follower
+- Every leader must be willing and able to lead, but also to follow
+- A leader must be willing to lean on the expertise and ideas of others for the good of the team
+- A good leader encourages junior leaders to step up and lead when they put up ideas that contribute to mission sucsess
+- A good leader must be a good follower of his leaders. One of the most important jobs of a leader is to support your own boss. A leader must follow and support the chain of command mik
+- A good relationship with your boss incorporates 3 things: They trust you. They seek and value your opinion and guidance. They give you what you need to accomplish your mission and then let you go execute
+
+## Chapter 10: Plan, but don't overplan
+- Careful planning is essential to the success of any mission
+- But you cannot plan for every contigency. Focusing on every possible potential problem will overwhelm your team, the planning process and complicate decisions for leaders
+- Choose maybe 3-4 contigencies for each step along with the worst possible case scenario
+- Be careful if you don't plan for contingencies also. Complacency and overconfidence are dangerous. A string of victories can breed arrogance
+
+##Chapter 11: Humble, not passive
+- Humility is the most important quality in a leader. When seals were fired, it was most often because they couldn't check their ago, refused constructive criticism, or take ownership for their mistakes
+- But being too humble can be disastrous. Leaders often took this too far and became passive
+- When it truly matters, leaders must be willing to push back, voice their concerns, stand up for the good of the team and provide feedback up the chain of command against a strategy they know will endanger the team or harm the strategic mission
+- An important part of being a leader is being humble to see beyond his or her own needs. Understand the importance of strategic direction from your boss
+- A leader must carefully prioritize when and where to push back. You may only be successful pushing back if you build a strong working relationship with your chain of command. Doing seemingly small things well can help you build this trust
+- Leif strengthened the relationship with an army captain by carrying sandbags. This showed humility and that that they didn't hold themselves above carrying sandbags.
+
+## Chapter 12: Focused, but detached
+- Leaders must be attentive to the details. But they can't be so immersed in the details that they lose track of the larger strategic situation
+- You also can't get so far away -- so detached -- that you lose track of what's happening in the front lines
+- If you don't know what's going on, you can't lead
+    - You can't try to be on top of everything, as you'll get sucked into all the minor things
+    - You can't be be too far detached as you won't know what's going on
+- If the team is on the verge of disaster, it's the for the senior leader to put detachment aside and lean into the fray to try to solve problems, it's time to lead.
+- Pro tip for yourself: Don't run the risk of giving small things too much importance. Detach and think about it later with a broader point of view
+
+## Afterword
+- There are endless dichotomies out there. Communication. Humor. Emphasis on feelings. Emphasis on data. Work and personal life. You must find balance in all of them.
+- Once balance is achieved, be aware that it will not last. Teams change. You change. The world changes.
+- If you go out of balance, be careful not to over correct
