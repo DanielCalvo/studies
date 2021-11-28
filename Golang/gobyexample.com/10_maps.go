@@ -4,7 +4,8 @@ import "fmt"
 
 func main() {
 
-	//Maps are Go's associative data type: https://en.wikipedia.org/wiki/Associative_array
+	//Maps are Go's associative data type
+	//https://en.wikipedia.org/wiki/Associative_array
 	m := make(map[string]int)
 	fmt.Println(m)
 
