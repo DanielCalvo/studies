@@ -9,9 +9,4 @@ docker run \
 docker_s3_example
 ```
 
-- To run:
-```shell
-
-```
-
 

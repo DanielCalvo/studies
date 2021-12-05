@@ -93,7 +93,7 @@ func main() {
 
 	if *filePath == "" {
 		fmt.Println("You must provide at least a filepath to an unsorted list")
-		fmt.Println("Ex: go run main.go -filepath=/tmp/unsorted_list.txt")
+		fmt.Println("Ex: go run simple.go -filepath=/tmp/unsorted_list.txt")
 		os.Exit(1)
 	}
 

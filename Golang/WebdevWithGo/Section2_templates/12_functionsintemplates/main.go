@@ -26,6 +26,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("End of main.go")
+	fmt.Println("End of simple.go")
 
 }
