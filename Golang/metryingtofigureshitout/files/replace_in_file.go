@@ -10,7 +10,8 @@ import (
 func main() {
 
 	/*
-		You can't remove a line in a file without eithe reading the file to memory or iterating through the file, you googled this a lot!
+		I got in a conceptual kerfuffle, this doesn't make a lot of sense.
+		You can't remove a line in a file without either reading the file to memory or iterating through the file
 	*/
 
 	//amagaaaaahd this turned out ugly
