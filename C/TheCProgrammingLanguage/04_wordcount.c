@@ -1,15 +1,25 @@
-//
-// Created by daniel on 12/12/21.
-//
-
 #include <stdio.h>
 
-int main(){
-    printf("asd");
+#define IN 1
+#define OUT 0
 
-    int c;
+int main() {
+
+    int c, n1, nw, nc, state;
+    state = OUT;
+    n1 = nw = nc = 0;
 
     while ((c = getchar()) != EOF) {
-        putchar(c);
+        ++nc;
+        if (c == '\n') {
+            ++n1;
+        }
+        if (c == ' ' || c == '\n' || c == '\t') {
+            state = OUT;
+        } else if (state == OUT) {
+            state = IN;
+            ++nw;
+        }
     }
+    printf("%d %d %d", n1, nw, nc);
 }
