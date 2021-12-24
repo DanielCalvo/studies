@@ -15,12 +15,11 @@ func main() {
 	fmt.Println(g[1][0])
 	fmt.Println(len(g), len(g[0]))
 	fmt.Println(isOutofBoundsMatrix(g, 3, 2))
-	recover()
 }
 
 //Let's assume a square matrix for now
 // y is the outer slice
-// x is the outer slice
+// x is the inner slice
 func isOutofBoundsMatrix(s [][]string, y, x int) bool {
 	if y < 0 || y > len(s)-1 {
 		return true
