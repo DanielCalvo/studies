@@ -6,10 +6,10 @@
 package main
 
 import (
-"encoding/json"
-"fmt"
-"log"
-"net/http"
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
 )
 
 type Person struct {

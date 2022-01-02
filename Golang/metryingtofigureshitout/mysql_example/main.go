@@ -5,6 +5,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 )
+
 func check(err error) {
 	if err != nil {
 		fmt.Println(err)
@@ -14,7 +15,7 @@ func check(err error) {
 var db *sql.DB
 var err error
 
-func main(){
+func main() {
 	//db, err = sql.Open("mysql", "user:password@tcp(127.0.0.7:3306)/test02?charset=utf8")
 	db, err = sql.Open("mysql", "user:password@tcp(127.0.0.7:3306)/mydb?charset=utf8")
 	if err != nil {
@@ -34,14 +35,13 @@ func main(){
 	defer rows.Close()
 
 	var name string
-	for rows.Next(){
+	for rows.Next() {
 		err = rows.Scan(&name)
 		if err != nil {
 			fmt.Println(err)
 		}
-	fmt.Println(name)
+		fmt.Println(name)
 	}
-
 
 	fmt.Println("done yo")
 }
