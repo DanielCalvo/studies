@@ -1,7 +1,5 @@
 
 ## Courage
-## 
-
 ## Perseverange
 ## Adaptability
 ## Resilience
