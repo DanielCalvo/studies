@@ -14,6 +14,9 @@ Chapters that seemed most relevant and interesting from a quick glance:
     - Maintainability
 - The summary on page 22 is very nice too!
 
+## 2. Relational vs document model
+- Learning one relational database (like PostgreSQL) and one Document database (like MongoDB?) could be a very good learning exercise!
+
 ## 10. Batch processing
 - Ha, unix tools rock for data processing! I knew it! :D
 - The biggest limitation of Unix tools is that they run only on a single machine
