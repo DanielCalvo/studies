@@ -1,0 +1,2 @@
+- Excellent blog post: https://go.dev/blog/context
+- The info on context is pretty good, but the example itself is broken, it tries to reach some ajax api from google that returns a 404 :(
