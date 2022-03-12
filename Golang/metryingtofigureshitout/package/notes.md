@@ -1,0 +1,1 @@
+I want to create a local package and reference it through the filesystem using go mod. How do I do that? 

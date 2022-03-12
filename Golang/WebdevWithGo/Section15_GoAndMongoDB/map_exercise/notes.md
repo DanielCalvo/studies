@@ -1,0 +1,1 @@
+Instead of storing the json for this app in mongodb, store it in a map in memory!

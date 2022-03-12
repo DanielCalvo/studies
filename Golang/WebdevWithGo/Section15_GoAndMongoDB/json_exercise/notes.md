@@ -1,0 +1,2 @@
+- Same as the map exercise, but this time write the map to a json file and keep it in between runs!
+- Every time a user is created or deleted, write this map to a json file and stora that data

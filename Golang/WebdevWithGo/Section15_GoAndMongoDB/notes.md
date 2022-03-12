@@ -1,2 +1,3 @@
-- Uh-oh we'll do MVC!
-- Erm, you know what, I should do relational databases first
+- Do Todd's mongodb thing with the packages thing he does, maybe you can learn something
+    - Write down instructions on how to create, update and delete a user, it's a bit unclear how to do that looking at the code
+- Then do the exercises he suggests! (hold it in a map in memory, hold it in a json file, see what else)
