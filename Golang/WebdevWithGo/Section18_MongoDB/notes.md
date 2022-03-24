@@ -113,3 +113,83 @@ db.customers.remove({role:"villain"})
 db.customers.remove({role:"citizen"},1) #Removes only one entry
 db.customers.remove({}) #Removes all
 ```
+
+## 164 Projection
+- Selecting some fields out of the data
+```shell
+db.<collection name>.find(<selection criteria>,<list of fields with toggle 0 or 1>)
+db.customers.find({},{_id:0,name:1,}) #One is on, zero is off
+db.customers.find({},{_id:0,name:1,age:1})
+db.customers.find({age:{$gt:32}},{_id:0,name:1,age:1})
+```
+
+## 165 Limit
+```shell
+db.customers.find().limit(3)
+db.customers.find({age:{$gt:32}},{_id:0,name:1,age:1}).limit(2)
+```
+
+## 166 Sort
+```shell
+#Dataset is at: https://github.com/GoesToEleven/golang-web-dev/tree/master/046_mongodb/10_sort
+db.oscars.find().limit(10)
+db.oscars.find({},{_id:0,year:1,title:1}).limit(10)
+db.oscars.find({},{_id:0,year:1,title:1}).limit(10).sort({title:1})
+db.oscars.find({},{_id:0,year:1,title:1}).sort({title:1}).limit(10)
+db.oscars.find({},{_id:0,year:1,title:1}).limit(10).sort({title:-1})
+db.oscars.find({releaseYear:{$gt:1970}},{_id:0,year:1,title:1}).limit(10).sort({title:1})
+db.oscars.find({releaseYear:{$gt:1980}},{_id:0,year:1,title:1})
+```
+
+## 167 Index
+```shell
+db.<collection name>.createIndex({<field to index>:<1 for ascend, -1 descend>})
+db.oscars.createIndex({title:1})
+db.oscars.getIndexes()
+```
+
+## 168 Aggregation
+```shell
+#distinct() seems to be the same deal as the unix `uniq` command
+db.collection.distinct(field, query, options)
+db.oscars.count()
+db.customers.find({role:"citizen"}).count()
+db.inventory.distinct( "dept" )
+
+#There's also the concept of aggregation pipelines
+db.orders.aggregate([
+{$match:{status:"A"}},
+{$group:{_id: "$cust_id",total: {$sum:"$amount"}}}
+])
+
+#See Todds markdown for more info: https://github.com/GoesToEleven/golang-web-dev/tree/master/046_mongodb/12_aggregate
+#There are tons of niche mongodb things one can learn, seems like a cool tool
+```
+
+## 169 Users 
+```shell
+use admin #You have to be at the database you're creating the user for!
+db.createUser(
+  {
+    user: "daniel",
+    pwd: "password",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+  }
+)
+# Give read write permissions to the store db
+db.createUser(
+  {
+    user: "user",
+    pwd: "password",
+    roles: [ { role: "readWrite", db: "store" } ]
+  }
+)
+
+
+mongo -u daniel -p password --authenticationDatabase "admin"  
+```
+
+## 170 JSON
+```shell
+
+```

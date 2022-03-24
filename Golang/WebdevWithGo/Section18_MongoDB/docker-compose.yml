@@ -10,3 +10,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=password
+
+#docker-compose up
+#docker-compose exec mongodb /bin/sh
+#mongo -u daniel -p password --authenticationDatabase "admin"

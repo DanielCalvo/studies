@@ -1,0 +1,13 @@
+version: '3'
+services:
+  api:
+    restart: always
+    build: .
+    ports: [8080:8080]
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example # psql -h localhost -U postgres
+    ports:
+      - 5432:5432
