@@ -1,15 +1,19 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/csv"
 	"fmt"
+	_ "github.com/lib/pq"
 	"io"
 	"log"
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
+//Company,Valuation ($B),Date Joined,Country,City,Industry,Select Inverstors,Founded Year,Total Raised,Financial Stage,Investors Count,Deal Terms,Portfolio Exits
 type Company struct {
 	Name       string
 	Valuation  float64
@@ -25,7 +29,20 @@ type Company struct {
 	//	PortfolioExits int
 }
 
-//Company,Valuation ($B),Date Joined,Country,City,Industry,Select Inverstors,Founded Year,Total Raised,Financial Stage,Investors Count,Deal Terms,Portfolio Exits
+var db *sql.DB
+
+func init() {
+	var err error
+	db, err = sql.Open("postgres", "postgres://postgres:example@localhost/startups?sslmode=disable")
+	if err != nil {
+		panic(err)
+	}
+	if err = db.Ping(); err != nil {
+		panic(err)
+	}
+	fmt.Println("Connection to database established!")
+}
+
 func main() {
 	filename := "/home/daniel/Downloads/dataset/Unicorn_Companies.csv" //Tis a temporary location for development
 	file, err := os.Open(filename)
@@ -47,22 +64,29 @@ func main() {
 			break
 		}
 
-		company := Company{
-			Name:      row[0],
-			Valuation: TrimValuation(row[1]),
+		dt, err := time.Parse("1/2/2006", row[2])
+		if err != nil {
+			fmt.Println("Unable to time.Parse() provided date:", err)
+			continue
 		}
 
-		//Need to convert that B thing to numbers! Make a function for that!
+		company := Company{
+			Name:       row[0],
+			Valuation:  TrimValuation(row[1]),
+			DateJoined: dt.Format("2006-01-02"),
+		}
+
 		fmt.Println(company)
 
+		_, err = db.Exec("INSERT INTO company (NAME, VALUATION, DATEJOINED) VALUES ($1, $2, $3)", company.Name, company.Valuation, company.DateJoined)
+		if err == nil {
+			fmt.Println("Success inserting into the db:", company)
+		}
+		if err != nil {
+			fmt.Println("Failed to insert into the db:", company)
+		}
 	}
 }
-
-/*
-About the date: PostgreSQL uses the yyyy-mm-dd format for storing and inserting date values.
-And golang can also do yyyy-mm-dd https://golang.cafe/blog/golang-time-format-example.html
-Let's convert the data from the csv to yyyy-mm-dd format then!
-*/
 
 func TrimValuation(s string) float64 {
 	s = strings.Trim(s, "$")

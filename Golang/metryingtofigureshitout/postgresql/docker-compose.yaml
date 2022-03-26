@@ -1,14 +1,8 @@
-version: '3'
+version: '3.1'
 services:
-#  api:
-#    restart: always
-#    build: .
-#    ports: [8080:8080]
   db:
     image: postgres
     restart: always
-    volumes:
-      - ~/apps/pgsql:/usr/local/pgsql
     environment:
       POSTGRES_PASSWORD: example # psql -h localhost -U postgres
     ports:

@@ -2,18 +2,19 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"time"
 )
 
 func main() {
 
-	d := "1/23/2014" //Why Americans, why...
-	//layout := "2006-30-03"
-	fmt.Println("heyaaa")
-	dt, err := time.Parse(d, d)
+	d := "12/23/2019"                    //Why Americans, why...
+	dt, err := time.Parse("1/2/2006", d) //Looks like this works? Kinda mysterious
+
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println("Unable to time.Parse() provided date:", err)
 	}
-	fmt.Println(dt)
+
+	fmt.Println(dt.Year(), dt.Month(), dt.Day())
+	formattedDate := dt.Format("2006-01-02")
+	fmt.Println(formattedDate)
 }
