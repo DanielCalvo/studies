@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
@@ -10,6 +11,12 @@ import (
 )
 
 type server struct{}
+
+type Company struct {
+	Name       string
+	Valuation  float64
+	DateJoined string
+}
 
 var db *sql.DB
 
@@ -36,45 +43,42 @@ func main() {
 	})
 	//...
 	api.HandleFunc("/companies/name/{name}", searchByName).Methods(http.MethodGet)
+
 	log.Fatalln(http.ListenAndServe(":8080", r))
 
 }
 
+var id int
+var name, valuation, datejoined string
+
 //http://localhost:8080/api/v1/companies/name/SpaceX
 //select * from company where name = 'SpaceX';
 func searchByName(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "hello world!")
-	pathParams := mux.Vars(r)
-	fmt.Fprintln(w, pathParams)
-	if name, ok := pathParams["name"]; ok {
-		row := db.QueryRow("SELECT * FROM companies WHERE name = $1", name)
+	var c Company
 
-		err := row.Scan(&name)
+	pathParams := mux.Vars(r)
+	if name, ok := pathParams["name"]; ok {
+		fmt.Println("Got name:", name)
+		row := db.QueryRow("SELECT * FROM company WHERE name = $1", name)
+
+		err := row.Scan(&id, &c.Name, &c.Valuation, &c.DateJoined)
 		switch {
 		case err == sql.ErrNoRows:
 			http.NotFound(w, r)
 			return
 		case err != nil:
+			fmt.Println("Error querying DB:", err)
 			http.Error(w, http.StatusText(500), http.StatusInternalServerError)
 			return
 		}
-		fmt.Fprintln(w, "name:", name)
+		b, err := json.Marshal(c)
+		if err != nil {
+			fmt.Println("Error marshalling json:", err)
+			http.Error(w, http.StatusText(500), http.StatusInternalServerError)
+		}
 
+		fmt.Fprintln(w, string(b))
 	}
-
-	//
-	//
-	//bk := Book{}
-	//err := row.Scan(&bk.Isbn, &bk.Title, &bk.Author, &bk.Price)
-	//switch {
-	//case err == sql.ErrNoRows:
-	//	http.NotFound(w, r)
-	//	return
-	//case err != nil:
-	//	http.Error(w, http.StatusText(500), http.StatusInternalServerError)
-	//	return
-	//}
-
 }
 
 //func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {

@@ -1,7 +1,9 @@
-Next actions
-- Create the database schema for the book dataset
-- Put the csv data inside the schema!
+## Ah
+I was going to do a full CRUD api, but dealing with postgreSQL got kinda boring, there's not much of a challenge here
 
+---
+
+psql -h localhost -U postgres
 ```sql
 CREATE DATABASE startups;
 \c startups;
