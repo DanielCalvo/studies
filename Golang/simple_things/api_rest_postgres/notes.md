@@ -1,7 +1,6 @@
 ## Ah
-I was going to do a full CRUD api, but dealing with postgreSQL got kinda boring, there's not much of a challenge here
 - How do you do pagination if someone wants a list of all the companies?
-    - Can you return all the companies that start with the letter "H" or have a valuation bigger than X billion?
+    - Can you return all the companies that start with the letter "H" or have a valuation bigger than X billion? (how far does this server-side processing go?)
 - How do you do authentication so that not anyone can delete companies?
 - What if the DB stops responding?
 
