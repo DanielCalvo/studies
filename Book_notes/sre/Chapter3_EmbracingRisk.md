@@ -1,4 +1,4 @@
-## Embracing risk
+# Chapter 3: Embracing risk
 
 - Google says: Make a service reliable, but no more reliable than it has to be.
 - Maximizing reliability comes at the cost of limiting feature delivery speed and hiw quickly products can be delivered to customers

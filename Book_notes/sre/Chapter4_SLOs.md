@@ -1,24 +1,23 @@
-
-## Chapter 4 - Service Level Objectives
+# Chapter 4 - Service Level Objectives
 To manage a service correctly, you must understand which behaviours matter for the service and how to measure and evaluate these behaviours
 
 Terminology time!
-### Indicators
+## Indicators
 - A (carefully) defined measured of some aspect of the service provided.
     - Most services consider latency as a key SLI
     - Others might include error rate and throughput
     - Another key indicator is availability: The fraction of the time a service is usable
     - For storage systems, durability is important: The likelyhood that data will be retained for a long period of time
 
-### Objectives
+## Objectives
 - A target value (or range) for a service level measured by an SLI
     - Example SLO: The average search result time for the shakespeare should be less than 100ms
 - Choosing and setting SLOs set expectations as to how a service will perform
 
-### Agreements
+## Agreements
 - An explicit or implicit contract with your users that include consequences of meeting (or missing) the SLO your service has.
 
-### Indicators in practice
+## Indicators in practice
 - What do you and your users care about?
     - User facing services: Availability, latency and throughput
     - Storage systems: Latency, availability and durability
@@ -27,20 +26,20 @@ Terminology time!
 
 Certain indicators should be instrumented with client side collection (ex: How long it takes for a page to become usable in a browser) (I have no idea how to instrument this -- maybe on a test?)
 
-### Aggregation
+## Aggregation
 - Be careful when aggregating/averaging metrics. It's possible for the "average" of requests to be ok, but 10% of the requests to be taking much longer than expected
 - Metrics are better through of distributions rather than averages
 - Consider using percentiles for indicators! High variance in the time it takes for a service to respond annoys users!
 
-### Standardize indicators
+## Standardize indicators
 - The book recommends standardizing indicators across all projects
 - Build a set of re-usable SLI templates for each common metric (like for GET requests from blackbox monitoring!)
 
-### Objectives in practice
+## Objectives in practice
 - Start by thinking about (or finding out) what your users care about, not what you can measure (interesting one!)
 - What users care about can be difficult to measure, so you'll end up approximating what users need in some way
 
-### Defining objectives
+## Defining objectives
 - SLOs should specify how they're measured and the conditions under which they're valid!
     - 99% (averaged over one minute) of Get RPC calls will complete in less than 100ms (measured across all backend servers)
       Or, simplifying a bit and using some defaults
@@ -59,7 +58,7 @@ If users have heterogeneous workloads like bulk process pipelines, you can defin
 It is both unrealistic and undesirable to set SLOs that will be met 100% of the time. It is better to allow an error budget, otherwise you'll be stiffling innovation or require expensive set ups.  
 The SLO violation rate con be compared against the error budget. Read more on budgets later! (There's a chapter for it, right?)
 
-### Choosing targets
+## Choosing targets
 General advice for picking SLOs:
 - Keep it simple: Complicated aggregations in SLI can obscure performance and make it difficult to figure out what's going on
 - Have as few SLOs as possible: Choose just enough SLOs to provide coverage of your system. Defend the ones you pick!
@@ -69,7 +68,7 @@ General advice for picking SLOs:
 
 SLOs are a major driver for prioritizing SRE work, they can be large levers: Chose them wisely! Be careful not to get them wrong (overly aggressive requiring heroic efforts, or too lax resulting in a bad product)
 
-### Control measures
+## Control measures
 So here's how the book recommends approaching SLIs and SLOs to manage your system (in other words, this seems to imply what infrastructure work you should tackle)
 - Monitor your SLIs
 - Compare SLIs to the SLOs and decide if action is needed
@@ -78,11 +77,11 @@ So here's how the book recommends approaching SLIs and SLOs to manage your syste
 
 Ex: If latency on your service is increasing, it might be that your service is CPU bound and you need more CPU power to meet your SLO!
 
-### Expectations
+## Expectations
 - Keep a safety margin: Aim for a tighter SLO internally
 - Don't overachieve: This one might be a bit too far fetched, but if your system is always up (higher than SLO) users will come to rely on it as infallible. Ideally other systems should handle your system being unavaible (as your SLO isn't 100%). Google recommends to deliberately take your system offline if you're overachieving your SLO, though in practice... I'm not sure how this would play out.
 
-### In practice
+## In practice
 - You are in a priviledged position to help you legal team craft an SLA, by helping them understand the likelihood and difficulty of achieving your SLOs
 - It is wise to be conservative in what you offer to your users. It can be hard to change SLAs.
 
