@@ -16,22 +16,6 @@
 ## Chapter 3 - Embracing Risk
 
 ### Chapter 5 - Eliminating Toil
-### Chapter 6 - Monitoring Distributed Systems
-- Your monitoring system should address two questions: What's broken, and why?
-- Whitebox monitoring is essential for debugging
-
-- Four golden signals:
-    - Latency: How long it takes to serve a request
-    - Traffic: How much demand is being placed on your system
-    - Errors: The rate of request that fails
-    - Saturation: How much of your system resources are being used
-- Measuring all 4 signals and alerting a human when one of them is problematic is a good start
-- Worrying about your tail: Careful with averages. Some of your requests might take very long, but not show on an average. Historigrams per exponential boundaries are useful to track these
-
-- There are some really really good rules on paging and how to page here.
-- Pages (as in, being paged) should be actionable, require intelligence, and possibly be about a novel problem
-
-As a general rule, the chapter advises to keep it simple. Trying to get too fancy with monitoring might make it too fragile, or too time and money expensive.
 
 ### Chapter 7 - The Evolution of Automation at Google
 ### Chapter 8 - Release Engineering
@@ -43,12 +27,6 @@ Ideal release engineering characteristics
 The book describes `rapid` which contains all the common steps you would see in a pipeline nowadays (building, branching, testing, packaging, deployment)
 Nothing too groundbreaking in this chapter.
 
-### Chapter 9 - Simplicity
-- The book stresses: Software simplicity is a prerequisite for reliability
-- Keep your releases small and simple
-- Keep your APIs simple
-- Boring is a positive attribute when it comes to software.
-- Be careful of bloat. Less can be more.
 
 ## Part III - Practices
 There is a site reliability hierarchy! From the base to the top:
@@ -96,19 +74,13 @@ Google encourages proactive testing of your systems.
 ### Chapter 22 - Addressing Cascading Failures
 ### Chapter 23 - Managing Critical State: Distributed Consensus for Reliability
 ### Chapter 24 - Distributed Periodic Scheduling with Cron
-
 ### Chapter 25 - Data Processing Pipelines
-
-
 ### Chapter 26 - Data Integrity: What You Read Is What You Wrote
 ### Chapter 27 - Reliable Product Launches at Scale
 
 ## Part IV - Management
 ### Chapter 28 - Accelerating SREs to On-Call and Beyond
-
 ### Chapter 30 - Embedding an SRE to Recover from Operational Overload
-
-
 ### Chapter 31 - Communication and Collaboration in SRE
 ### Chapter 32 - The Evolving SRE Engagement Model
 

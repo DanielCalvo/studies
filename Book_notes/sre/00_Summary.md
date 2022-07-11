@@ -1,12 +1,22 @@
-- Create a list of chapters here, a very short summary (a line or two) and create a link to the file that contains your reading notes for that chapter
-
 ## Chapter 3: Embracing Risk
-- This chapter explains error budgets and why it's important to agree on them.
+- This chapter explains error budgets and why it's important to agree on them
 - I really liked this phrase: "Hope is not a strategy"
 
 ## Chapter 4: Service Level Objectives
-- You pick a bunch of SLO targets based on your SLIs and bam, you have SLOs.
+- You pick a bunch of SLO targets based on your SLIs and bam, you have SLOs
 - I found this chapter very vague. Examples would've been cool
+
+## Chapter 5: Eliminating Toil
+- Beware of toil: Manual, repetitive work that is of little value. Be careful with the amount of toil that you take, and work to automate it away 
+
+## Chapter 6 - Monitoring Distributed Systems
+- What's broken, and why? The 4 golden signals are a good place to start. Histograms are better than averages. Keep it simple.
+
+## Chapter 8 - Release Engineering
+- PENDING
+
+## Chapter 9 - Simplicity
+- Keep it simple whenever possible. Boring can be a positive attribute
 
 ## Chapter 10: Practical Alerting from Time Series Data
 - This chapter was not useful. Read "Prometheus up and Running" instead
@@ -34,7 +44,6 @@
 ## Chapter 19: Load Balancing at the frontend
 - Talks about load balancing using DNS and Network Load Balancers.
 - Most of this is offered by Cloudflare (DNS+LB) and AWS (Global load balancer, NLBs and Route53). Nothing too ground breaking, though Google does it their own way.
-
 
 ## Chapter 29 - Dealing with Interrupts
 - Do one thing well. Project time and interrupts at the same time don't mix
