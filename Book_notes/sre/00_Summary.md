@@ -1,3 +1,9 @@
+## Chapter 1: Introduction
+- PENDING
+
+## Chapter 2: The Production Environment at Google
+- PENDING
+
 ## Chapter 3: Embracing Risk
 - This chapter explains error budgets and why it's important to agree on them
 - I really liked this phrase: "Hope is not a strategy"
@@ -11,6 +17,10 @@
 
 ## Chapter 6 - Monitoring Distributed Systems
 - What's broken, and why? The 4 golden signals are a good place to start. Histograms are better than averages. Keep it simple.
+
+## Chapter 7 - The Evolution of Automation at Google
+- PENDING summary! Though you read this.
+- THIS CHAPTER IS SO BORING AAAAAAAAA
 
 ## Chapter 8 - Release Engineering
 - PENDING
@@ -45,6 +55,23 @@
 - Talks about load balancing using DNS and Network Load Balancers.
 - Most of this is offered by Cloudflare (DNS+LB) and AWS (Global load balancer, NLBs and Route53). Nothing too ground breaking, though Google does it their own way.
 
+## Chapter 24 - Distributed Periodic Scheduling with Cron
+- Talks about some characteristics of a distributed Cron system.
+- This one is a bit too specific to Google scale. Us mere mortals can use k8s, nomad, mesos or whatever other schedulers that solve this on a more common scale
+
+## Chapter 25 - Data Processing Pipelines
+- SKIPPED FOR NOW: Seems to case specific for data processing, will skip for now
+
 ## Chapter 29 - Dealing with Interrupts
 - Do one thing well. Project time and interrupts at the same time don't mix
 - Respect yourself and your customers. If there are too many onerous or annoying tickets -- it's okay to push some work back to them
+
+## Chapter 31 - Communication and Collaboration in SRE
+- Strange chapter. Goes over weekly "production update" meetings (going over the state of currently managed services. Could work outside google, but could also be wasteful and have low attendance)
+- Then goes over a tool they developed which... doesn't seem to relate much to the topic at hand. Not a very good chapter
+
+## CHAPTER 32 - ENGANGEMENT MODELLLELELEL
+- Great chapter with some great ideas. Do a proper summary!
+
+## Chapter 33 - Lessons Learned from Other Industries
+- Interesting, varied chapter. Goes over decision making processes, postmortems and when runbooks make sense (only if your systems don't change too fast)
