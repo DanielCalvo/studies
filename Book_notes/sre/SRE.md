@@ -90,18 +90,9 @@ Google encourages proactive testing of your systems.
 ### Chapter 31 - Communication and Collaboration in SRE
 
 ### Chapter 32 - The Evolving SRE Engagement Model
-- Production readiness checklists can be interesting as a concept, but you probably need to adapt them to your requirements 
-- But this is not only for new services, you can have this for existing services too (ex: is it rightsized, monitored, backed up, and so on)
-- Oooh, frameworks with best practices! SRE Supported platform: In this case, k8s! Hmm but the framework has things like: log format, monitoring set up, capacity planning (aka rightsizing), 
-- The whole framework thing is pretty alrite (ex: templates) but it does require some adapting from Google's world into reality
-- This chapter is worth reviewing and taking some notes on!
 
 ## Part V - Conclusions
 ### Chapter 33 - Lessons Learned from Other Industries
-- Hmmm there might be a thing or two you can extract from this chapter, you do need to think about it for a bit
-- Interesting. Runbooks for everything seem to make sense if your industry moves slowly. If things change too fast, runbooks for everything aren't the best idea
-
-
 ### Chapter 34 - Conclusion
 ### Appendix A - Availability Table
 ### Appendix B - A Collection of Best Practices for Production Services

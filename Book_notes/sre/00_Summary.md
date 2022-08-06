@@ -1,8 +1,11 @@
+Read the book intro!
+
 ## Chapter 1: Introduction
 - PENDING
 
 ## Chapter 2: The Production Environment at Google
-- PENDING
+- Google used k8s, prometheus and Global load balancers before it was cool
+- Most of the relevant technologies described in this chapter are available by public cloud providers
 
 ## Chapter 3: Embracing Risk
 - This chapter explains error budgets and why it's important to agree on them
@@ -70,8 +73,10 @@
 - Strange chapter. Goes over weekly "production update" meetings (going over the state of currently managed services. Could work outside google, but could also be wasteful and have low attendance)
 - Then goes over a tool they developed which... doesn't seem to relate much to the topic at hand. Not a very good chapter
 
-## CHAPTER 32 - ENGANGEMENT MODELLLELELEL
-- Great chapter with some great ideas. Do a proper summary!
+## CHAPTER 32 - Evolving The SRE Engagement Model MODELLLELELEL
+- Do a proper summary!
+- Great chapter with some great ideas. 
 
 ## Chapter 33 - Lessons Learned from Other Industries
+- Do a proper summary!
 - Interesting, varied chapter. Goes over decision making processes, postmortems and when runbooks make sense (only if your systems don't change too fast)
