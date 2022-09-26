@@ -1,11 +1,15 @@
 Read the book intro!
 
+# Part I - Introduction
+
 ## Chapter 1: Introduction
 - PENDING
 
 ## Chapter 2: The Production Environment at Google
 - Google used k8s, prometheus and Global load balancers before it was cool
 - Most of the relevant technologies described in this chapter are available by public cloud providers
+
+# Part II - Principles
 
 ## Chapter 3: Embracing Risk
 - This chapter explains error budgets and why it's important to agree on them
@@ -30,6 +34,8 @@ Read the book intro!
 
 ## Chapter 9 - Simplicity
 - Keep it simple whenever possible. Boring can be a positive attribute
+
+# Part III - Practices
 
 ## Chapter 10: Practical Alerting from Time Series Data
 - This chapter was not useful. Read "Prometheus up and Running" instead
@@ -65,6 +71,8 @@ Read the book intro!
 ## Chapter 25 - Data Processing Pipelines
 - SKIPPED FOR NOW: Seems to case specific for data processing, will skip for now
 
+# Part IV - Management
+
 ## Chapter 29 - Dealing with Interrupts
 - Do one thing well. Project time and interrupts at the same time don't mix
 - Respect yourself and your customers. If there are too many onerous or annoying tickets -- it's okay to push some work back to them
@@ -73,9 +81,11 @@ Read the book intro!
 - Strange chapter. Goes over weekly "production update" meetings (going over the state of currently managed services. Could work outside google, but could also be wasteful and have low attendance)
 - Then goes over a tool they developed which... doesn't seem to relate much to the topic at hand. Not a very good chapter
 
-## CHAPTER 32 - Evolving The SRE Engagement Model MODELLLELELEL
+## CHAPTER 32 - Evolving The SRE Engagement Model 
 - Do a proper summary!
 - Great chapter with some great ideas. 
+
+# Part V - Conclusions
 
 ## Chapter 33 - Lessons Learned from Other Industries
 - Do a proper summary!
