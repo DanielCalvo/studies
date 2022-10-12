@@ -1,0 +1,2 @@
+- go mod init example.com
+- go get golang.org/x/exp/slices
