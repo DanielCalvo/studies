@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-//This is probably silly and/or very basic, but I want to have a reference of this to copy and paste around
+//This is probably silly and/or very basic, but I want to have a personal_references of this to copy and paste around
 
 func main() {
 

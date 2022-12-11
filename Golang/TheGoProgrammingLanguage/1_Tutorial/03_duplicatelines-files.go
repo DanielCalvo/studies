@@ -29,8 +29,8 @@ func main() {
 
 /*
 Woah!
-A map is a reference to the data structure created by make.
-This means that function will receive a copy of the reference, so any changes done in the called function will be visible to the caller's map reference too.
+A map is a personal_references to the data structure created by make.
+This means that function will receive a copy of the personal_references, so any changes done in the called function will be visible to the caller's map personal_references too.
 */
 func countLines(f *os.File, counts map[string]int) {
 	input := bufio.NewScanner(f)

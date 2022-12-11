@@ -14,7 +14,7 @@ func main() {
 
 	//This is currently a very dumb program that only indents some types of markdown lists
 
-	filename := "/home/daniel/Projects/notes/INBOX.md"
+	filename := "/home/daniel/Projects/notes/personal_INBOX.md"
 
 	src, err := os.ReadFile(filename)
 	if err != nil {
@@ -25,7 +25,7 @@ func main() {
 
 	fmt.Println(processedSrc)
 
-	tempFile, err := ioutil.TempFile("", "INBOX.md")
+	tempFile, err := ioutil.TempFile("", "personal_INBOX.md")
 
 	if err != nil {
 		panic(err)
@@ -38,7 +38,7 @@ func main() {
 
 }
 
-//This function is a big mess
+// This function is a big mess
 func processFileContents(s string) string {
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	var buf bytes.Buffer
