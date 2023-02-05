@@ -10,8 +10,8 @@ import (
 
 // TODO fill these in!
 const (
-	S3_REGION = ""
-	S3_BUCKET = ""
+	S3_REGION = "eu-west-1"
+	S3_BUCKET = "dcalvo-dev-bucket"
 )
 
 func main() {

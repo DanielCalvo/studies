@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-//I need to get rid of this struct!
+// I need to get rid of this struct!
 type Coordinates struct {
 	x int
 	y int
@@ -25,7 +25,7 @@ func main() {
 
 }
 
-//Populates cells in a grid with a 50/50 chance of being either alive or dead
+// Populates cells in a grid with a 50/50 chance of being either alive or dead
 func PopulateGrid(g [][]string) [][]string {
 	for _, s := range g {
 		for i := 0; i < len(s); i++ {
@@ -36,7 +36,7 @@ func PopulateGrid(g [][]string) [][]string {
 }
 
 func GetRandomString(n int) string {
-	var letters = []rune("xZ") //x == dead, Z == alive
+	var letters = []rune(" *") //x == dead, Z == alive
 	s := make([]rune, n)
 	for i := range s {
 		s[i] = letters[rand.Intn(len(letters))]
@@ -52,7 +52,7 @@ func ApplyRules(g [][]string) [][]string { //Hmm, maybe this returns the next tu
 	for y := 0; y < len(g); y++ {
 		for x := 0; x < len(g[y]); x++ {
 			liveNeighbourCounter = 0
-			if g[y][x] == "Z" {
+			if g[y][x] == "*" {
 				alive = true
 			} else {
 				alive = false
@@ -61,20 +61,20 @@ func ApplyRules(g [][]string) [][]string { //Hmm, maybe this returns the next tu
 			neighbours := identifyNeighbours(g, y, x)
 
 			for _, neighbour := range neighbours {
-				if g[neighbour.y][neighbour.x] == "Z" {
+				if g[neighbour.y][neighbour.x] == "*" {
 					liveNeighbourCounter++
 				}
 			}
 
 			if alive == true && (liveNeighbourCounter == 2 || liveNeighbourCounter == 3) { //This cell is alive and remains alive!
-				newGrid[y][x] = "Z"
+				newGrid[y][x] = "*"
 			} else if alive == true { //This is alive, but dies :(
-				newGrid[y][x] = "x"
+				newGrid[y][x] = " "
 			}
 			if alive == false && liveNeighbourCounter == 3 { //This cell is dead, but comes to life!
-				newGrid[y][x] = "Z"
+				newGrid[y][x] = "*"
 			} else if alive == false { //This cell is dead and remains dead
-				newGrid[y][x] = "x"
+				newGrid[y][x] = " "
 			}
 		}
 	}
@@ -133,7 +133,7 @@ func printGrid(g [][]string) {
 	}
 }
 
-//returns a square grid
+// returns a square grid
 func createGrid(size int) [][]string {
 	g := make([][]string, size)
 	for i := 0; i < size; i++ {

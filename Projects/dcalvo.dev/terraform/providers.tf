@@ -9,9 +9,16 @@ provider "aws" {
 }
 
 terraform {
+  required_version = "1.3.6"
   backend "s3" {
     bucket = "dani-terraform-states"
     key    = "dcalvo.dev/dcalvo.dev.tfstate"
     region = "eu-west-1"
+  }
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "4.48.0"
+    }
   }
 }

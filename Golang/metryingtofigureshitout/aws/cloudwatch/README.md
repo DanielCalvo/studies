@@ -1,0 +1,1 @@
+This gets the number of files in a bucket from Cloudwatch as AWS keeps track of that for us.

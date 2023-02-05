@@ -1,0 +1,2 @@
+- Very, very handy: https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/go/example_code
+- Also strangely handy: https://golang.hotexamples.com/examples/github.com.aws.aws-sdk-go.service.cloudwatch/CloudWatch/GetMetricStatistics/golang-cloudwatch-getmetricstatistics-method-examples.html
