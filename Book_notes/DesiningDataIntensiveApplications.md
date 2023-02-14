@@ -14,6 +14,8 @@ Chapters that seemed most relevant and interesting from a quick glance:
     - Maintainability
 - The summary on page 22 is very nice too!
 
+- Sounds like trying to code a twitter clone using the approach on the first chapter of the data intensive apps would be a fun exercise
+
 ## 2. Relational vs document model
 - Learning one relational database (like PostgreSQL) and one Document database (like MongoDB?) could be a very good learning exercise!
 
