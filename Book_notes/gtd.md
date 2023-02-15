@@ -99,3 +99,26 @@ Horizon 4: Vision
 Horizon 5: Purpose and principles
 - Big picture. Why does your company exist? Why do you exist?
 - What really matters to you, no matter what?
+
+
+## Notes taken with speech-to-text while listening to the ebook
+- David Allen stresses the importance of a weekly review in which you go through all of your projects.
+- Development an image of how you would like to be and visualize it
+- It's important to realize when you fall out of a productive loop and develop the skill to get back to it quickly again
+- When you have a given project, write it down, review it once a week and be very clear about the outcome. That's the first part of the puzzle
+- The next question you have to ask is what is the next action to get from here to there?
+
+Uh oh, it seems I don't know the successful outcome to many of my own projects
+
+- He says to ask yourself: What's the successful outcome, what's the next action?
+- David Allen recommends having a list of things to do when you are low on energy
+
+- David suggests going through it and defining every single possible action on every project that you have.
+- Is it possible to define next actions and someday maybe is inside the context of a project?
+
+- At least 40 projects might be normal
+- Focusing focusing (?) on your project list getting things done fast this six some things are discussion of the different feet levels you can create objectives for
+- Dave says that if you want to be successful, pay attention to success. Don't just imagine success, imagine Wild success.
+- Dave says to imagine yourself for you want to be even if you don't have the foggiest idea of how you get there. Imagine the outcome even if you don't know how to get it.
+- If you have to defend your project in front of somebody else put it in their terms, not yours.
+- Write an article about yourself 6 months in the future describing what wild success would look like
