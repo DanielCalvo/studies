@@ -10,4 +10,9 @@ Testing package docs: https://pkg.go.dev/testing
 Oooh examples are a thing: https://go.dev/blog/examples
 
 ## Noice!
-- Continue here: https://quii.gitbook.io/learn-go-with-tests/go-fundamentals/hello-world#hello-you
+- Continue here: https://quii.gitbook.io/learn-go-with-tests/go-fundamentals/arrays-and-slices#refactor-2
+    - (on the sum all tails part)
+- AAAA you learned about functions with variable initialization on the header, what was the name of that again?
+    - Go over each thing you learned on each chapter (the comments!) and leave a reference here!
+- `go test -cover` can show you your test coverage 
+- I learned about `reflect.DeepEqual` to compare slices and that was cool!
