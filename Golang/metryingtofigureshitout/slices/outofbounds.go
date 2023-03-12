@@ -17,7 +17,7 @@ func main() {
 	fmt.Println(isOutofBoundsMatrix(g, 3, 2))
 }
 
-//Let's assume a square matrix for now
+// Let's assume a square matrix for now
 // y is the outer slice
 // x is the inner slice
 func isOutofBoundsMatrix(s [][]string, y, x int) bool {
@@ -31,7 +31,7 @@ func isOutofBoundsMatrix(s [][]string, y, x int) bool {
 	return false
 }
 
-//Oh hey this could be a nice candidate for an interface for matrix/slice
+// Oh hey this could be a nice candidate for an interface for matrix/slice
 func isOutOfBounds(s []string, pos int) bool {
 	if pos < 0 || pos > len(s)-1 { //slices start at 0
 		return true
