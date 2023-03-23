@@ -54,7 +54,7 @@ func GetRandomString(n int) string {
 	return string(s)
 }
 
-//If you don't use copy() here and instead do `g[i] = g[i-1]` you run into some shallow copy problems and have 2 indexes pointing to the same thing
+// If you don't use copy() here and instead do `g[i] = g[i-1]` you run into some shallow copy problems and have 2 indexes pointing to the same thing
 func moveGridDown(g [][]string) [][]string {
 	for i := len(g) - 1; i > 0; i-- {
 		copy(g[i], g[i-1])

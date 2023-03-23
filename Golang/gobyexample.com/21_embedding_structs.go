@@ -8,7 +8,7 @@ type base struct {
 	num int
 }
 
-//A container embeds a base
+// A container embeds a base
 type container struct {
 	base
 	str string

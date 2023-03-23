@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-//To connect: nc localhost 8000
+// To connect: nc localhost 8000
 func main() {
 	listener, err := net.Listen("tcp", "localhost:8000")
 	if err != nil {

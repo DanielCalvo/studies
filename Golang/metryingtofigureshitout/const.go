@@ -8,7 +8,7 @@ https://go.dev/doc/effective_go#constants
 
 import "fmt"
 
-//copied and pasted from the log package
+// copied and pasted from the log package
 const (
 	Ldate         = 1 << iota     // the date in the local time zone: 2009/01/23
 	Ltime                         // the time in the local time zone: 01:23:23

@@ -23,7 +23,7 @@ type secretAgent struct {
 	ltk bool
 }
 
-//func (r receiver) identifier (parameters) (return) { code }
+// func (r receiver) identifier (parameters) (return) { code }
 func (s secretAgent) speak() {
 	fmt.Println("I am", s.first, s.last)
 }

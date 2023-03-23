@@ -7,8 +7,8 @@ import (
 	"os"
 )
 
-//go run 05_fetchingurl.go https://google.com
-//Started with the code snippet in the book but then modified it to do the exercises
+// go run 05_fetchingurl.go https://google.com
+// Started with the code snippet in the book but then modified it to do the exercises
 func main() {
 	for _, url := range os.Args[1:] {
 		resp, err := http.Get("https://" + url)

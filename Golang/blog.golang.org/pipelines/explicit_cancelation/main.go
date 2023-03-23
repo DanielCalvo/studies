@@ -24,7 +24,7 @@ func main() {
 
 }
 
-//First stage
+// First stage
 func gen(nums ...int) <-chan int {
 	out := make(chan int)
 	go func() {
@@ -36,7 +36,7 @@ func gen(nums ...int) <-chan int {
 	return out
 }
 
-//Second stage
+// Second stage
 func sq(in <-chan int) <-chan int {
 	out := make(chan int)
 	go func() {

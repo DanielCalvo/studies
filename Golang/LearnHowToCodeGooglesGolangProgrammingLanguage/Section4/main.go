@@ -4,10 +4,10 @@ import "fmt"
 
 var y = 22
 
-//Declare there is a variable with the identifier z
-//And that the variable with the identifier z is of type int
-//Assigns the zero value of type int to z
-//zero value for its type: false for booleans, 0 for numeric types, "" for strings, and nil for pointers, functions, interfaces, slices, channels, and maps.
+// Declare there is a variable with the identifier z
+// And that the variable with the identifier z is of type int
+// Assigns the zero value of type int to z
+// zero value for its type: false for booleans, 0 for numeric types, "" for strings, and nil for pointers, functions, interfaces, slices, channels, and maps.
 var z int
 var a string = `This is a raw string.
 %T "banana"`

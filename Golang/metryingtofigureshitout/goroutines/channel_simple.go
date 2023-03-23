@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-//This is the simplest usage of channels possible I suspect
+// This is the simplest usage of channels possible I suspect
 func main() {
 
 	ch := make(chan int)
@@ -18,7 +18,7 @@ func main() {
 	fmt.Println("The program finished!")
 }
 
-//Let's send three values to a channel!
+// Let's send three values to a channel!
 func sendToChannel(i chan int) chan int {
 	i <- 0
 	i <- 1

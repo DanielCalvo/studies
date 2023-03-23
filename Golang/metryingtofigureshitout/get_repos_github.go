@@ -117,7 +117,7 @@ type GithubRepoApiResponse []struct {
 //curl -H "Accept: application/vnd.github.inertia-preview+json" https://api.github.com/orgs/kubernetes/repos?per_page=2000 > /tmp/kubernetes.json
 //http://networkbit.ch/golang-http-client/#minimal
 
-//curl -H "Accept: application/vnd.github.inertia-preview+json" https://api.github.com/orgs/etcd/repos?per_page=2000
+// curl -H "Accept: application/vnd.github.inertia-preview+json" https://api.github.com/orgs/etcd/repos?per_page=2000
 func main() {
 
 	req, err := http.NewRequest("GET", "https://api.github.com/orgs/kubernetes/repos?per_page=2000", nil)

@@ -16,7 +16,7 @@ limitations under the License.
 
 // Note: the example only works with the code within the same release/branch.
 
-//For the original example, please see: https://github.com/kubernetes/client-go/blob/master/examples/out-of-cluster-client-configuration/main.go
+// For the original example, please see: https://github.com/kubernetes/client-go/blob/master/examples/out-of-cluster-client-configuration/main.go
 package main
 
 import (

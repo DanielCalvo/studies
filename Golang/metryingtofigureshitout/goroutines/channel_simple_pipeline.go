@@ -20,8 +20,8 @@ func main() {
 
 }
 
-//Let's do a function that reads lines from a file and sends those to a channel of type string
-//sendStringToChannel only sends data to the channel, so let's set the channel as send only on the function definition!
+// Let's do a function that reads lines from a file and sends those to a channel of type string
+// sendStringToChannel only sends data to the channel, so let's set the channel as send only on the function definition!
 func sendStringToChannel(sch chan<- string) {
 	file, err := os.Open("/etc/passwd")
 	if err != nil {

@@ -5,9 +5,9 @@ import (
 	"math"
 )
 
-//interfaces are named collections of method signatures
-//Whatever has the area function implements the geometry interface -- something like that
-//Cool blog post on interfaces for when you want to learn more: https://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go
+// interfaces are named collections of method signatures
+// Whatever has the area function implements the geometry interface -- something like that
+// Cool blog post on interfaces for when you want to learn more: https://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go
 type geometry interface {
 	area() float64
 }

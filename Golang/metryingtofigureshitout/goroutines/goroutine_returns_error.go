@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-//I want to have a function that runs forever in a go routine and might eventually return an error
-//If this go routine returns an error, I would like to stop the program
+// I want to have a function that runs forever in a go routine and might eventually return an error
+// If this go routine returns an error, I would like to stop the program
 func main() {
 	log.Println("let's go!")
 

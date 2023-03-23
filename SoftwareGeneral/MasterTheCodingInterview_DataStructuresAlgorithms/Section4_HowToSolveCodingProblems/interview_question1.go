@@ -39,7 +39,7 @@ func CommonItemsSlow(s1, s2 []string) bool {
 	return false
 }
 
-//This is a better solution for time complexity
+// This is a better solution for time complexity
 func CommonItemsBetter(s1, s2 []string) bool {
 	m := make(map[string]bool)
 

@@ -23,7 +23,7 @@ func (*server) Greet(ctx context.Context, req *greetpb.GreetRequest) (*greetpb.G
 	return res, nil
 }
 
-//	GreetManyTimes(*GreetManyTimesRequest, GreetService_GreetManyTimesServer) error
+// GreetManyTimes(*GreetManyTimesRequest, GreetService_GreetManyTimesServer) error
 func (*server) GreetManyTimes(req *greetpb.GreetManyTimesRequest, stream greetpb.GreetService_GreetManyTimesServer) error {
 	fmt.Println("Greet many times function was invoked")
 	firstName := req.GetGreeting().GetFirstName()

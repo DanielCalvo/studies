@@ -156,7 +156,7 @@ var use_life_ring bool = true
 var use_mana_pot bool = true
 var mana_pot_interval = 0
 
-//Set these up before running the program
+// Set these up before running the program
 var manabar_x int = 1024
 var manabar_y int = 32
 var food_slot_x int = 1530
@@ -164,7 +164,7 @@ var food_slot_y int = 428
 var character_center_screen_x int = 841
 var character_center_screen_y int = 488
 
-//Don't forget the bar at the end!
+// Don't forget the bar at the end!
 var image_directory string = "/home/daniel/PycharmProjects/studies/Golang/simple_things/robotgo_experiment/images/"
 
 func main() {

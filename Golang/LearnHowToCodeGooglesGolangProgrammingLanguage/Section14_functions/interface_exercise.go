@@ -15,7 +15,7 @@ type dog struct {
 	likesmango bool
 }
 
-//Anybody who has the function cuddle is also of type pet
+// Anybody who has the function cuddle is also of type pet
 type animal interface {
 	pet()
 }

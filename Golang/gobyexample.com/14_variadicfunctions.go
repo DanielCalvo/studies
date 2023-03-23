@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-//Variadic functions can be called with any number of trailing arguments!
+// Variadic functions can be called with any number of trailing arguments!
 // https://en.wikipedia.org/wiki/Variadic_function
 func sum(nums ...int) int {
 	result := 0

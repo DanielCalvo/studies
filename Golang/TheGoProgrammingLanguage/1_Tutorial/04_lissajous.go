@@ -30,7 +30,7 @@ var blue = color.RGBA{
 	A: 255,
 }
 
-//Exercise 1: Change colors!
+// Exercise 1: Change colors!
 var palette = []color.Color{color.Black, green, blue}
 
 const (

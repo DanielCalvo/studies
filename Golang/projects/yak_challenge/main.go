@@ -10,11 +10,11 @@ import (
 	"strconv"
 )
 
-//A happylist(TM) is a large list, arranged in decreasing order, stored on a file.
-//After initiating it with a file path with happylist.Initiate(), you can:
-//See it's current value (line) on happylist.CurrentValue
-//Advance to it's next value (line) with happylist.GetNextValue()
-//See if you have reached the end of this happylist with happylist.IsScanning
+// A happylist(TM) is a large list, arranged in decreasing order, stored on a file.
+// After initiating it with a file path with happylist.Initiate(), you can:
+// See it's current value (line) on happylist.CurrentValue
+// Advance to it's next value (line) with happylist.GetNextValue()
+// See if you have reached the end of this happylist with happylist.IsScanning
 type Happylist struct {
 	filePath     string
 	CurrentValue int
@@ -51,15 +51,15 @@ func (m *Happylist) GetNextValue() error {
 	return nil
 }
 
-//The sort interface is implemented for a slice of happylists.
-//This allows us to sort a slice of happylists by CurrentValue
+// The sort interface is implemented for a slice of happylists.
+// This allows us to sort a slice of happylists by CurrentValue
 type HappySorter []Happylist
 
 func (a HappySorter) Len() int           { return len(a) }
 func (a HappySorter) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a HappySorter) Less(i, j int) bool { return a[i].CurrentValue < a[j].CurrentValue }
 
-//SaveChunkSorted is used on the first of the problem to save a large unordered list into smaller, ordered lists
+// SaveChunkSorted is used on the first of the problem to save a large unordered list into smaller, ordered lists
 func SaveChunkSorted(lines []int, filePath string) error {
 
 	//If you have this: {1,6,8,2,4}

@@ -39,7 +39,7 @@ if current line has less indents than previous line
 //	indentTier int
 //}
 
-//This should've been called "indentButHackily"
+// This should've been called "indentButHackily"
 func processListItem(s string) string {
 	scanner := bufio.NewScanner(strings.NewReader(s))
 

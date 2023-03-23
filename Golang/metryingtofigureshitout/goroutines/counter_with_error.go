@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-//Make a program that counts to 3, sending those values on a channel, but then errors and sends that value to that channel!
+// Make a program that counts to 3, sending those values on a channel, but then errors and sends that value to that channel!
 func main() {
 
 	//Let's count to three first!

@@ -2,22 +2,22 @@ package Section5
 
 import "fmt"
 
-//Exercise 2
+// Exercise 2
 var a int
 var b string
 var c bool
 
-//Exercise 3
+// Exercise 3
 var e int = 42
 var f string = "James Bond"
 var g bool = true
 
-//Exercise 4
+// Exercise 4
 type dani int
 
 var xx dani
 
-//Exercise 5
+// Exercise 5
 var yy int
 
 //The short declaration operator can only be used at the function level. Can't be used at the package level

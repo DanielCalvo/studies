@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-//Exercise 2
+// Exercise 2
 type person struct {
 	first string
 	last  string

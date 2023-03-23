@@ -36,8 +36,8 @@ func init() {
 	log.Println("Connection to database established!")
 }
 
-//Todo here: Insert some records in a table, select them back with a select+where statement
-//Bonus: Marshall the results to json and print them to stdout
+// Todo here: Insert some records in a table, select them back with a select+where statement
+// Bonus: Marshall the results to json and print them to stdout
 func main() {
 	name := "pepe"
 	funny := true

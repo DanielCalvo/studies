@@ -13,7 +13,7 @@ func newPerson(name string) *person {
 	return &p //A pointer to a local variable will survive the scope of the function
 }
 
-//It’s idiomatic to encapsulate new struct creation in constructor functions
+// It’s idiomatic to encapsulate new struct creation in constructor functions
 func newPersonButWithNoPointer(name string) person {
 	p := person{name: name}
 	p.age = 42

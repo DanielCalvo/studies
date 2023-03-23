@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-//Iota is a constant generator, which is used to create a sequence of related values without spelling out each one individually
+// Iota is a constant generator, which is used to create a sequence of related values without spelling out each one individually
 type Weekday int
 
 const (

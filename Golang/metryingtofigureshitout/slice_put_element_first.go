@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-//https://www.digitalocean.com/community/tutorials/understanding-arrays-and-slices-in-go
+// https://www.digitalocean.com/community/tutorials/understanding-arrays-and-slices-in-go
 func ThreeFirst(si []int) []int {
 	var tmpSlice []int
 

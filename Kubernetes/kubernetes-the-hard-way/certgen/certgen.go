@@ -24,7 +24,7 @@ type Parameters struct {
 	} `yaml:"hosts"`
 }
 
-//Checks if a given command outputs a string. If it does, we return true. If it does not, we return false.
+// Checks if a given command outputs a string. If it does, we return true. If it does not, we return false.
 func validateCmd(successString string, commandArguments ...string) bool {
 	fmt.Println("successString", successString)
 	fmt.Println("Actual command:", commandArguments[0])
