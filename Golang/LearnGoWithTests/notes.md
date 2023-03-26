@@ -33,6 +33,22 @@ The `assertError` function to check which error you're getting is really cool fo
 - Cool chapter, goes into detail on testing a print/sleep function
 - Has good advice about mocking in the end!
 
+## Chapter 11: Select
+- Has an example of `how you would write a real HTTP server in Go` 
+
+## Chapter 12: Reflect(ion)
+- This chapter is mega confusing! 
+- I'm not too familiar with reflection (that doesn't help) and the author doesn't clarify very well what we're setting out to accomplish here
+- I think I should explore the topic of reflection in go independently and then come back to this more prepared
+- Here's where you stopped:
+    - https://pkg.go.dev/reflect#ValueOf
+    - https://go.dev/blog/laws-of-reflection
+
+## Chapter 14: Context
+- In this chapter we'll use the package context to help us manage long-running processes.
+- Hey an exercise idea that you had: Read lines from a file and after x seconds pass, time it out, like an http request but to a file!
+
+
 ## Noice!
 - AAAA you learned about functions with variable initialization on the header, what was the name of that again?
     - Go over each thing you learned on each chapter (the comments!) and leave a reference here!
