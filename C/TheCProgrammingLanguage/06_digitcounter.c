@@ -11,7 +11,7 @@ int main() {
 
     while ((c = getchar()) != EOF) {
         if (c >= '0' && c <= '9') {
-            ++ndigit[c-'0']; //There's some ASCII integer subtraction going on here that only works for this example. Really obscure!
+            ++ndigit[c-'0']; //There's some ASCII integer subtraction going on here. Rather obscure!
         } else if (c == ' ' || c == '\n' || c == '\t') {
             ++nwhite;
         } else {

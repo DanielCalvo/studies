@@ -1,0 +1,1 @@
+- [./search_insert_position](./search_insert_position) is not O(log n) -- I think it needs a divide and conquer algorithm but I haven't formally studied those!
