@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
+// Maybe not the best naming -- but lets roll with it for now
 const openers = "([{"
 const closers = ")]}"
 
@@ -17,45 +19,94 @@ func main() {
 	//----
 	//fmt.Println(isValid3("(())[[]{})()"))
 	//fmt.Println(isValid3("(())[[]{}]()"))
-	fmt.Println("empty string", isValid3(""))
-	fmt.Println(")", isValid3(")"))
-	fmt.Println("(", isValid3("("))
-	fmt.Println("[]", isValid3("[]"))
-	fmt.Println("(])", isValid3("(])"))
-	fmt.Println("([)", isValid3("([)"))
-	fmt.Println("()", isValid3("()"))
-	fmt.Println("([]([])[])()", isValid3("([]([])[])()"))
-	fmt.Println("(())()())", isValid3("(())()())"))
-	fmt.Println("((((()))(())))", isValid3("((((()))(())))"))
+	//fmt.Println("empty string", isValid3(""))
+	//fmt.Println(")", isValid3(")"))
+	//fmt.Println("(", isValid3("("))
+	//fmt.Println("[]", isValid3("[]"))
+	//fmt.Println("(()", isValid4("(()")) //lets do parenthesis only first!
+	fmt.Println("())", isValid4("())"))
+	//fmt.Println("()", isValid4("()"))
+
+	//fmt.Println("([)", isValid3("([)"))
+	//fmt.Println("()", isValid3("()"))
+	//fmt.Println("([]([])[])()", isValid3("([]([])[])()"))
+	//fmt.Println("(())()())", isValid3("(())()())"))
+	//fmt.Println("((((()))(())))", isValid3("((((()))(())))"))
 }
+
+func isValid5(s string) bool {
+
+	return false
+}
+
+func isValid4(s string) bool {
+	/*
+			1. found an opener
+		 	2. Is there a closer somewhere down the line?
+			if yes: Remove closer and opener from string
+			if a closer is not found: return false
+			if len(stack) > 0 after all of this, return false
+	*/
+	//ah crap you probably can do this iterating only once -- but how? lets try improving this later, lets see if we can make it work first
+	for k, v := range s {
+		if v == '(' {
+			for kk, vv := range s {
+				if vv == ')' {
+					fmt.Println("Found opener at:", k)
+					fmt.Println("Found closer at:", kk)
+				}
+			}
+		}
+	}
+	if len(s) > 0 {
+		return false
+	}
+	return true
+
+}
+
+// Convert to generics!
+func removeCharAtIndexes(s string, elements ...int) string {
+	sort.Ints(elements)
+	for i := len(elements) - 1; i >= 0; i-- { //Iterate through elements from end to beginning
+		indexToRemove := elements[i] //for better clarity
+		s = s[:indexToRemove] + s[indexToRemove+1:]
+	}
+	return s
+}
+
+// doesn't work, misses stray closers like (]), but otherwise functions
 func isValid3(s string) bool {
 	if len(s) == 0 || !strings.Contains(openers, string(s[0])) { //if empty or doesn't start with an opener
 		return false
 	}
 
-	var stackerino []string
+	var sl_openers []string
 
 	for _, v := range s {
 		if strings.Contains(openers, string(v)) {
-			stackerino = append(stackerino, string(v))
+			sl_openers = append(sl_openers, string(v))
 		}
 
-		if len(stackerino) == 0 {
+		if len(sl_openers) == 0 {
 			return false
 		}
 
-		if v == ')' && stackerino[len(stackerino)-1] == string('(') {
-			stackerino = stackerino[:len(stackerino)-1] //was using RemoveLastElement here but changed it so it all fits ina single function
+		if v == ')' && sl_openers[len(sl_openers)-1] == string('(') {
+			fmt.Println("Got here )")
+			sl_openers = sl_openers[:len(sl_openers)-1] //was using RemoveLastElement here but changed it so it all fits ina single function
 		}
-		if v == ']' && stackerino[len(stackerino)-1] == string('[') {
-			stackerino = stackerino[:len(stackerino)-1]
+		if v == ']' && sl_openers[len(sl_openers)-1] == string('[') {
+			fmt.Println("Got here ]")
+			sl_openers = sl_openers[:len(sl_openers)-1]
 		}
-		if v == '}' && stackerino[len(stackerino)-1] == string('{') {
-			stackerino = stackerino[:len(stackerino)-1]
+		if v == '}' && sl_openers[len(sl_openers)-1] == string('{') {
+			fmt.Println("Got here }")
+			sl_openers = sl_openers[:len(sl_openers)-1]
 		}
 	}
 
-	if len(stackerino) > 0 { //unclosed opener
+	if len(sl_openers) > 0 { //unclosed opener
 		return false
 	}
 
