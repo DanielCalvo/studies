@@ -1,0 +1,206 @@
+
+4:
+Coordinates
+X Y Z (always in that order!)
+
+
+- Sketch > Extrude > Woah you can extrude with an ange and do hollow extrudes!
+
+- Revolve command: Very handy for anything circular, but you can also use it to create things in 180, 90, 45 degrees or any other stuff
+I think you can use this to create a hollow bell-like thing that could be a prototype for the 2fiddy valve spring compressor
+
+- Loft command: joins 2 sketches in 2 offset planes, noice! Makes like a funnel, so to speak
+Easy to modify 2 circle sketches and plane offsets than tapper angles
+
+When loft really comes into its own is when you're using different planes!
+
+With loft you could create a vase, noice.
+
+- Sweep: Handy for a handrail or pipe!
+Ah you can create some lines and then attach a circle to the end of the line and create a tube
+Not something you use a lot
+Good for doing a beading at the edge of an object
+
+
+--- Sketching!
+01:
+- Create a new component rather than the main project. Avoid the default one
+- Ohh you can turn on and off the visibility of your origin plane, might be handy if you ever go looking for it!
+- A plane can be any flat surface on existing geometry!
+
+Fully constrained and locked sketches are very important!
+Work simetrically around the origin if you can 
+Center rectangle is bette practice than just rectangle
+
+02:
+Constrains lock your sketch in place
+There's a parallel symbol/constraint on a rectangle!
+Oooo a rectangle has an angle constrain!
+
+03:
+The horizontal/vertical constraint is very handy and encouraged
+The perpendicular and parallel constrains also work!
+You want the object to be black so it is fully constrained
+
+04:
+Coincident makes a point touch a line
+Ooooo a trim command! Noice!
+Tangential smoothes a line into a coming curve, noice!
+Equal lenght contraint is also noice
+Fix/Unfix fixes a point of the sketch somewhere (you don't need to fix it to 0/0)
+Oooo midpoint puts a point in the middle of a line! Noice! Damn midpoint is meganice
+Concentric constrains one circle in the middle of another one! Whichever one you select first is the one that stays in position
+Symmetry constraint seems interesting but difficult to keep track of -- it made two angles symetrical. You might need to investigate more!
+
+05:
+Create your shape, constrain it, dimension it, and when the lines are back then all's good and you can finish your sketch
+Spline: Interesting curved lines
+Mirror: Allows you to pick a shape, put a line around it and mirror it. These 2 shapes are then constrained to each other!
+Slots: Noice! Creates a slot like shape. 2 half circles joined by lines, resembles your mouthwas bottle
+Splined curve seems noice too, creates a variable curve in a line
+Point: Like a centerpunch in a place where you want to drill a hole. It allows you dimension to it, maybe you want to do something with it later
+Text! There is text! Noice!
+Oooh you can sketch (text) on an existing 3d surface!
+
+06:
+Oh patterns! Examples are nice but it seems like an hexagon pattern would be more complicated
+Get your sketches fully constrained, fully dimentioned, and fully locked. With time it becomes second nature!
+
+--- Fillets and Chamfers!
+01:
+Ooooh you can extrude to object and go to an opposite face!
+Fillet smoothes edges! So noice! You can also do inside fillets, meganice!
+Chamfer creates straight rounded edges at a 45 angle, noice. Chamfer can also have different distances for corners
+You can also fillet your newly created chamfered edges, noice
+You can also chamfer and fillet round edges from circles, cool!
+OOOOOOOOH YOU have fillet and chamfers on your sketch!1!!one
+Author's preference: Extrude basic square, adds chamfers later (chamfers on sketches can make them cumbersome to alter)
+
+02: Creating holes
+Fusion has a command to create holes, you don't need to sketch and extrude every time
+Create a sketch with a point and you can create the hole on the point, neat
+Points with holes works out noicely
+
+03: Working with patterns
+Wew to create a patter from a feature: select feature > click pattern
+There are many ways to create holes (sketch, holes and pattern)
+You can also create a rectangular pattern at an angle with an angled construction line
+
+04: Working with patterns 02
+Circular pattern is neat!
+Ohh you can use project to project an object from another sketch!
+Select Feature and then the path and you're good to go!
+Pattern on a path really comes together if have a curved line along something!
+
+
+-- Creating your first part: A disk brake!
+- Project and offset were mega handy before extruding into the hub!
+- Extrude to object with 5mm offset! Noice!
+- Oh wow you can select the inner part of a hole as the axis for something else, neat
+
+
+-- More modeling techniques!
+01: Press pull is cool but it doens't tell you what it does and you can't edit it
+Its best to find your original extrusions and change them. Be careful with them!
+
+02: Shell command
+Woah noice! Makes a box very easily!
+Hollows things out with a thickness for the wall
+Really nice to use with squigly lines to create a vase!
+Handy for when you want hollow things for 3d printing -- would've been a lot of work to create something hollow with the revolve command
+
+03: More modifying tools
+Draft command: Changes the side of something and makes them ramp line!
+Scale: Scales some object up or down
+Offset face: If you need it can come very handy, similar to press pull, but do things properly if you have a choice!
+
+04: More modifying toosl 2
+Replace face: Levels a face with another one
+offset face: separates a face into smaller ones, noice
+Split body: Same deals, splits a body along a face or something like that that, if you have the design history, go back to the sketch
+
+05: Move & copy
+Moves and object around or creates a copy of it. Seems like it could be interesting to create some weird patterns. Copying might be more useful than moving
+
+06: Boolean commands
+Combine joins 2 objects into 1 and it lets you chose which object cuts into the other one (target and tool bodies, really neat)
+
+--- Model management!
+01: Applying materials
+You can modify > appearance to apply a material to your object to make it look more realistic
+The software knows a bunch of mechanical properties of the types of materials you apply to an object, noice
+Utilities > Manage materials
+You can add physical material or appearance to your object. One is just how it looks, other can help you made do simulations
+
+02: Components, bodies and assemblies
+A project is usually divided between components and bodies and assembles
+Author went over the bike frame example on how bodies are inside a component and... I forgot the rest. But looks like we'll get to practice!
+
+03: Starting a project correctly
+Hmm split your parts into components, pretty much. Hard to take notes on this one.
+
+--- Designing a workbench in fusion 360!
+01: 
+Paste copies and item, but if you edit the original one, the copy changes
+Paste new makes a new independent copy!
+
+02: 
+Joining pieces was mega cool! I think it requires some practice though
+You could've mirrored too but you lose your joints and it would've all come apart!
+
+--- Working with Joints
+01:
+Woah you can trim lines on a sketch to create a |_| shape with two rectangles, how mega neat!
+"Set current view as front" is really neat, changes a part of the design to be the front!
+Position > Revert reverts it back to the captured position, neat
+
+02:
+Oh you can project a hole and extrude the projection negatively elsewhere!
+You can use a tangent plane to put a plane on a cilinder, noice!
+
+03:
+OH LORD JOINTS CAN HAVE MOTIONS
+JOINT > MOTION > REVOLUTE > OMG IT SPINS1!1!1ONE
+
+04
+Joints became hard to follow with the spinning part of the vice not being very clear on the lesson, give this a retry sometime.
+
+-- Inserting objects
+01:
+Neat you can add decals!
+Oooh you can insert a canvas to use it as a rough template (ex: add picture and start sketching on top of it)
+Ooohh this would be great for bloste!
+Insert mesh means you can get an STL and insert it in your model, noice
+
+02:
+You can insert ready-made bolts and nuts from McMaster Carr, neat
+
+03:
+You can presspull to change the McMaster Carr parts
+
+04:
+Joints only work with components (good info!)
+Some McMaster Carr components come with several bodies, neat
+
+
+
+
+
+
+
+
+
+
+
+
+
+YOUR OWN NOTES
+Hexagon patterns: https://www.youtube.com/watch?v=AFZVNVvmXJ4&ab_channel=Kristian_Laholm
+Fusion 360 tutorials: https://www.youtube.com/playlist?list=PLvjX0x1uNNLEfZGC6zpW68C-0X6JzLQHE
+Angled hole through a plane: https://youtu.be/NdKWh8aiYME
+To create a hole at 45 degree on an edge: Create an angled plane!
+
+For your printer it seems the hexagon hole size for a 5mm diameter hexagon is 5.35
+
+
+Ooooh you can create a "quartershelf component" in your hexagon square thingy and copy and paste it to another components!
