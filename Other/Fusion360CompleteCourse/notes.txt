@@ -183,16 +183,57 @@ Joints only work with components (good info!)
 Some McMaster Carr components come with several bodies, neat
 
 
+--- 12: Outputting your designs
+01: How to create a technical drawing
+Design > Drawing > From design
+Initial scale is too small! I went for 1:2 scale
+Once you place it in the drawing sheet, you can right click > edit
+Ooooooh projected view adds the view to the place you go with the mouse!
+Ok so we have one big view of the thing but no individual piece view, that comes next!
 
+02:
 
+--- 13: Parametric design
+01:
+Parametric modeling means you're creating your design on a series of parameters!
+Oooh the parameters of the operations that you do are saved under "model parameters", neat!
+Neat you can click and edit those parameters! Didn't know that, cool
+These are hard to keep track though
 
+02:
+Oooh but we can use user parameters!
+You can create easily identifiable terms that make it easy to change your model
+You can refer a parameter in another parameter and do things like multiply it by two (ex: lenght = widht * 2)
 
+03:
+OOOh you can use offset to offset something from something else! (ex: concentric circles)
+Off topic but you can click on advanced appearance for plastic and make it red, how cool
 
+04:
+Ooo book case design!
+We can make a book case with different heights and shelve numbers depending on parameters
+Assembled the book case with joints. I always struggle to get joints right, this has some good examples!
 
+05:
+Translated the parameters entered add hoc to user parameters and changed the main dimmensions of the book case to match those!
+Aaaaah join might be better than move as it keeps things together when you change the parameters!
+Backboard thickness might not change so yeah it makes sense to keep a numerican value in there
 
+06:
+Shelves!
 
+07:
+A rectangular pattern for the shelves with the void height, clever!
+You can use "supress" under rectangular pattern to supress certain items (like something on the edges)
 
+08:
+Uh oh, a drawing for manufacturing
+Even if you don't plan on manufacturing your item, dimensioning it seems like a nice way to review your design and correct issues
 
+09:
+Oh it still things a few things on my drawing are made of steel
+Good practive: Just label all the things just in case
+Another sheet but I can't follow this part as I don't have a commercial license
 
 YOUR OWN NOTES
 Hexagon patterns: https://www.youtube.com/watch?v=AFZVNVvmXJ4&ab_channel=Kristian_Laholm
