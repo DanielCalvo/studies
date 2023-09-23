@@ -138,7 +138,9 @@ Author encourages you to practice with these elements! They looked cool.
 - HEY THERE'S A JOINTS FOLDER!
 
 - Wew man I'm getting my ass kicked by these joints, I need to practice a bit on my own I think
-    - Practice a joint in place in which you can chose which object slides!
+    - Practice a joint in place in which you can choose which object slides!
+
+- For joints with tolerances: There's an offset setting you dummy!
 
 ### TODO here:
 - Practice joins (which?)
