@@ -120,7 +120,7 @@ Author encourages you to practice with these elements! They looked cool.
 - You can create a component from a body 
 - Components can be moved without using the move command, interesting!
 
-- Grouding a component: Coordinates of the componen stay fixed relative to the design (not too sure what this means=
+- Grounding a component: Coordinates of the component stay fixed relative to the design (not too sure what this means)
 - When you create a rigid group between 2 or more components, when you drag them around they move together!
 - You can select 2 components > right click > isolate (this way only these 2 are visible)
 
