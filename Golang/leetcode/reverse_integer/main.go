@@ -21,7 +21,7 @@ func ReverseNumber(num int) int {
 }
 
 // hang on let me implement this in a really bad way I wanna have an adventure
-// ABSOLUTE THRASH THIS IS MERELY FOR ENTERTAINING PURPOSES
+// ABSOLUTE THRASH THIS IS MERELY ILLUSTRATIVE
 func ReverseNumberString(num int) (int, error) {
 	var is_negative bool
 	s := strconv.Itoa(num)
