@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	//index.html is treated differently
+	//index_old.html is treated differently
 	log.Fatal(http.ListenAndServe(":8080", http.FileServer(http.Dir("."))))
 }

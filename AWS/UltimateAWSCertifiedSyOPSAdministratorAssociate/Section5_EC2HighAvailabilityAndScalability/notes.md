@@ -368,7 +368,7 @@ yum update -y
 yum install -y httpd
 systemctl start httpd.service
 systemctl enable httpd.service
-echo "Hello from host: $(hostname -f)" >> /var/www/html/index.html
+echo "Hello from host: $(hostname -f)" >> /var/www/html/index_old.html
 ```
 
 ##### Note on AZ rebalance

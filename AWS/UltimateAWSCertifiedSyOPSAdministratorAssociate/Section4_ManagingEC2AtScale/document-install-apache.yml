@@ -15,4 +15,4 @@ mainSteps:
     - 'sudo yum install -y httpd'
     - 'sudo systemctl start httpd.service'
     - 'sudo systemctl enable httpd.service'
-    - 'echo "{{Message}} from $(hostname -f)" > /var/www/html/index.html'
+    - 'echo "{{Message}} from $(hostname -f)" > /var/www/html/index_old.html'
