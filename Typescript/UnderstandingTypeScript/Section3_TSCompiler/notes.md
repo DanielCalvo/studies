@@ -1,6 +1,6 @@
 ## 34. Using watch mode
 - How to work with multiple files!
-- `tsc app.ts --watch`
+- `tsc classes.ts --watch`
 
 ## 35. Compiling the Entire Project / Multiple Files
 - `tsc --init`

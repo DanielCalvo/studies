@@ -17,3 +17,9 @@ npm start
 
 ## Section 5
 - The whole class and copying from a class using `this` is also a bit confusing
+
+## Section 7
+- The `countAndDescribe` generic function is really cool -- it would be neat to create a type that implements the `Lenghty` interface
+- It would be cool to do this with generics in golang as well
+- Go over `Partial` and `ReadOnly` generic functions again for a better understanding, the explanation was a bit shallow here
+- Give `constraints` within the topic of `generics` another look, it isn't very clear whats up
