@@ -1,0 +1,1 @@
+I'm going over these sections in a quick and dirty fashion just so I can refresh the concepts in my head. These are not neat, comprehensive study notes. 
