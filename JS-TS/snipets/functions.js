@@ -91,7 +91,7 @@ const foo = function bar() {
 // arguments.callee()
 // foo()
 
-//A function that calls itself is a recursive function. In some ways a recurse function is analogous to a loop
+//A function that calls itself is a recursive function. In some ways a recursive function is analogous to a loop
 let x = 0;
 while (x < 10) {
     x++
@@ -105,3 +105,36 @@ function loop(x){
     loop(x+1)
 }
 loop(2)
+
+//Closures: In JS you can nest functions, and inner functions can access variables from the outer function
+// This seems to get really elaborated -- I wonder if using an object with functions just isn't a better a idea?
+const pet = function (name) {
+    const getName = function() {
+        return name
+    }
+    return getName; //Returns the getName functio
+}
+
+const myPet = pet("Joey")
+console.log(myPet())
+
+//there's an arguments object!
+function someArgs(something) {
+    console.log(arguments) //Huh, what's this?
+    console.log("Argument is:",typeof arguments)
+    console.log(arguments[0])
+}
+someArgs("banana", "apple", "orange", "melon")
+
+//You can also have default parameters:
+function multiply(a, b = 1) {
+    return a*b
+}
+console.log(multiply(5), multiply(5,5))
+
+//Rest parameters: Allows you to represent an indefinite number of arguments as an array
+function multiply2(multiplier, ...myArgs) {
+    return myArgs.map((x) => multiplier * x)
+}
+myArr = multiply2(2, 1,2,3,4)
+
