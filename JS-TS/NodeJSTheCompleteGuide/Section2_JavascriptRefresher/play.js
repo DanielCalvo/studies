@@ -118,9 +118,6 @@ console.log(hobby1, hobby2)
 //Lets define a function that should execute after a certain timer expired
 // 2000 means 2000ms. `setTimeout` is part of the nodejs
 // However the rest of the program will continue executing!
-
-
-
 const fetchData = callback => {
     setTimeout(() => {
         callback('Done!');

@@ -15,7 +15,7 @@ try {
     person = getPerson("Joe")
 } catch (e) {
     person = "unknown"
-    console.log("Could not get person. Error:", e)
+    console.log("Could not get person")
 }
 
 console.log(person)
@@ -28,10 +28,12 @@ const fs = require('fs')
 //Huh, doesn't seem to be getting into the "catch" part here, there's obviously something I'm doing wrong
 try {
     fs.writeFile("/etc/passwd", "bazinga", (err) => {
-        if (err) throw err;
+        if (err){
+            throw err;
+        }
         console.log("Data has been written to file")
     });
-} catch (err)  {
-    console.log("Error writing to file:", err)
+} catch (error)  {
+    console.log("Error writing to file:", error)
 }
 
