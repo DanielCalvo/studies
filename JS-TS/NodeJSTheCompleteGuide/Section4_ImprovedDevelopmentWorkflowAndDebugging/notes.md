@@ -20,3 +20,7 @@ npm install nodemon --save-dev
 - Syntax error: Ya coded wrong son
 - Runtime errors: You tried to execute some code that just breaks
 - Logical errors: aka bugs
+
+# 53. Debugging 
+- https://blog.jetbrains.com/webstorm/2018/01/how-to-debug-with-webstorm/
+- Also a very interesting article on how to debug with VScode here: https://code.visualstudio.com/docs/nodejs/nodejs-debugging

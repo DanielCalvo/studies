@@ -1,5 +1,5 @@
 # Bookmark
-You stopped on lecture 50! Logical errors!
+You stopped on lecture 63! expressjs routing!
 Uh-oh there's a lecture on a debugger coming, noice!
 
 Other resources:
