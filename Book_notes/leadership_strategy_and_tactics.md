@@ -88,7 +88,7 @@ There are however two more components of leadership:
 # Leading from the Rear
 # Don't Overreact
 # Don't care
-# Everyone is the Same, Everyone is Differente
+# Everyone is the Same, Everyone is Different
 # Let nature Work
 # Isolation as a leader
 # Know what is important and what isn't
