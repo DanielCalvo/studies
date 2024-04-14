@@ -13,4 +13,8 @@ func main() {
 	fmt.Println(slices.Contains(s, 1)) //Cool!
 	fmt.Println(slices.Compact(s))     //Similar to uniq!
 
+	//Can we use insert to prepend to a slice?
+	ss := []int{2, 3, 4, 5}
+	ss = slices.Insert(ss, 0, 1) //Inserts 1 at position 0 of the slice
+	fmt.Println(ss)              //Will print [1 2 3 4 5]
 }
