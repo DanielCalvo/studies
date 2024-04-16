@@ -11,7 +11,7 @@ func main() {
 }
 
 // What if I get a negative target?
-// O(log n) runtime complexity:
+// O(log n) runtime complexity: <- You did not research/meet this target!
 // You could make this a lot faster by only looking at parts of the array instead of going through the whole thing!
 func searchInsert(nums []int, target int) int {
 	var k, v int

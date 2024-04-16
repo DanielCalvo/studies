@@ -5,6 +5,11 @@ import (
 	"math/rand/v2"
 )
 
+type testData struct {
+	slice []int
+	sum   int
+}
+
 //This would be a cool one to benchmark!
 //And also refresh your knowledge of execution times
 
@@ -18,6 +23,19 @@ func main() {
 
 	//write a function for this so you can solve the leetcode!
 	//benchmarking with your improved idea after you solved the leetcode would be cool too!
+	var myTestData []testData
+
+	for i := 1; i < 100; i++ {
+		fmt.Println("Loop:", 1)
+		testSlice := GenerateSlice(i, i)
+		fmt.Println(testSlice)
+
+		testSum := GenerateRandomSum(testSlice)
+		myTestData = append(myTestData, testData{slice: testSlice, sum: testSum})
+		fmt.Println(testSlice)
+	}
+
+	fmt.Println(myTestData)
 
 }
 
@@ -50,9 +68,15 @@ func GenerateSlice(lenght, maxValue int) []int {
 	return s
 }
 
-func GenerateSliceTemplate
-
 func GenerateRandomSum(s []int) int {
+	if len(s) == 0 {
+		return 0
+	}
+
+	if len(s) == 1 && s[0] == 0 {
+		return 0
+	}
+
 	var pos1, pos2 int
 	for pos1 == pos2 {
 		pos1 = rand.IntN(len(s))

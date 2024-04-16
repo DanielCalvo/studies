@@ -1,9 +1,24 @@
 package main
 
 import (
+	"fmt"
 	"slices"
 	"testing"
 )
+
+func TestGenerateTestData(t *testing.T) {
+	var myTestData []testData
+
+	for i := 1; i < 100; i++ {
+		testSlice := GenerateSlice(i, i)
+		testSum := GenerateRandomSum(testSlice)
+		myTestData = append(myTestData, testData{slice: testSlice, sum: testSum})
+		fmt.Println(testSlice)
+	}
+
+	fmt.Println(myTestData)
+
+}
 
 func TestGenerateSlice(t *testing.T) {
 	tests := []struct {
@@ -39,12 +54,31 @@ func TestFindSumInSlice(t *testing.T) {
 	}{
 		{slice: []int{1, 2, 3, 6}, sum: 5, wantResult: []int{1, 2}},
 		{slice: []int{0, 0, 0, 0}, sum: 0, wantResult: []int{0, 1}},
+		{slice: []int{4, 4, 4}, sum: 8, wantResult: []int{0, 1}},
 		{slice: []int{1, 2, 3, 4}, sum: 20, wantResult: []int{-1, -1}}, //if sum is not found, return [-1,-1]
 	}
 	for _, test := range tests {
 		result := FindSumInSlice(test.slice, test.sum)
 		if !slices.Equal(test.wantResult, result) {
 			t.Errorf("Result is incorrect, expected %d, got %d, input slice: %d", test.wantResult, result, test.slice)
+		}
+	}
+}
+
+func TestGenerateRandomSum(t *testing.T) {
+	tests := []struct {
+		slice []int
+		sum   int
+	}{
+		{slice: []int{}, sum: 0},
+		{slice: []int{0}, sum: 0},
+		{slice: []int{1, 1}, sum: 2},
+		{slice: []int{1, 2}, sum: 3},
+	}
+	for _, test := range tests {
+		result := GenerateRandomSum(test.slice)
+		if result != test.sum {
+			t.Errorf("Result is incorrect, expected %d, got %d", test.sum, result)
 		}
 	}
 }
