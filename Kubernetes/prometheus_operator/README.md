@@ -1,3 +1,18 @@
+## Objectives
+1. Set up a VPC and EKS on it using the latest terraform version and terraform modules (when you perform this exercise)
+2. Install the Prometheus operators CRDs in this (by hand, for now)
+3. Install... the big prometheus manifests from kube-prometheus? Alternatively, install a trimmed down version of it
+4. Configure monitoring for the following:
+    - A deployment inside k8s (pod number and... readiness endpoint? Figure out how that works!)
+    - Node exporter on an EC2 machine somewhere outside of the cluster
+    - Some other arbitrary exporter, say, some exporter to list the number of EC2 machines on this account or some other thing.
+    - Oh and a blackbox exporter!
+5. Configuring the prometheus forwarder thing to send metrics to another prometheus instance would be really cool.
+
+## Other ideas
+- What does long term metric storage look like?
+
+---
 Haven't worked with Prometheus in a while, and haven't set it up inside k8s. Lets give this a go!
 
 I wanna set this up on AWS. Stack is:
@@ -36,6 +51,14 @@ Before deploying kube-prometheus in a production environment, read:
 # What you got so far
 - Install CRDs: https://prometheus-operator.dev/docs/user-guides/getting-started/#installing-the-operator
     - This doesn't include any instance of prometheus, its just the CRDs! 
+
+# A default list of manifests can be found here: 
+- https://github.com/prometheus-operator/kube-prometheus/tree/main/manifests
+- Looks like this is your starting point, and you add, mix and kustomize the above until you got what you want
+- Your next action could be to start with a reduced set of those to set up something
+
+# What about kube-mixing, is there anything valuable in there? 
+- https://github.com/kubernetes-monitoring/kubernetes-mixin
 
 # The custom resources managed by the Prometheus Operator are
 It could be handy to go one by one in here and reckon what they do -- I think that's the key to sorting this out
