@@ -82,6 +82,20 @@ There are however two more components of leadership:
 
 # Be Capable and Ask for Help
 # Building Trust and Relationships
+Relationships are based on trust. Teams are built on relationships
+
+The most obvious way of building trust is honesty. To build trust you have to give trust.
+
+The author allows subordinates to run missions as beginners to increase trust both ways. If the subordinate is successful, trust increases. If the subordinate fails this is an opportunity to teach, council and mentor them. The more trust is built the more hands off the leader can be.
+
+## Up the chain
+To build trust up the chain, first of all, tell the truth. Make sure you tell the truth about things the boss needs to know. Small things might not matter. Performing well and being tactful when pushing back are also important to build trust up the chain.
+
+## Trust and decentralized command
+Communication up and down the chain of command is important. A leader might not be able to see what a subordinate sees.
+A leader can make bad decisions because of their lack of perspective. Therefore it is essential that open dialogue takes place.
+However some situations are emergencies and there are there is no time for dialogue. This is when having trust is essential
+
 # Earning influence and Respect
 # Extreme Ownership in Everything
 # Picking up Brass
