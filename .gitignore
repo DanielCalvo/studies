@@ -7,4 +7,6 @@ id_rsa
 !/.gitignore
 .terraform
 target
+cache
+tmp
 */terraform.tfvars
