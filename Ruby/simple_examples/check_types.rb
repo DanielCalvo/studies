@@ -13,6 +13,6 @@ puts num.class
 if num.class == Integer then puts ("#{num} is an integer") end
 puts Integer.class
 
-# Numeric is a parent class of both Integer and Float. Interesting!
+# Numeric is a parent class of both Integer and Float. Neat!
 num.is_a?(Numeric)
 
