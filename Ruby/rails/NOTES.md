@@ -23,3 +23,4 @@ bin/rails generate model Article title:string body:text
 ## Other notes
 - oh wow there's a routes command, I wonder what other commands are there!
 - so many helpers! (like link_to, I wonder if there's a list of all of them somewhere?)
+- Try out brakeman

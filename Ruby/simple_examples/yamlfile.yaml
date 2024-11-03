@@ -1,0 +1,8 @@
+someitem: one
+list:
+  - one
+  - two
+person:
+  name: joe
+  age: 0
+  happy: true
