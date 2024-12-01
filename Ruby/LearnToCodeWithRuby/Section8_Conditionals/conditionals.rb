@@ -148,3 +148,31 @@ when "steak", "sushi", "chicken"
 else
   puts "This evaluates when none of these have matched"
 end
+
+#unless
+#aka execute if a condition is false
+password = "banana" #but the actual password is apple!
+unless password == "apple"
+  puts "Wrong password" 
+end
+
+unless password.include?("m")
+  puts "Password has no m letter"
+end
+
+
+#statement modifier -- neat, one liners!
+num = 9000
+puts "That's over nine thousand!!!" if 9900 > num #neat, single liner
+puts "That's over nine thousand!!!" unless num < 9000
+
+#Conditional assignment operator, neat! ||=
+#if a variable is nil, it assignets a value to that variable. If the variable is not nil, it does nothing
+#So it allows you initialize a variable with nil, and later assigned a value to it, but only if it is nil. Neat!
+myval = nil
+p myval
+
+myval ||= "Woah!"
+p myval
+myval ||= "Woah! again!" #nothing happens, awesome!
+p myval

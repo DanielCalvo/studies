@@ -13,8 +13,10 @@
 - Explore all the integer and string methods, there are so many cool ones!
 - What can rubocop do for you?
 - Any "awesome ruby" repos out there?
-- Oh woah, write your own block method for your ulown object sometime
-
+- Oh woah, write your own block method for your own object sometime
+- Try out some recursion on your own sometime, you lack practice!
+- Does the inclusion operator work on an array or a hash? what about a string? test it out!
+- Save all your exercises from the course in a file somewhere!
 ## The docs
 - https://ruby-doc.org/3.3.5/
 - https://ruby-doc.org/3.3.5/File.html
