@@ -17,6 +17,7 @@
 - Try out some recursion on your own sometime, you lack practice!
 - Does the inclusion operator work on an array or a hash? what about a string? test it out!
 - Save all your exercises from the course in a file somewhere!
+- I'm curious about benchmarking, see if there's some resource on it beyond just chatgpting it!
 ## The docs
 - https://ruby-doc.org/3.3.5/
 - https://ruby-doc.org/3.3.5/File.html
