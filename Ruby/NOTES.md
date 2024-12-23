@@ -18,10 +18,23 @@
 - Does the inclusion operator work on an array or a hash? what about a string? test it out!
 - Save all your exercises from the course in a file somewhere!
 - I'm curious about benchmarking, see if there's some resource on it beyond just chatgpting it!
+- Oooooo don't forget the .methods method!
+- You can't find each_with_index on the array docs because that belongs to the enumerable module: https://ruby-doc.org/3.3.6/Enumerable.html
+- There's Hash.new(). Is there... Array.new()? I wonder what other new objects might there be! 
+- I wonder where I can find some superclass definitions, like the Numeric one!
+- I think it could stand to practive and learn more about the super thing, it can have different behaviours in different circumstances and its not entirely clear to ne how it would behave in most circumstances
+- You can include the Enumerate mixin by defining an each method and then you gain access to a bunch of other operations you can do. I wonder where this is documented? What other mixins you can import and have by defining a method or two?
+- Practice creating your own mixins with include, extend and prepend, this stuff is as bit difficult to memorize
+- Whats the difference between self and @ again?
+
 ## The docs
 - https://ruby-doc.org/3.3.5/
 - https://ruby-doc.org/3.3.5/File.html
 - https://ruby-doc.org/3.3.5/stdlibs/yaml/YAML.html
+
+## Ruby's library code:
+- https://github.com/ruby/ruby/blob/master/lib/
+- Worth a look to understand the language better!
 
 ## woah
 What is going on here? From integer.rbs
