@@ -130,3 +130,30 @@ p custom_index("joe","oe")
 p custom_index("banana","na")
 p custom_index("McDonalds","M") 
 p custom_index("McDonalds","ds") 
+
+#I think you could've used contains? in here
+
+def custom_delete(text, search)
+  result = ""
+  text.chars do |text_char|
+    match = false
+    search.chars do |search_char|
+      if search_char == text_char
+        match = true
+        break
+      end
+    end
+    if match == false
+      result << text_char
+    end
+  end
+  return result
+end
+#wew the authors solution was way better than mine!
+#he iterated over text and used and used include? on characters to delete
+#you thought this was a many-to-many thing but he saw it as a one-to-many, much easier to solve!
+
+#iterate over text
+#iterate over search
+
+p custom_delete("mcdonalds", "ma")

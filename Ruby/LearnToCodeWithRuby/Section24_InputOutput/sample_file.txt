@@ -1,0 +1,3 @@
+Hello world!
+Thes are lines
+in a sample file

@@ -38,3 +38,7 @@ p str.index("here") #You get the starting index of the first occurrence
 p str.index("e",10) #You can start your search 3 index positions in
 
 str.rindex("e") #starts looking from the end of the string
+
+#delete - remove character(s) from string
+p "banana".delete("a")
+p "banana".delete("ab") #All the characters to delete, not a sequence of characters!
