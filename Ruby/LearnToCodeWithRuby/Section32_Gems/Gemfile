@@ -1,0 +1,6 @@
+source "https://rubygems.org"
+
+gem "faker", "~> 3.5.1" #This version or any version higher, as long as it doesnt violate the major or minor version. aka only get patches updates.
+
+#If you were to do this:
+#gem "faker", "~> 3.5" #you would lock it down on the major version, so 3.2 would be valid, as well as 3.6, 3.7 and so on. It can't go to 4.0 though.
