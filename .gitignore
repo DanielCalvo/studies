@@ -10,3 +10,4 @@ target
 cache
 tmp
 */terraform.tfvars
+.ruby-lsp
