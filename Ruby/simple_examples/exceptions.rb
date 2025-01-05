@@ -44,11 +44,6 @@ rescue
   retry if attemps < 3
 end
 
-#Lets try to create a file from an array of file paths.
-#If the file exists, do nothing
-#If for some reason you cant create the file, continue to the next file
-
-
 #Ok so lets try the above but with a twist:
 #We still have our file list. We try to create the files.
 #If we fail to create a given file for some issue, like /root/123 for insufficient permissions, lets create this file under tmp (in this case, /tmp/123)

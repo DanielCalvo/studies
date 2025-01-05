@@ -4,5 +4,3 @@ From having a look at: https://github.com/ruby/ruby/blob/master/lib/uri/
 - All classes seem to be inside the URI module
 - Most files have a require_relative to the generic file
 - Most classes inherit from the generic class
-
-Almost all classes (http)
