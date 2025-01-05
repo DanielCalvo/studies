@@ -11,3 +11,8 @@ cache
 tmp
 */terraform.tfvars
 .ruby-lsp
+
+*.gem
+*.kpf
+*.sw?
+Gemfile.lock

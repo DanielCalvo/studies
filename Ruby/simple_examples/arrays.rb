@@ -15,8 +15,14 @@ my_array =  [1,2,3].product(["a", "b", "c"])
 
 some_array = ["a", "b", "c"]
 
+#not as idiomatic in ruby, the each method is more common
 for element in some_array
   print element + '\n'
+end
+
+#the very common each method
+some_array.each do |element|
+  puts element
 end
 
 #holy bananas look at this, you can do a loop during assignment
