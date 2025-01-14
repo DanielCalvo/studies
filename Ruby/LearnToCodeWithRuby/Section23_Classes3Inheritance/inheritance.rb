@@ -25,8 +25,7 @@ p em.introduce
 #subclass!
 #manager class inherits from employee class!
 #they're going inherit the initialize method, the variables and the introduce method!
-
-class Manager <  Employee
+class Manager < Employee
   attr_reader :rank
   def initialize(name, age, rank)
     super(name, age)

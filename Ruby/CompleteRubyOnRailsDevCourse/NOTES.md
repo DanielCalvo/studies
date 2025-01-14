@@ -4,7 +4,7 @@
 
 The author encourages:
 - Reading this, for style: https://github.com/rubocop/ruby-style-guide
-- Also for practive, https://try.ruby-lang.org/ is encouraged!
+- Also for practice, https://try.ruby-lang.org/ is encouraged!
 
 
 ## To research

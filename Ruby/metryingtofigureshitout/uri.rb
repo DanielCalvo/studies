@@ -18,8 +18,25 @@ and if that doesnt work either you get a InvalidURIError, ha!
 require "uri"
 
 #handle an invalid host exception when going through a list of hosts, and continue!
-invalid_uri = URI("wee e e")
-p my_uri
-
+begin
+  invalid_uri = URI("wee e e")
+rescue URI::InvalidURIError
+  puts "Invalid URI"
+end
 
 #I wonder if you can use the debugger to check how an url is parsed?
+
+#can I have a uri with something like github.com/torvalds?
+myuri = URI("github.com/torvalds")
+puts myuri #apparently, it does instantiate yeah
+puts myuri.host #but apparently it does not get populated
+puts myuri.path
+puts myuri.port
+
+myuri2 = URI("https://github.com/torvalds")
+puts myuri2
+puts myuri2.host #this does get me all the fields
+puts myuri2.path
+puts myuri2.port
+
+#so apparently you need to handle adding the http(s) suffix yourself to an url if you don't have it
