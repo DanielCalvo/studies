@@ -1,11 +1,13 @@
-- The each and select ways of looping through an array seem really interesting, you should practice with them a bit!
+# Next
+- Do and finish the getting started tutorial! https://guides.rubyonrails.org/getting_started.html
+    - Continue here: https://guides.rubyonrails.org/getting_started.html#rails-console 
+- Then read some overview and basics: https://guides.rubyonrails.org/
 
 ## Stopped on lecture 36 on the area code exercise, seems like a fun one to do!
 
 The author encourages:
 - Reading this, for style: https://github.com/rubocop/ruby-style-guide
 - Also for practice, https://try.ruby-lang.org/ is encouraged!
-
 
 ## To research
 - google getters and setters and see what the internet recommends.

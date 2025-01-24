@@ -67,6 +67,7 @@ class Person
 
   #Lets define the person class again with keyword arguments!
   class Person
+
     attr_reader :name, :age, :gender, :occupation
     def initialize(
       name:,
