@@ -51,3 +51,8 @@ Author encourages going through:
 
 Alternatively, you can go through this, which is more thorough
 - https://learn.shayhowe.com/html-css/building-your-first-web-page/
+
+Make the notes per chapter later!
+
+# Other notes
+- The form_with helper generates a CSRF token: What is that and what does it do?
