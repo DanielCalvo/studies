@@ -25,12 +25,20 @@ some_array.each do |element|
   puts element
 end
 
+#The map method can be used to create a new array based on the original array, but with the values modified by the supplied block.
+#Let me use that to convert an array of numbers to strings
+
+arr1 = [1,2,10,20]
+arr1.map! do |element|
+  element.to_s
+end
+p arr1
+
 #holy bananas look at this, you can do a loop during assignment
 squared_numbers = [1, 2, 3].map do |num|
   num * num
 end
 puts squared_numbers.inspect #returns a string representation of the object, particularly useful for debugging!
-
 
 upper_case = ["a", "b", "c"].map { |string| string.upcase }
 puts upper_case.inspect #woah

@@ -40,3 +40,27 @@ puts myuri2.path
 puts myuri2.port
 
 #so apparently you need to handle adding the http(s) suffix yourself to an url if you don't have it
+
+#anyways lets check for what is a valid uri and what isnt:
+
+urls = [
+"google.com",
+"banana",
+"https://google.com",
+"mailto:someone@example.com",
+"https://github.com/torvalds",
+"github.com/torvalds",
+"http://example.com/invalid url",
+"\\\\",
+"🤩",
+]
+
+puts "starting url check!"
+urls.each do |url|
+  begin
+    URI.parse(url)
+    puts "Valid URL: #{url}"
+  rescue => e
+    puts "Invalid URI: #{url}, error: #{e.class}"
+  end
+end
