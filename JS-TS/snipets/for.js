@@ -23,3 +23,6 @@ console.log()
 strArray.map(function(element) {
     process.stdout.write(element + " ")
 });
+
+console.log()
+
