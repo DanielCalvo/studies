@@ -1,13 +1,13 @@
 var name = 'asd';
 console.log(name);
 
-var age = 22
+var age = 22;
 console.log(age);
 age = "111"
 console.log(age); //Anarchy. Complete anarchy.
 
 function summarizeuser(userName){
-    return ("User is: " + userName)
+    return ("User is: " + userName);
 }
 
 console.log(summarizeuser(name))

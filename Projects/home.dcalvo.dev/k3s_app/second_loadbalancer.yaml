@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-second-lb
+  namespace: nginx
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 192.168.1.241
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

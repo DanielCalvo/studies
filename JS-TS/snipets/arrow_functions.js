@@ -1,5 +1,5 @@
-//Arrow functions have shorter syntaz
-//They do not have this, argumentsm, super or new.target.
+//Arrow functions have shorter syntax
+//They do not have this, arguments, super or new.target.
 //Arrow functions are always anonymous
 
 const a = ["Hydrogen", "Helium", "Lithium", "Beryllium"];

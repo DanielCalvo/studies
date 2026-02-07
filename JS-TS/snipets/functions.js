@@ -1,22 +1,60 @@
-//Here's a simple function:
-
+//Classic function. This function is hoisted, meaning you can call it before it is defined.
+//This is also known as a standard function, or a named function
 function square(number) {
     return number * number;
 }
+
 console.log(square(4))
 
-//When you pass an object, if the function changes the objects properties, that change is visible outside the function:
-function myFunc(theObject) {
-    theObject.make = "Toyota";
+//This is a function expression, also known as function as a variable, or anonymous function. These functions are not hoisted,
+const mysquare = function(x) {
+    return x * x;
 }
+console.log(mysquare(5))
+
+//And this is called an arrow function
+const arrowsquare = (x) => {
+    return x * x;
+}
+console.log(arrowsquare(6))
+
+//There is also a concise syntax for a single return expression
+const shortsquare = num => num * num;
+console.log(arrowsquare(7))
+
+//Shock, absolute beginner shock: Javascript only lets you return one value! This does not work like it would in go!
+//const salutepeople = (a,b) => {
+//    return `Hello ${a}`, `Hello ${b}`
+//}
+
+//Here's a fixed version, or the JS way of doing it:
+//a,b are arguments, followed by the function body. In this case the body is a single line.
+const salutepeople = (a,b) => {
+    return [`Hello ${a}`, `Hello ${b}`]
+}
+
+const [s1, s2] = salutepeople('alice', 'bob')
+console.log(s1, s2)
+
+//Lets do another function: A function that receives an array of numbers and returns the highest and lowest values!
+const getminmax = (num) => {
+    const min = Math.min(...num)
+    const max = Math.max(...num)
+    return {min, max} //Huh, it seems I stumbled upon variadic parameters in go. In js this seems to be called the rest parameter.
+}
+//Lets do a function with the rest parameter -- this function receives an array name and sums alls of its elements
+const
 
 const mycar = {
     make: "Honda",
     yeah: 1999
 }
-console.log(mycar)
-myFunc(mycar)
-console.log(mycar)
+
+//When you pass an object, if the function changes the objects properties, that change is visible outside the function:
+function myFunc(theObject) {
+    theObject.make = "Toyota";
+}
+console.log("My car was a Honda, but now its a " + mycar.make)
 
 //Same deal happens with an arrays
 const arr = [100]

@@ -2,11 +2,6 @@
 
 strArray = ["banana", "apple", "orange", "melon"]
 
-for (let i = 0; i < strArray.length; i++) {
-    process.stdout.write(strArray[i] + " ");
-}
-console.log()
-
 // Interesting, an array has a forEach method
 strArray.forEach(function (element) {
     process.stdout.write(element + " ")
