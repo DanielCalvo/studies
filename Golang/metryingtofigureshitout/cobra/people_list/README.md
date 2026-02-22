@@ -6,3 +6,6 @@ cobra-cli init
 ```
 
 This is a dummy cobra project that will add, remove and search for people's names on a text file.
+
+## review from February 2026
+Let me review the docs and add some information here

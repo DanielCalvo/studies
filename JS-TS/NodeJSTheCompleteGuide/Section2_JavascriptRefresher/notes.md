@@ -7,6 +7,9 @@ Hell yeah lets roll
 
 # 12. Refreshing core syntax
 
+# 14. Let and const
+- var is outdated, let is preferred.
+- use const for constants for variable declarations whenever possible
 ---
 
 Other notes

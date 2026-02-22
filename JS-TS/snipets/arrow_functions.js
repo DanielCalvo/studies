@@ -2,6 +2,22 @@
 //They do not have this, arguments, super or new.target.
 //Arrow functions are always anonymous
 
+//arrow functions allow you to drop the function and return keywords, as well as the curly braces for one-liners
+//this is what an ES5 function might look like
+const multiply = function (a, b) {
+    return a * b;
+}
+
+const multiplyArrow = (a,b) => a * b;
+
+//if you have only one argument, then you can have the argument without parenthesis:
+const addOne = a => a + 1;
+
+//if you have no arguments though, then you need parenthesis
+const addRandom = () => 1+2;
+
+//TODO: Have gemini ask you things about anonymous functions and do your learning there!
+
 const a = ["Hydrogen", "Helium", "Lithium", "Beryllium"];
 
 //lets create an array with the lenght of every string in the `a` arrray above:

@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 )
 
+// read the docs on this so you can solidify your knowledge of this simple concept, this goes beyond go, there are functions in other languages!
 func main() {
 	base := "/repos/kubernetes/kubernetes"
 	target := "/repos/kubernetes/kubernetes/docs/setup/install.md"

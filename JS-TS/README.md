@@ -2,6 +2,10 @@
 You stopped on lecture 63! expressjs routing!
 Uh-oh there's a lecture on a debugger coming, noice!
 
+# Courses from Traversy
+- js crashcourse: https://www.youtube.com/watch?v=32M1al-Y6Ag
+- nodejs crash course: https://www.youtube.com/watch?v=32M1al-Y6Ag
+
 Other resources:
 - https://www.typescriptlang.org/
 - Software system design by example: https://third-bit.com/sdxjs/introduction/ 
