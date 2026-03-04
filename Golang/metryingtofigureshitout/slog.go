@@ -3,6 +3,7 @@
 package main
 
 import (
+	"errors"
 	"log/slog"
 	"os"
 )
@@ -23,5 +24,17 @@ func main() {
 	//you can also create your handler by implementing the slog.Handler interface!
 	//you can pass a context.Context to some log functions so a handler can extract context information like trace IDs.
 	//neat: You can call Logger.With to add attributes to a logger that will appear in all of its output, effectively factoring out the common parts of several log statements.
+
+	//-----
+	//one more tidbit here, the docs say:
+	// Package slog provides structured logging, in which log records include a message, a severity level, and various other attributes expressed as key-value pairs.
+	//so something like this is fine:
+	logger.Info("hi")
+
+	err := errors.New("something errored out!")
+	//but this is malformed -- you're supposed to treat everything after the first arg as a key value pair!
+	logger.Error("something errored out", err)
+	//what you want is something like:
+	logger.Info("something errored out", "error", err)
 
 }

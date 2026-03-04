@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
-
-	"gopkg.in/yaml.v3"
 )
+
+//you should redo this with generics to see how it turns out
 
 func main() {
 	data, err := os.ReadFile("file.yaml")
