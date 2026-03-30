@@ -1,5 +1,5 @@
 /*
-Lets go over Anton's notes on new features added in go over time!
+Lets go over Anton's notes.md on new features added in go over time!
 
 https://antonz.org/go-1-24/
 https://antonz.org/go-1-25/

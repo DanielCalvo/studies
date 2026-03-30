@@ -14,7 +14,7 @@ func main() {
 
 	//This is currently a very dumb program that only indents some types of markdown lists
 
-	filename := "/home/daniel/Projects/notes/personal_INBOX.md"
+	filename := "/home/daniel/Projects/notes.md/personal_INBOX.md"
 
 	src, err := os.ReadFile(filename)
 	if err != nil {
