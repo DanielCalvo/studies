@@ -1,0 +1,38 @@
+---
+apiVersion: karpenter.k8s.aws/v1
+kind: EC2NodeClass
+metadata:
+  name: default
+spec:
+  amiSelectorTerms:
+    - alias: bottlerocket@latest
+  role: k8s-gitops
+  subnetSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: k8s-gitops
+  securityGroupSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: k8s-gitops
+  tags:
+    karpenter.sh/discovery: k8s-gitops
+---
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: default
+spec:
+  template:
+    spec:
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: default
+      requirements:
+        - key: "node.kubernetes.io/instance-type"
+          operator: In
+          values: ["t3a.small"]
+  limits:
+    cpu: 100
+  disruption:
+    consolidationPolicy: WhenEmpty
+    consolidateAfter: 30s
