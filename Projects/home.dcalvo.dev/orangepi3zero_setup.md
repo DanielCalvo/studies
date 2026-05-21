@@ -7,22 +7,27 @@ sudo su
 apt-get update && apt-get upgrade -y && apt-get install git vim curl wget sshfs htop build-essential make apt-transport-https ca-certificates gnupg-agent software-properties-common -y
 adduser daniel
 sudo adduser daniel sudo
-#login as yourself, add ssh key
+#change root's password
+passwd
 
-#lol, as root:
+#copy over your public ssh key
+ssh-copy-id daniel@192.168.1.46
+ssh-copy-id root@192.168.1.46
+
+#rm the orangepi user as root:
 rm /lib/systemd/system/getty@.service.d/override.conf
 rm /lib/systemd/system/serial-getty@.service.d/override.conf
 init 6
 deluser orangepi --remove-all-files
 
 #Change for the machine number
-echo 'opi-X' > /etc/hostname
+echo 'opi1' > /etc/hostname
 ```
 
 To edit the image:
 
 # Set a static address -- this part wasn't automated
-- vim /etc/netplan/orangepi-default.yaml
+vim /etc/netplan/orangepi-default.yaml
 
 Do note that the interface name changes, it might not always be eth0
 ```yaml
@@ -33,7 +38,7 @@ network:
     end0: 
       dhcp4: false
       addresses:
-        - 192.168.1.200/24
+        - 192.168.1.201/24
       routes:
         - to: default
           via: 192.168.1.1
