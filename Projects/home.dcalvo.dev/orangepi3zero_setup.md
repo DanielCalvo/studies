@@ -2,7 +2,7 @@
 
 ```shell
 #whatever you got from dhcp here
-ssh orangepi@192.168.1.46 #defalt password is orangepi
+ssh orangepi@192.168.1.45 #defalt password is orangepi
 sudo su
 apt-get update && apt-get upgrade -y && apt-get install git vim curl wget sshfs htop build-essential make apt-transport-https ca-certificates gnupg-agent software-properties-common -y
 adduser daniel
@@ -11,8 +11,8 @@ sudo adduser daniel sudo
 passwd
 
 #copy over your public ssh key
-ssh-copy-id daniel@192.168.1.46
-ssh-copy-id root@192.168.1.46
+ssh-copy-id daniel@192.168.1.45
+ssh-copy-id root@192.168.1.45
 
 #rm the orangepi user as root:
 rm /lib/systemd/system/getty@.service.d/override.conf
