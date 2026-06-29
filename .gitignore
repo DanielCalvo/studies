@@ -16,3 +16,6 @@ tmp
 *.kpf
 *.sw?
 Gemfile.lock
+
+# Media
+*.pdf
