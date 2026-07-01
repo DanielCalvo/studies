@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fix Dictation"
+  short_description: "Clean dictated technical notes, preserving voice."
+  default_prompt: "Use $fix-dictation to clean up this dictated technical note while preserving my wording, structure, and tone."

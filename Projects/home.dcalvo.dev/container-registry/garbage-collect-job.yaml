@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: registry-garbage-collect
+  namespace: container-registry
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: registry-garbage-collect
+          image: registry:2
+          imagePullPolicy: IfNotPresent
+          command:
+            - registry
+            - garbage-collect
+            - /etc/docker/registry/config.yml
+          volumeMounts:
+            - name: registry-storage
+              mountPath: /var/lib/registry
+      volumes:
+        - name: registry-storage
+          persistentVolumeClaim:
+            claimName: registry-storage
+  backoffLimit: 1

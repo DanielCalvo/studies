@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: unnamed-exporter
-  namespace: monitoring
+  namespace: tmp_monitoring
   labels:
     app: unnamed-exporter
   annotations:

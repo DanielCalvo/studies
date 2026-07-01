@@ -1,0 +1,49 @@
+services:
+  metrics_app:
+    build:
+      context: ../metrics_app
+    environment:
+    - ERROR_RATE=0.2
+    ports:
+    - "8000:8000"
+    - "8001:8001"
+
+  pushgateway:
+    image: prom/pushgateway
+    ports:
+    - "9092:9091"
+
+  pushgateway_app:
+    build:
+      context: ../pushgateway_app
+    environment:
+    - PUSHGATEWAY_URL=http://pushgateway:9091
+    - JOB_NAME=batch
+    - WORK_DURATION_SECONDS=1
+    depends_on:
+    - pushgateway
+    profiles:
+    - batch
+
+  prometheus:
+    image: prom/prometheus
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+    - "9091:9090"
+    volumes:
+    - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    - ./rules.yml:/etc/prometheus/rules.yml:ro
+    depends_on:
+    - metrics_app
+    - pushgateway
+    - alertmanager
+
+  alertmanager:
+    image: prom/alertmanager
+    command:
+    - --config.file=/etc/alertmanager/alertmanager.yml
+    ports:
+    - "9093:9093"
+    volumes:
+    - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro

@@ -1,0 +1,12 @@
+apiVersion: tmp_monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: example
+spec:
+  serviceAccountName: prometheus
+  replicas: 2
+  alerting:
+    alertmanagers:
+    - namespace: default
+      name: alertmanager-example
+      port: web

@@ -1,0 +1,7 @@
+## Istance down will be evaluated every 10 seconds and if its down for an entire minute, the alert fires
+groups:
+- name: example
+  rules:
+  - alert: InstanceDown
+    expr: up == 0
+    for: 1m

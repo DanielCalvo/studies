@@ -3,8 +3,7 @@ id_rsa
 .idea/*
 *.log
 .*.swp
-.*
-!/.gitignore
+
 .terraform
 target
 cache

@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: unnamed-exporter
-  namespace: monitoring
+  namespace: tmp_monitoring
 spec:
   rules:
     - host: to.be.changed.com
