@@ -1,6 +1,12 @@
-This folder contains various instructions and cluster components for my k3s homelab
+This folder contains Kubernetes configuration and notes for my k3s homelab.
 
-- The container-registry folder contains a container registry to host docker images to be used in the homelab
-- The metallb folder contains the metallb configuration to be used for cluster.
+Read `cluster-context.md` for reusable cluster facts such as node IPs, architecture, MetalLB usage, local registry details, and home-lab constraints.
 
-Since this all runs on a local network at home, we can be more relaxed with TLS/auth and general security settings if they allow us to move faster
+Repo areas:
+- `container-registry/`: local Docker Registry v2 manifests and notes for images used in the homelab.
+- `metallb/`: MetalLB configuration and validation examples.
+
+Guidance:
+- This runs on a trusted local home network, so prefer simple solutions over production-grade TLS/auth when that helps experiments move faster.
+- The cluster is small and arm64, so prefer lightweight components and verify image architecture when relevant.
+- Keep durable operational notes in normal Markdown files, not only in `AGENTS.md`.

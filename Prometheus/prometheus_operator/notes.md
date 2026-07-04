@@ -13,5 +13,7 @@ I would be interested to see how prometheus ingests and handles traces!
 - What app do you want to instrument to ingest the metrics?
 - How is push gateway represented by the prometheus operator?
 - Can you have a list of CRDs and what they do? How do they compare to a plain text prometheus set up?
-
+- So if you have 2 pods running an app and both expose a metric endpoint, how do you make sure all pods are scrapped?
+- When in create a ServiceMonitor or a PrometheusRule, how do I know which prometheus and alert manage instances are handling it in case i have many instances in my cluster?
+ 
 ## Other notes
