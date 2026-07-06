@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kube-state-metrics
+  namespace: monitoring
+  labels:
+    prometheus: homelab
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kube-state-metrics #matches the label app.kubernetes.io/name on the service, not the actual name of the service
+  endpoints:
+    - port: http #interesting, apparently you cant have a raw number here, you need to use a named port
+      #Look at the Kubernetes service for this to know what the endpoint port is named

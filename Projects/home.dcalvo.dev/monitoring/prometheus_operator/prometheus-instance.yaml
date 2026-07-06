@@ -1,0 +1,24 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  serviceAccountName: prometheus
+  replicas: 1
+  resources:
+    requests: #this has a statefulset under the hood, along with other occompanying resources (headless service, configmap, and secrets for tls/web config, and more things)
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
+  serviceMonitorSelector:
+    matchLabels:
+      prometheus: homelab #selects all the service monitors that have these labels to know which metrics to scrape, so if you have a ton of them and they all have this label, prometheus will use all of them to know what to scrape
+
+
+#  alerting:
+#    alertmanagers:
+#    - namespace: default
+#      name: alertmanager-example
+#      port: web

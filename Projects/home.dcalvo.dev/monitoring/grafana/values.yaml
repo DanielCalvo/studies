@@ -1,0 +1,80 @@
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 3000
+  annotations:
+    metallb.io/loadBalancerIPs: 192.168.1.221
+
+deploymentStrategy:
+  type: Recreate
+
+persistence:
+  enabled: true
+  type: pvc
+  accessModes:
+    - ReadWriteOnce
+  size: 5Gi
+
+# The chart default chown init container fails against the existing local-path
+# PVC even after dashboard ConfigMaps were moved out of /var/lib/grafana.
+# Grafana can already read/write the PVC, so keep this disabled.
+initChownData:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 128Mi
+  limits:
+    memory: 256Mi
+
+adminUser: admin
+adminPassword: admin
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        uid: prometheus
+        access: proxy
+        url: http://prometheus-lb.monitoring.svc.cluster.local
+        isDefault: true
+
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: default
+        orgId: 1
+        folder: Kubernetes
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/default
+
+dashboards:
+  default:
+    kube-state-metrics-overview:
+      # Grafana dashboard: Kube-State-Metrics Overview
+      gnetId: 25091
+      revision: 1
+      datasource:
+        - name: DS_PROMETHEUS
+          value: prometheus
+    node-exporter-full:
+      # Grafana dashboard: Node Exporter Full
+      gnetId: 1860
+      revision: 45
+      datasource:
+        - name: ds_prometheus
+          value: prometheus
+    prometheus-2-overview:
+      # Grafana dashboard: Prometheus 2.0 Overview
+      gnetId: 3662
+      revision: 2
+      datasource:
+        - name: DS_THEMIS
+          value: prometheus

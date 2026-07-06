@@ -24,13 +24,16 @@ This is a small local k3s cluster used for study and experimentation.
 - Images must support `linux/arm64`
 
 ## Monitoring
-- Prometheus Operator is installed for initial experimentation.
-- Install method: upstream getting-started `bundle.yaml` applied directly with `kubectl create -f -`.
-- Current posture: basic/default install; a more refined setup can come later.
-- kube-state-metrics is installed with the `prometheus-community/kube-state-metrics` Helm chart.
-- kube-state-metrics release: `kube-state-metrics` in namespace `monitoring`.
-- kube-state-metrics service: `kube-state-metrics.monitoring.svc.cluster.local:8080`, `ClusterIP`.
-- Current kube-state-metrics posture: metrics endpoint is running, but no `ServiceMonitor` was created by the default chart install.
+- Namespace: `monitoring`
+- Prometheus Operator is installed from the upstream getting-started `bundle.yaml`.
+- Prometheus instance: `monitoring/prometheus`, exposed by MetalLB at `192.168.1.220`.
+- Prometheus uses ServiceMonitor label selector `prometheus: homelab`.
+- Prometheus scrapes kube-state-metrics, node-exporter, itself, and the Prometheus Operator.
+- kube-state-metrics is installed by Helm and scraped through `monitoring/kube-state-metrics`.
+- node-exporter is installed by Helm as a DaemonSet, one pod per node.
+- Grafana is installed by Helm, exposed by MetalLB at `192.168.1.221`.
+- Grafana uses a `local-path` PVC, datasource UID `prometheus`, and pinned Grafana.com dashboards for kube-state-metrics, node-exporter, and Prometheus.
+- Useful next monitoring target: kubelet/cAdvisor metrics for pod/container resource usage.
 
 ## Practical Constraints
 - Prefer lightweight components and simple deployments.
@@ -43,5 +46,7 @@ This is a small local k3s cluster used for study and experimentation.
 - `k3s.md`: install and access notes for the k3s cluster.
 - `metallb/`: MetalLB configuration and validation examples.
 - `container-registry/`: local Docker Registry v2 manifests and operational notes.
-- `prometheus_operator/`: brief Prometheus Operator install notes for initial monitoring experiments.
-- `kube_state_metrics/`: Helm install notes and validation for kube-state-metrics.
+- `monitoring/`: monitoring namespace, Grafana, node-exporter, and Prometheus Operator manifests/notes.
+- `monitoring/prometheus_operator/`: Prometheus CR, RBAC, LoadBalancer Service, and ServiceMonitors.
+- `monitoring/grafana/`: Grafana Helm values and dashboard provisioning notes.
+- `monitoring/node-exporter/`: node-exporter Helm values and notes.

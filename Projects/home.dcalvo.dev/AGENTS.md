@@ -1,6 +1,6 @@
 This folder contains Kubernetes configuration and notes for my k3s homelab.
 
-Read `cluster-context.md` for reusable cluster facts such as node IPs, architecture, MetalLB usage, local registry details, and home-lab constraints.
+Read `ai_cluster_context.md` for reusable cluster facts such as node IPs, architecture, MetalLB usage, local registry details, and home-lab constraints.
 
 Repo areas:
 - `container-registry/`: local Docker Registry v2 manifests and notes for images used in the homelab.
