@@ -5,6 +5,8 @@ metadata:
   namespace: nginx
   labels:
     app: nginx
+  annotations:
+    kubernetes.io/change-cause: "some reason for the rollout"
 spec:
   replicas: 1
   selector:
@@ -14,6 +16,8 @@ spec:
     metadata:
       labels:
         app: nginx
+      annotations:
+        kubernetes.io/change-cause: "some reason for the rollout"
     spec:
       containers:
         - name: nginx

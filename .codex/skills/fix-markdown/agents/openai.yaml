@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fix Markdown"
+  short_description: "Clean dictated Markdown diff additions"
+  default_prompt: "Use $fix-markdown to clean the newly added lines in this Markdown file."

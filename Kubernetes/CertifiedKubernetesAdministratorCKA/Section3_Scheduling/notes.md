@@ -7,6 +7,8 @@
 - You can manually schedule pods yourself. You can only specify the nodeName entry on a pod definition at creation time.
 - If the pod is already created and you want to assign it to a node, you have to create Binding object and send a POST request to the pod's binding API, thus mimicking what the scheduler actually does.
 
+### Notes from Dani
+- Do note that having no scheduler is very, very unusual. Nowadays most pods and nodes are treated like cattle, and are not manually scheduled to a given node as nodes are disposable
 
 ### 42: Practice test - Manual Scheduling
 Q: Why is the POD in a pending state? Inspect the environment for various kubernetes control plane components.
@@ -62,6 +64,10 @@ spec:
         image: nginx
 ```
 
+### Notes from Dani
+- Remember that you can use multiple selectors at once to query things that contain multiple labels
+- You can also use one selector only if you only want the dev instances or something
+
 
 ### 46: Taints and Tolerations
 - Taints and tolerations are used to set restrictions on what pods can be scheduled on a node
@@ -74,7 +80,7 @@ spec:
 - The taint effect defines what would happen to a pod if they do not tolerate the taint
 - There are 3 taint effects:
     - NoSchedule: Pods won't be scheduled on the node
-    - PrefferNoSchedule: The system will attempt avoinding placing a pod on the node
+    - PreferNoSchedule: The system will attempt to avoid placing a pod on the node
     - NoExecute: New pods will not be scheduled on the node, and existing pods on the node will be evicted if they do not tolerate the taint
 - Example: `kubectl taint nodes node1 app=blue:NoSchedule`
 - See [./46_toleration.yaml]() for a toleration example
@@ -86,6 +92,13 @@ spec:
 - If you want to restrict a pod to certain nodes, this is achieved through another concept called "Node Affinity"
 - Master nodes have a taint that prevent any nodes from being scheduled on these nodes.
 - To see this taint: `kubectl describe node kubemaster | grep Taint`
+
+#### Notes from Dani
+- Perhaps it wasn't clear enough up above, but a taint can only be added to a node
+- Conversely, tolerations are only added to pods
+- If you add a taint on a node with an effect of `NoSchedule`, and you don't change your pods, nothing will be scheduled there
+- A DaemonSet is not automatically exempt from taints. If you taint a node with `NoSchedule` and a pod managed by a DaemonSet is deleted and has to be recreated for instance, it won't be able to be scheduled on that node
+- For some system DaemonSets like kube-proxy, they have broad tolerations so that they can tolerate all taints. This stops you from shooting yourself in the foot and blocking kube-proxy from running on your node if you add a taint to it
 
 ### 47: Practice test - Taints and tolerations
 Q: Do any taints exist on node01?
@@ -125,7 +138,15 @@ A: `kubectl taint nodes master node-role.kubernetes.io/master:NoSchedule-`
     - 
 - To label a node: `kubectl label nodes $nodename $labelkey=$labelvalue`
 - Ex: `kubectl label nodes node-1 size=Large`
-- NodeSelector has its uses, but it also has limitations: What if you want to run a pod on a node that is MEDIUM or LARGE (or not SMALL?)
+- NodeSelector has its uses, but it also has limitations: What if you want to run a pod on a node that is MEDIUM or LARGE (or not SMALL?). The node selector functionality cannot do this
+
+#### Notes from Dani
+- So you can label a node with a given label, then you can use the `nodeSelector` setting on a pod
+- This will make the pod be scheduled on any node that has that label. I suppose you can choose a name label or something like that so that a pod goes specifically to a node, or you can choose some other thing, maybe there's a label for instance size or something
+- If node selector has more than one label you need to match all of them for the pod to be scheduled
+- If there are no matches the pod remains pending
+- Now do note that node selector labels make a node eligible for a pod to go there, but other factors can still prevent scheduling like insufficient resources or an untolerated taint
+
 
 ### 49: Node Affinity
 - The main feature of node affinity is to make sure certain pods are hosted on certain nodes.
@@ -190,25 +211,39 @@ items:
     - First you use taints and tolerations to prevent other pods from being placed on your nodes
     - Then you use node affinity to make sure your pods are not placed on other nodes
 
+#### Notes from Dani
+So what if you want to have a node pool and you want only one deployment to use this node pool, how do you do this?
+
+Let's assume you have a node pool only for text processing, so you have text processing nodes and a text processing deployment
+
+- The first thing you need to do is add a taint to the text processing node pool
+- Then you need to add a matching toleration on the text processing pods
+
+This would only solve the problem partially though: no other pods would be scheduled on the text processing node pool, however the text processing pods could still be scheduled anywhere
+
+This brings us to the second part of the solution
+- You need to add a label on that specific node pool for text processing
+- And then you either need a node selector or required node affinity on the text processing pods, so that they are only scheduled on that dedicated node pool
+
 ### 52: Resource requirements and limits
 - Kubernetes places pods on the nodes with most available resources by default.
 - If there are no resources available on a node to place a pod, kubernetes holds back scheduling the pod.
 - You will see the pod in a pending state. If you look at the events you'll see the reason.
-- By default, Kubernetes defines that a pod or a container within the pod requires 0.5 CPU units and 256 mebibytes of memory. These are known as the "resource request" -- The minimum amount of CPU and memory requested by a container.
 - When the scheduler tries to place your application on a node, it will look for a node that has these resources available, minimally.
 - You can specify the resources requirements for your pod under the pod specs. See [52_pod_resourcedef.yaml](./52_pod_resourcedef.yaml)
 
 - What does 1 count of CPU mean?
 - "0.1" CPU can also be expressed as "100m". m stands for "mili". You can go as low as 1m. A count of 1 CPU is equal to 1 vcpu on whatever undelying platform you have (gcloud, aws, on prem)
 
-- By default, Kubernetes sets a limit of 1 vcpu per container, so if you do not specify it explicitly, a container will be limited to using 1 vcpu when under load.
-- The same goes with memory. By default the limit is 512 Mi. These can also be changed, take a look at See 41_pod_resourcedef.yaml.
-
 - Remember that the limits are set for each container within the pod!
 
 - If a pod tries to use resources beyond it's defined limit:
     - In case of CPU: Kubernetes throttles it so it doesn't go beyond the specified limit
     - In case of memory: If a pod tries to consume more memory than it's limit constantly, it will terminate.
+
+Oh there's now a LimitRange resource that allows you to define default CPU and memory requests and limits for pods. So you can set that per namespace
+
+You can also have a ResourceQuota kind of object that will limit how much CPU and memory you can request and limit in a given namespace. Really cool, this was not on the first edition of the exam I think, but it was added sometime later
 
 ### 53: A note on editing pods:
 - These are the things you CAN edit on an already existing pod:
@@ -251,6 +286,15 @@ A: Save the pod to yaml, delete pod, apply yaml again
 - That's how it actually used to be until Kubernetes v1.12 ahahah
 - Currently DaemonSet uses nodeAffinity rules to make sure the pods all fall onto different nodes.
 
+#### Notes from Dani
+- Right this is quite interesting, so the way the DaemonSet controller schedules a pod in every node is it just launches a bunch of pods with a bunch of node affinity rules and it targets the node names so that you don't end up with duplicated pods on nodes
+- The DaemonSet controller also adds a bunch of tolerations including:
+    - Nodes marked unschedulable
+    - Nodes that are not ready or reachable
+    - Memory, disk, or process ID pressure
+    - Network unavailable, because some DaemonSets are used for host networking, cool
+- However this doesn't mean a DaemonSet will automatically tolerate every custom taint you create, you still need to add appropriate tolerations for custom workload taints
+
 ### 57: Practive test - Daemonsets
 Q: Create a daemonset named fluentd for logging
 A: You can generate a deployment, remove the replica number and change the kind to DaemonSet and:
@@ -292,6 +336,11 @@ spec:
 - `vim /var/lib/kubelet/config.yaml`
 - Look for staticPodPath, by default it should be /etc/kubernetes/manifests
 
+#### Notes from Dani
+- In public clouds Kubernetes nodes are meant to be treated as cattle and as such static pods are not really something you use
+- To be fair, even in an on-premises cluster I don't think you use them either
+- Their uses appear to be quite niche like maybe a pod permanently tied to a given machine, but then why not use a node selector with the name
+- Also if your pod manifest is on a machine now you need to put it in version control and you need to jump through some hoops for that, like you might just as well put the thing in GitOps and use a node selector so that your pod always goes to your selected node and that's it, you probably shouldn't use this feature and let it be reserved for cluster bootstrapping
 
 ### 59: Practive Test - Static pods
 Q: How many static pods exist in this cluster in all namespaces?
@@ -304,3 +353,46 @@ A: Run the command `kubectl get pods --all-namespaces` and look for those with -
 
 ### 63: Configuring Kubernetes Scheduler
 There's further reading material out there for advanced scheduling. Could be an interesting read!
+
+### 75. Priority Classes
+- Nice this is a new section that was not in the 2020 version of the course
+- This helps you have pods that have a higher priority than other pods so they can preempt, in other words evict, these least important pods so that the most important workload can run
+- PriorityClasses are not namespaced, so once you create one, it can be used on any namespace
+- Higher number means higher priority
+- Kubernetes system components have an exclusive priority that goes up to two billion or something
+- To use a priority class just pass it as `priorityClassName` to a pod and you're in business
+- By default pods have no priority class and as such have a priority class value of zero
+- This is whatever priority class currently has `globalDefault` set to `true`
+- PriorityClasses have a preemption policy. If not set, the default value is `PreemptLowerPriority`
+    - This means that it will evict lower priority pods to take their place
+- There is also a preemption policy of `Never`, meaning that it will not preempt other pods, and by preempt I mean destroy, and it will stay pending to be scheduled. It will however have a higher priority in scheduling over other pods that also want to be scheduled
+
+
+#### Notes from Dani
+Also if you have a preemption policy of `Never` and your cluster is already full and you deploy pods with a higher priority class, nothing will happen, nothing will get evicted and nothing will get scheduled. Now of course in practice you usually have some sort of autoscaling mechanism like Karpenter which will create more nodes, but still that's in theory what would happen
+
+Also priority classes affect how pods are queued up to be scheduled. So imagine if you have two pods of two different priority classes pending to be scheduled and they have the same let's say memory requests and enough space opens up on the cluster so that they can be scheduled. In this case the pod with the higher priority class will get scheduled, assuming you only have space for one
+
+### 80: Configuring Scheduler Profiles
+- So the course goes over and explains very briefly how schedulers have certain plugins and then it shows how you can create a custom scheduler and you can disable some of those plugins like for instance you can disable the taint and toleration plugin and then you can enable my custom plugin one two and three and so on
+- So this is essentially information on how you can have a custom scheduler with certain plugins disabled or other custom plugins enabled
+
+Again this is something that you will very rarely if ever see on a production Kubernetes cluster unless what you're doing is very niche and specific
+
+### 82: Admission Controllers
+- Looks like an admission controller allows you to restrict certain things within the pod that you wouldn't be able to do with role-based access control
+- So for instance here's what you can achieve with an admission controller:
+    - You can only permit images from a certain registry
+    - You can deny run as root users
+    - Or you can enforce that the metadata always contains labels
+
+#### Notes from Dani
+- I scoured the docs a bit and you cannot easily tell which admission controllers are enabled for k3s
+    - API server metrics can show which admission controllers have actually run, but that is a runtime observation rather than actually inspecting a config file
+- For EKS you generally cannot enable or disable admission controllers yourself as the control plane is managed by AWS
+
+For EKS you can however configure admission behavior exposed via APIs, such as validating and mutating webhooks, which is I think what the next chapter is about
+
+### 85. (2025 Updates) Validating and Mutating Admission Controllers
+- So a validation controller is a controller that receives a request and validates if it passes whatever validation logic it has, like for instance maybe it can stop you from creating a pod that has a given name
+- A mutation controller receives a request, modifies it, and then passes the modified object to the next stage of the API processing. So for instance a mutation admission controller could add an additional container to your pod, like an Istio sidecar

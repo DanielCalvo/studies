@@ -1,4 +1,4 @@
-### 9: Cluster architecture
+### 7: Cluster architecture
 - Cluster consists of a set of nodes. There are worker nodes and master nodes.
 - Worker node: Hosts applications as containers
 - Master node: Manages, plans, executes and monitors nodes
@@ -17,6 +17,23 @@ Cluster components:
 What runs on what:
 - Master: ETCD cluster, kube-apiserver, Kube Controller Manager, kube-scheduler
 - Worker: kubelet, kube-proxy, Container Runtime Engine
+
+### 8: Docker Versus containerd
+In the beginning Kubernetes just orchestrated Docker.
+
+- But then Kubernetes introduced the container runtime interface. This allowed any container vendor to work as a container runtime for Kubernetes, as long as they adhered to OCI. OCI has an image spec and a container spec. With these specs in mind anyone can build a container runtime
+- Docker however was not built to support these standards. Docker was built before that
+- Docker shim was a hacky way to continue to support Docker outside of the container runtime interface
+- However Docker does follow the OCI standard, so you can use Docker images inside Kubernetes even though Kubernetes doesn't use Docker anymore
+- You can use the `ctr` command line tool to interact with containerd, but it's not very user friendly
+- There is however a tool called nerdctl that provides a Docker-like CLI for containerd. Neat!
+- There's another command line tool named crictl, this is a tool to interact with a CRI compatible container runtime
+- This is used to inspect and debug container runtimes. It's not really used to create containers
+- This is a bit of trivia but if you go in a Kubernetes node and create containers using crictl, kubelet will delete them as it doesn't know about them
+- crictl is what you would use on a Kubernetes node to debug containers if you ever had to
+
+### 9. A Note on Docker Deprecation
+- Docker is still used, and in many examples Docker is mentioned, it's just that Docker is not the default container runtime for Kubernetes anymore
 
 ### 10: ETCD for beginners
 - ETCD is a distributed key-value store.
@@ -38,12 +55,27 @@ You can then use ./etcdctl to:
 - On manual set up, the most important flag is the --advertise-client-urls, which is the address on which etcd listens. This is the URL that should be configured on the kube-api server when it tries to reach etcd
 - Kubeadm deploys etcd as a pod
 
-### 12: Kube-API Server
+### Notes from Dani
+- etcd was built to be a strongly consistent, highly available source of truth
+- The API server is basically the front door to that state. When you apply a pod, you are not directly creating a container, you are asking the API server to validate the object and then write the desired state into etcd. Then controllers, schedulers, kubelet, etc, observe that state and act on it
+
+So Kubernetes needs etcd to answer questions like: What is the current state of the cluster right now?
+
+And the answer needs to be correct even if one of the control plane nodes dies, network messages are delayed, or two clients try to update the same object at the same time.
+
+etcd uses Raft. Raft is a consensus protocol. In a cluster one node is elected as leader, and writes go through that leader, and a write is only committed once a majority of etcd members agree to it. This means that if one node dies the cluster can still continue working.
+
+This is why a two node etcd cluster is not considered meaningfully highly available. If either node dies, there is no majority for the cluster to continue working. People recommend three five or sometimes seven members
+
+#### So Why Not Use Something Like Redis?
+Redis was built for fast caching, not to be a strongly consistent distributed source of truth. You can set up replication for Redis, but that is asynchronous. This is usually fine for caching, but insufficient when you want strongly consistent authoritative state of the cluster.
+
+### 13: Kube-API Server
 When you run a kubectl command, it reaches for the kube-api server. The Kube api server authenticates the request and then validates it. It then communicates with the ETCD cluster and replies to the kubectl command line tool.
 You don't need to use kubectl, you could invoke the API directly
 
 #### Kube API server functionalities:
-- Authenticates Users
+- Authenticates users
 - Validates requests
 - Reads / writes from ETCD. kube-api is the only component that interacts directly with ETCD.
 - The scheduler, kubelet and kubectl use the Kube API to perform updates in the cluster.
@@ -65,8 +97,9 @@ This is a nice example put forward by Mumshad
 
 A similar pattern is followed every time a change is requested. The kube-api is at the center of every single task that needs to be performed to make a change in the cluster
 
-### 13: Kube controller manager:
+### 14: Kube controller manager:
 As the name might indicate, manages other controllers inside the Kubernetes cluster
+
 In Kubernetes terms: A controller is a process that continually monitors the state of various components within the system and works towards bringing the system to a desired state.
 
 - Node controller: Responsible for monitoring the states of the nodes. It takes the necessary actions through the kube API server to make sure pods are allocated to healthy nodes, and removes nodes that do not respond to heartbeats under certain circumstances
@@ -75,10 +108,16 @@ In Kubernetes terms: A controller is a process that continually monitors the sta
 
 If you set up your cluster with kubeadm, the kube-controller-manager will be a pod in the kube-system namespace
 
-### 14: Kube scheduler
+### Notes from Dani:
+When you use custom resource definition, it's a similar thing:
+
+- You first installed the custom resource definition so that Kubernetes can store and serve objects of that type through the APIs
+- And then you install a controller, often running as a normal deployment in the cluster. That controller watches those custom resources and reconciles the cluster state towards the desired state
+
+### 15: Kube scheduler
 - Responsible for scheduling pods on nodes. Only responsible for deciding which pod goes on which node. But it doesn't actually place the pod on the node! :o
 - The kubelet is the controller that creates the pod on the node. The scheduler only decides which pod goes where.
-- The scheduler only decides on which nodes the pods are placed on. Pods can have different requirements, and nodes can have different ammounts of resources vailable.
+- The scheduler only decides on which nodes the pods are placed on. Pods can have different requirements, and nodes can have different amounts of resources available
 - The scheduler looks at each pod and tries to find the best node for it. Pods might have certain requirements that only make them suitable to certain nodes (such as high cpu and memory requirements)
 - Other factors that factor in that will be seen later:
     - Resource requirements and limits
@@ -86,11 +125,11 @@ If you set up your cluster with kubeadm, the kube-controller-manager will be a p
     - Node selectors/affinity
 
 ### 15: Kubelet
-- Runs on worker nodes. Registers the worker node in the cluster. When it receives a request to start a pod, it launches it by communicating with the Container runtime engine (Docker in most cases) to pull the required image and run an instance. Monitors the status of the pod and containers in it and reports it to the kube api server.
-- Kubeadm does not deploy kubelets. You must always manually install Kubelet.
+- Runs on worker nodes. Registers the worker node in the cluster. When it receives a request to start a pod, it launches it by communicating with the Container runtime engine (which was Docker when you did the course at first) to pull the required image and run an instance. Monitors the status of the pod and containers in it and reports it to the kube api server
+- Kubeadm does not deploy kubelets. You must always manually install Kubelet
 
 ### 16: Kube proxy
-- Inside a cluster, all pods can communicate among themselves. This is accomplished by deploying a pod networking solution to the cluster.
+- Inside a cluster, all pods can communicate among themselves. This is accomplished by deploying a pod networking solution to the cluster
 - A POD network is a virtual network that all the pods connect to and it spans across all the nodes in the cluster
 - Kube proxy implements things like service IPs, which are virtual IPs. It uses IPTables rules to make sure that the traffic that his a virtual IP assigned to a service actually reaches a pod.
 
@@ -315,6 +354,31 @@ Note: Some questions were too easy/covered previously (ex: How many pods/replica
 Q: `Create a new Deployment with the below attributes using your own deployment definition file`
 A: `kubectl run nginx --image=nginx --replicas=4`
 
+### Notes from Dani
+So hang on, what are the differences between a replicaset and a deployment?
+
+Well, a ReplicaSet only tries to answer one question: how many pods are running matching this selector?
+
+That's all it does.
+
+A deployment gives you more to manage a versioned pod template over time. A deployment can for instance:
+
+- rollout a new image gradually
+- keep the old and new pods balanced during the update
+- pause and resume rollout
+- detect rollout failure
+- rollback
+- keep rollout history
+- and avoid directly mutating the ReplicaSet that currently owns the pods
+
+Also when you update a deployment's pod template, like when you change the image, the deployment controller creates a new ReplicaSet for the new template.
+
+The old ReplicaSet is kept around for rollback history. Usually there's a revision history limit that controls this setting on the deployment spec. But anyways after a rollout you might see an old ReplicaSet with zero pods.
+
+You usually use a ReplicaSet directly only in unusual cases: you are learning or debugging, or you are building your own high level controller that wants to manage the ReplicaSets itself.
+
+Also here's another interesting bit of trivia: If you change the image on a ReplicaSet it will not update the pods for you. Only new pods will have the new image. So it doesn't do a rollout.
+
 ### 30: Namespaces
 - There is the default namespace, which is where I assume all your objects go to when you just get a cluster and start launching things. This namespace is created by default.
 - There is also the kube-system namespace, which is where Kubernetes run it's own components.
@@ -339,6 +403,7 @@ kind: Namespace
 metadata:
   name: dev
 ```
+
 - Or: `kubectl create namespace dev`
 - If you want to have `dev` as you default namespace, you can: `kubectl config set-context $(kubectl config current-context) --namespace=dev`
 - `kubectl get pods` (will get the pods in the dev namespace)
@@ -347,6 +412,10 @@ metadata:
 #### ResourceQuotas
 - There are ResourceQuotas to limit resource usage on a given namespace!
 - The sample ResourceQuota on the k8s documentation is very large (lots of lines, check it out there if you want to)
+
+#### Notes from Dani
+- I never remember using the kube-public namespace -- apparently it has been around since Kubernetes 1.6, which is quite a while in Kubernetes time!
+- Apparently the only thing stored in there is a ConfigMap named cluster-info, used by kubeadm discovery and join flows, so not something that comes up very often
 
 ### 31: Practice test - Namespaces
 Q: How many Namespaces exist on the system?
@@ -377,11 +446,13 @@ A: `kubectl get pods --all-namespaces -owide`
 - If you do not provide a targetPort, it is assumed to be the same as Port.
 - If you do not provide a nodePort, a free one in the valid range (30000 - 32767) will be automatically alocated.
 - Note on the yaml definition that ports is an array. You can have multiple port mappings in the same service.
+- Here's an interesting thing to know: when using a service of type NodePort Kubernetes exposes the node port on every node. Imagine if you have three nodes on your cluster but only two instances of your pod, you do not need to know beforehand where your pods are, if by chance you use the IP of the node that doesn't have the pod running, kube-proxy will forward that traffic to a pod on another node
+- However you usually avoid caring about this by having a load balancer, ingress or gateway
 
 #### ClusterIP explanation
 - The service create VirtualIP inside the cluster to enable communication between different services
 
-####LoadBalancer explanation
+#### LoadBalancer explanation
 - Provides a LoadBalancer for your application in supported cloud providers
 
 ### 33: Services: ClusterIP
@@ -392,7 +463,11 @@ A: `kubectl get pods --all-namespaces -owide`
 - On the yaml spec: The target port where the backend is exposed in the pods. The port is which port in the service this ports gets exposed.
 - See [32_clusterip.yaml](./32_clusterip.yaml)
 
-#### 34: Practive test - Services 
+#### Notes from Dani
+- It is very uncommon to use a service of type NodePort on a public cloud. From what I can remember most services don't even explicitly specify a type, it's always ClusterIP as services are only used for in-cluster communication. ingresses usually have their own thing going on and are treated separately (ex: istio configs)
+- Gepeto says that some LoadBalancer services might use node ports internally depending on the provider or configuration. It claims the type of service LoadBalancer allocates node ports by default, which I found interesting, but don't remember interacting with on a production environment as we always used istio
+
+#### 34: Practive test - Services
 Q: How many Services exist on the system? in the current(default) namespace
 A: `kubectl get services`
 
@@ -440,7 +515,7 @@ spec:
 - The above will assume `app=redis` as selectors. You cannot pass selectors as an option
 - Create a Service named nginx of type NodePort to expose pod nginx's port 80 on port 30080 on the nodes: `kubectl expose pod nginx --port=80 --name nginx-service --dry-run -o yaml`
 
-###36: Practive test - Imperative commands
+### 36: Practive test - Imperative commands
 Q: Deploy a pod named nginx-pod using the nginx:alpine image.
 A: `kubectl run nginx-pod --restart=Never --image=nginx:alpine`
   
@@ -458,6 +533,23 @@ A: or: `kubectl scale deployment/webapp --replicas=3`
 
 Q: Expose the webapp as service webapp-service application on port 30082 on the nodes on the cluster
 A: `kubectl expose deployment webapp --type=NodePort --port=8080 --name=webapp-service --dry-run -o yaml > webapp-service.yam` <- Then edit the file and change the NodePort
+
+### 43. Kubectl explain command
+- You can use the kubectl api-resources command to see which resources are available in Kubernetes (well in your cluster!)
+- Then you can use the `kubectl explain` command to see a description of top level items that this object accepts on the config parameters declaratively, but you can also drill down to obtain more detailed instructions on a given field
+
+ex:
+```
+kubectl explain pod
+kubectl explain pod.spec
+kubectl explain pod.spec.containers
+```
+
+- You can also do: `kubectl explain pod --recursive`, which will recursively show you all these fields that this resource accepts
+
+### 46. kubectl apply command
+- When you run the apply command, if an object doesn't already exist it is created
+- When you apply something that already exists, Kubernetes checks your local file, the last applied configuration (which is stored as an annotation in the object) and the actual object configuration in Kubernetes memory to figure out which changes to perform
 
 ---
 Old notes:

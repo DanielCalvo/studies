@@ -280,7 +280,7 @@ A: `kubectl delete csr agent-smith`
 
 
 ### 123: KubeConfig
-- By default, kubectl looks for a file with the path $HOME/.kube/config which will contain the adress of the cluster and your login credentials
+- By default, kubectl looks for a file with the path $HOME/.kube/config which will contain the address of the cluster and your login credentials
 - The config file has 3 sections: Clusters, Contexts and Users.
 - Clusters: Has configs related to the different clusters you might have access to (dev, prod, gcloud, whatever)
 - Users: The user accounts with which you have access to these clusters. These users might have different privileges on different clusters
@@ -303,6 +303,10 @@ A: `kubectl delete csr agent-smith`
 
 - You can also specify a namespace under a context definition in config.
 - You can have a path to a certificate for a cluster in the config, or you can have the certificate in base64 in the config.
+
+#### notes from Dani
+- Now knowing about cube configure is all well and good but in the real world where you have managed Kubernetes usually, you usually have instructions on how to generate or get the cube coffee for your particular  flavor of Kubernetes,
+-  for instance with a ws EKS,  you run something from the command line and it will generate a cube  config for you and then you can take you from there,  no need to edit the file manually
 
 ### 124: Practice test - Kubeconfig
 Q: Where is the default kubeconfig file located in the current environment?

@@ -11,6 +11,11 @@ This is a small local k3s cluster used for study and experimentation.
 - `opi1`: `192.168.1.201`, k3s server
 - `opi2`: `192.168.1.202`, k3s agent
 
+## Node SSH Access
+- Root SSH access is available to both nodes: `root@192.168.1.201` and `root@192.168.1.202`.
+- If a user request can be answered by inspecting the nodes over SSH, it is acceptable to SSH into the relevant node and gather the information directly.
+- SSH operations are read-only by default. Do not modify files, services, packages, Kubernetes state, or other node state while logged in unless the user explicitly asks for a change.
+
 ## Networking
 - MetalLB provides `LoadBalancer` service IPs on the home LAN.
 - The local container registry is exposed through MetalLB.
