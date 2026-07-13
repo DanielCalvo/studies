@@ -38,6 +38,7 @@ Correct obvious Talon or voice-to-text artifacts:
 - Missing Markdown heading spaces, such as `####Heading` -> `#### Heading`.
 - Sentence starts and proper nouns when the fix is mechanical and low risk.
 - Spoken version numbers or numeric values when the intended number is clear from context, such as `Kubernetes one point thirty three` -> `Kubernetes 1.33`, `version one point twenty nine` -> `version 1.29`, and `fifty percent` -> `50%`.
+- Spoken Markdown, shell, and file-name symbols when the intended literal symbol is obvious from technical context. Examples: `minus minus help` -> `--help`, `dash dash set` -> `--set`, `back tic helm list back tic` -> "wrap `helm list` in backticks", `values dot yaml` -> `values.yaml`, `chart dot yaml` -> `Chart.yaml`, and `templates slash deployment dot yaml` -> `templates/deployment.yaml`.
 - Voice-to-text backtracks where the user dictated a correction, such as `thing A, no wait sorry I mean thing B`; keep only the corrected meaning (`thing B`) when the intended final wording is obvious.
 
 ## Formatting Preferences
@@ -48,6 +49,10 @@ Apply these preferences to added Markdown lines:
 - Use four spaces for nested list indentation. Top-level bullets use `- `; subitems use exactly four leading spaces before `- `. Normalize one, two, three, or other odd indentation widths to four spaces when the item is clearly nested.
 - List items should not end with a period. Remove a final period from bullet items unless the line is a code command, URL, abbreviation, or literal text where the period is meaningful.
 - Keep question marks and exclamation marks at the end of list items when they are intentional.
+- Put obvious inline shell commands, flags, file names, directory names, paths, Kubernetes resource names, and other literal technical tokens in backticks when they appear in prose or bullets. Examples: `helm install my-release bitnami/nginx`, `helm repo add`, `helm repo list`, `--help`, `--set`, `values.yaml`, `Chart.yaml`, `templates/`, and `charts/`.
+- When a note lists a family of shell commands or describes "the command", "run", "do", "use", "with", "followed by", or similar command context, treat the command phrase as inline code if it is clearly a command. For example, change "You can run helm history my-release" to "You can run `helm history my-release`".
+- Do not wrap ordinary product names or broad concepts in backticks just because they are technical. For example, keep `Helm`, `Kubernetes`, `chart`, `release`, and `repository` as prose unless the line is referring to a literal command, file, directory, flag, resource name, or typed value.
+- If a dictated phrase could be either prose or a literal command and the context does not make it clear, leave it as prose and mention the uncertainty at the end.
 
 ## What Not To Change
 

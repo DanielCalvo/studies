@@ -5,6 +5,7 @@
     - containers
     - image
     - volumes
+
 - When docker builds an image, it builds it in a layered architecture
 - Each line in a Dockerfile is a layer
 
@@ -53,6 +54,12 @@ Section keeps scope to Kubernetes only
 - `kubectl create -f 145_pvc.yaml`
 - `kubectl get persistentvolumeclaim`
 - There is a persistentVolumeReclaimPolicy. By default it is retain, which means your PVC will stay there until it's manually deleted.
+
+#### notes from Dani
+- So the examples here are purposefully easy so you can understand the concepts of persistent volumes and persistent volume claims
+- Things are different both on-premise and on the cloud
+- On-premise you usually have a more involved and complicated reliable setup with something like Ceph or Rook, or something else so you can reliably store data
+- On the cloud you might use EBS or EFS, which in the end are still volumes so to speak but they might have their own quirks and things to know about
 
 ### 146: Using PVCs in PODs
 - Once you create a PVC use it in a POD definition file by specifying the PVC Claim name under persistentVolumeClaim section in the volumes section like this:
@@ -172,3 +179,7 @@ spec:
     persistentVolumeClaim:
       claimName: claim-log-1
 ```
+
+### 201. Storage Class
+- With storage classes you can define provisioners such as Google storage that can automatically provision storage on Google Cloud and attach that to pods when a claim is made
+- That's called dynamic provisioning of volumes

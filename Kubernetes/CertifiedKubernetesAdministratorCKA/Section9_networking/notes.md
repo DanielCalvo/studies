@@ -109,6 +109,10 @@ A: `master $ netstat -anlp | grep 2379 | wc -l`
 - `--cni-conf-dir=/etc/cni/bin`
 - To run net-script.sh with arguments: `add, <container>, <namespace>`
 
+#### notes from Dani
+- The container network interface runs a script every time a pod is created or deleted to add a bunch of `iptables` rules around the pods so that the pods can communicate with each other throughout the cluster and through that host network
+- It would be cool having a look at one of those scripts just to see what it looks like, maybe this is something you can Google
+
 ### 162: CNI in Kubernetes
 - CNI is configured/invoked on/by the Kubelet
 - `--network-plugin=cni`
@@ -308,6 +312,11 @@ Or if they visit http://myapp.com or http://myotherapp.com
 
 - You can have multiple rules for a single ingress, regardless of name or url path.
 
+#### notes from Dani
+- So the course talks about the NGINX Ingress, but for Amazon Web Services now there's a Load Balancer Controller that you could adopt
+- And for 2026 it would be wise to evaluate the Gateway APIs with the new load balancer controller
+- Also I think the way the NGINX Ingress here is configured with a service of type `NodePort` might not be the most current one. But I'm not up to date on this so this note is entirely speculative
+
 ### 174: Practice test - Ingress 1
 Q: We have deployed Ingress Controller, resources and applications. Explore the setup.
 A: `kubectl get all --all-namespaces`
@@ -472,4 +481,30 @@ Q: Create the ingress resource to make the applications available at /wear and /
 A: 
 
 
+### 236. Introduction to Gateway API (2025 updates)
+The Ingress resource has some limitations:
+- No multi-tenancy
+- No namespace isolation
+- No role-based access control for features
+- And no resource isolation
 
+So you can have a single Ingress with two hosts and a bunch of paths and it's a single resource
+
+It also doesn't support many other things, like but not limited to:
+- Traffic splitting or weighting
+- Header manipulation
+- Authentication
+- Rate limiting
+- Redirects
+- Custom error pages
+- Session affinity
+- CORS
+- TCP or UDP routing
+- And probably a few other things we're forgetting here
+
+Actually some of these can be available but they're done through annotations on the Ingress objects and it seems to get very unwieldy if your Ingress config gets elaborate
+
+Gateway API is a new Kubernetes project that focuses on layer four and layer seven routing
+
+### 237. Practical Guide to Gateway API (2025 Updates)
+Well the course has nothing here. It's just go read the docs. I guess I should actually read the documentation on this and maybe apply it on EKS

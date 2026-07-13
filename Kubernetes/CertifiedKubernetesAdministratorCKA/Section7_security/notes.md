@@ -443,7 +443,7 @@ kubectl get clusterroles --all-namespaces
 - When you specify on a pod:
     - image:nginx
 - Kubernetes actually interprets this as:
-    - image: docker.io/nginx/nginx
+    - image: docker.io/library/nginx
 
 - To pull an image from a private registry, first you have to create a secret with the login credentials for the registry:
 ```
@@ -453,6 +453,10 @@ kubectl create secret docker-registry regcred \
     --docker-password=mypassword \
     --docker-email=myemail
 ```
+
+#### notes from Dani
+- So for some services like ECR you actually run a command in the command line and it gives you a short-lived token that you can use to talk with the container registry
+- It's a bit different from what is described above
 
 ### 132: Practice test - Image Security
 Q: Create a secret object with the credentials required to access the registry
@@ -528,6 +532,15 @@ spec:
 Q: Now try to run the below command in the pod to set the date: date -s '19 APR 2012 11:14:00'
 A: `kubectl exec -it ubuntu-sleeper -- date -s '19 APR 2012 11:14:00'`
 
+#### notes from Dani
+The book doesn't cover this very well but for instance you can have various other security context settings mostly to remove privileges from whatever you have running
+- You can have run as non root set to true, which will refuse to start the container as root
+- You can have allow privilege escalation set to false, which will prevent the process from acquiring additional privileges
+- You can have capability drop set to all which will remove default elevated Linux capabilities
+- You can have read-only file system set to true, which will launch with a read-only file system. Now this depends, because if your application uses the file system even lightly, you might not get away with this
+- And there is also a seccomp profile of runtime default which applies the container's runtime default system call restrictions
+
+So apparently this is pretty much all just standard Kubernetes hardening to prevent your container from doing things it shouldn't do
 
 ### 135: Network Policy
 - From a webserver, traffic coming from users is an Ingress traffic.
@@ -553,6 +566,13 @@ A: `kubectl exec -it ubuntu-sleeper -- date -s '19 APR 2012 11:14:00'`
 - Not all network solutions support network policies.
 
 (Follow up from Dani: The sample yaml given on this one was very crappy. Research and redo the text exercises on lecture 120!)
+
+#### notes from Dani
+- Network policies by default operate mainly at layer three and four
+- It can filter traffic based on source or destination pods, IPs or IP blocks, ports and TCP/UDP
+- It does not understand application layer levels, like HTTP paths or methods, headers, usernames or request bodies
+
+The above would be layer seven concerns and would require something like an ingress proxy, a service mesh, an API gateway or a CNI with extended layer seven policy capabilities. The network policy itself is only layer three and four
 
 ### 136 Practice test - Network Policy:
 Q: Create a network policy to allow traffic from the 'Internal' application only to the 'payroll-service' and 'db-service'
@@ -590,3 +610,29 @@ spec:
       port: 8080
   ```
  
+### 169. Service Accounts
+- Interesting one thing I didn't know is that you can use a service account to get a token, and this token has a short validity like one hour, and then you can use the token to connect to the cluster
+#### notes from Dani
+- So it turns out if you instantiate a pod and you don't specify a service account, you use the default service account
+- The default service account has very limited permissions, it can only do basic API discovery
+
+### 175. Pre-requisite - Security in Docker
+- So even if you run a container in Docker as root, Docker has setup security features that stop you from having root access to the underlying system
+
+### 184. (2025 Updates) Custom Resource Definition (CRD)
+- You can have a custom resource to represent anything in Kubernetes like you could use Kubernetes to order a flight ticket as seen on the first example
+- And what you do is you write a controller that interprets the instructions that you pass through the custom resource, and this controller is a Go program and it will do whatever you want
+
+- However out of the box Kubernetes will not understand what a flight ticket is. It doesn't have a flight ticket API for instance
+- For Kubernetes to understand what a flight ticket is first you need to apply a custom resource definition
+- And on this resource type you also define the spec of the custom resource, so what field it has and what arguments it accepts and so on
+- So this will cause Kubernetes to accept this resource, so Kubernetes will have the schema for it and its corresponding validations
+
+So the resource will be added to etcd but nothing will be done with it. Because you don't have a controller for it, you need to build and have running a custom controller that will handle these resources and do something with the instructions
+
+### 186. (2025 Updates) Custom Controllers
+- There is a sample controller available here: https://github.com/kubernetes/sample-controller
+
+### 187. (2025 Updates) Operator Framework
+- The operator framework is a thing that allows you to deploy the custom resource definitions and an operator pod I assume at the same time
+- You have the operator hub that lists a bunch of Kubernetes operators that you can adopt: https://operatorhub.io/
