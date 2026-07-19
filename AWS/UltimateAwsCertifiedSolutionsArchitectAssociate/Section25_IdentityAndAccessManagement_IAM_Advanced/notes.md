@@ -1,9 +1,9 @@
 ### 197. Security Token Service (STS) Overview
-- Allows you to grant limited and temporary access to AWS resources.
-- A token is valid for up to one hour (if you want to reuse that token you must refresh it )
+- Allows you to grant limited and temporary access to AWS resources
+- A token is valid for up to one hour (if you want to reuse that token, you must refresh it)
 - The most important functionality of the STS API is **AssumeRole**
-    - You can use AssumeRole Within your own account: for enhanced security
-    - Or you can assume a role in cross Account Access: assume role in target account to perform actions there
+    - You can use AssumeRole within your own account: for enhanced security
+    - Or you can assume a role in cross-account access: assume role in target account to perform actions there
 - AssumeRoleWithSAML
     - Used to return credentials for users logged with SAML
 - AssumeRoleWithWebIdentity
@@ -12,7 +12,7 @@
 - GetSessionToken
     - For MFA, from a user or AWS account root user
 
-#### Using STS to Assume a role
+#### Using STS to Assume a Role
 - First define an IAM Role within your account or cross-account
 - Then you define which principals (which users or which other roles) can access this IAM Role
 - Use AWS STS (Security Token Service) to retrieve credentials and impersonate the IAM Role you have access to (AssumeRole API)
@@ -20,37 +20,37 @@
 
 - You have a user that wants to assume a role (in the same or other account)
 - User > AssumeRole API > AWS STS > Check permissions > IAM
-- STS Then retorns temporary security credentials to the user
+- STS then returns temporary security credentials to the user
 
 #### Cross account access with STS
 1. Admin creates role that grants development account read/write access to productionapp bucket (on prod account)
 2. Admin grants members of the group Developers permission to assume the UpdateApp role (on dev account)
-3. Users request acces to role (from dev to prod)
+3. Users request access to role (from dev to prod)
 4. STS returns role credentials
 5. User updates productionapp (on prod) by using the role credentials
 - Never directly share credentials across accounts!
-    - You create a role and you and make sure your user assumes that role and STS will return to you role credentials that are temporary, so even if you lose them or they leak, it's not as bad as leaking entire credentials of an account
-- Can't find the diagram in the lecture, but this seems to be an equivalent: 
+    - You create a role and make sure your user assumes that role, and STS will return temporary role credentials to you, so even if you lose them or they leak, it's not as bad as leaking the entire credentials of an account
+- Can't find the diagram in the lecture, but this seems to be an equivalent:
     - https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html
 - Every time you see cross account access or assuming roles, think STS!
 
 ### 198. Identity Federation & Cognito
-- Federation lets users outside of AWS to assume temporary role for accessing AWS resources
-- These users assume identity provided access role
+- Federation lets users outside of AWS assume a temporary role for accessing AWS resources
+- These users assume an identity provider access role
 - Federations can have many flavors:
     - SAML 2.0
-- Custom Identity Broker
+    - Custom Identity Broker
     - Web Identity Federation with Amazon Cognito
     - Web Identity Federation without Amazon Cognito
     - Single Sign On
     - Non-SAML with AWS Microsoft AD
 - Using federation, you don’t need to create IAM users (user management is outside of AWS)
 - User > login > 3rd party > AWS
-- AWS trust the third party and lets user access it. User management is outside AWS
+- AWS trusts the third party and lets the user access it. User management is outside AWS
 
 #### SAML 2.0 Federation
 - Great integration with Active Directory / ADFS with AWS (or any SAML 2.0)
-- Using SAMK 2.0 we can get access to the AWS Console or CLI (through temporary creds)
+- Using SAML 2.0, we can get access to the AWS Console or CLI (through temporary creds)
 - No need to create an IAM user for each of your employees
 - https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_saml.html
 - Client > Identity provider (on prem) > LDAP
@@ -59,7 +59,7 @@
 - STS will look at the SAML assertion and make sure it is correct, and return temporary credentials
 - And then you can use these credentials to access an S3 bucket (for ex)
 - Same thing happens when we want to access the console!
- 
+
 #### SAML 2.0 Federation - Active Directory FS
 - User > ADFS > Identity store > returns SAML assertion to user
 - User > Posts the SAML assertion to sign in > Gets temp credentials from AWS > Redirected to console
@@ -74,7 +74,7 @@
 
 #### Custom Identity Broker Application
 - Use only if your identity provider is not compatible with SAML 2.0
-- The identity broker must determine the appropriate IAM policy for your user 
+- The identity broker must determine the appropriate IAM policy for your user
 - Uses the STS API: AssumeRole or GetFederationToken
 - Overall process similar, but this time the identity broker talks to STS directly (no SAML)
 
@@ -103,8 +103,8 @@
 - Centralized security management, create account, assign permissions
 - Objects are organized in trees
 - A group of trees is a forest
-- The idea is that you have a machine that is the domain controller, and you configure the user john in there
-- Then all the other machines that have this machine as a domain controller, can login as john (after the credentials are verified on the controler)
+- The idea is that you have a machine that is the domain controller, and you configure the user John in there
+- Then all the other machines that have this machine as a domain controller can log in as John (after the credentials are verified on the controller)
 
 #### AWS Directory Services
 - 3 flavours, no deep dive needed, but understand the differences!
@@ -122,7 +122,7 @@
 
 ### 200. Organizations - Overview
 - Multi accounts!
-- It's global service
+- It's a global service
 - Allows you to manage multiple AWS accounts
 - The main account is the master account – you can’t change it
 - Other accounts within the org are member accounts
@@ -147,94 +147,92 @@
 - You can have OUs as children/inside other OUs
 
 #### Service Control Policies
-- Allows you Whitelist or blacklist IAM actions
+- Allows you to whitelist or blacklist IAM actions
 - Applied at the Root, OU or Account level
 - Does not apply to the Master Account
 - SCP is applied to all the Users and Roles of the Account, including Root
-    - So if you restrict EC2 usage on a OU, even root can't use EC2 there
+    - So if you restrict EC2 usage on an OU, even root can't use EC2 there
 - The SCP does not affect service-linked roles
-- Service-linked roles enable other AWS services to integrate with AWS Organizations and can't be restricted by SCPs.
-- SCP must have an explicit Allow (does not allow anything by defa1ult)
+- Service-linked roles enable other AWS services to integrate with AWS Organizations and can't be restricted by SCPs
+- SCP must have an explicit Allow (does not allow anything by default)
 - Use cases:
     - Restrict access to certain services (for example: can’t use EMR)
     - Enforce PCI compliance by explicitly disabling services
 
 #### SCP Hierarchy
 - SCPs do not apply to the master account
-- Denies take precedences over authorizes
+- Denies take precedence over allows
 - SCPs are inherited by accounts down the organization tree
 
 #### SCP Examples blacklist and whitelist strategies
-- They look very much like json policies 
+- They look very much like JSON policies
 
 #### AWS Organizations - Moving accounts
-To migrate accounts from one organization to another
+To migrate accounts from one organization to another:
 1. Remove the member account from the old organization
 2. Send an invite to the new organization
 3. Accept the invite to the new organization from the member account
 
 If you want the master account of the old organization to
 also join the new organization, do the following:
-1. Remove the member accounts from the organizations using procedure above
+1. Remove the member accounts from the organizations using the procedure above
 2. Delete the old organization
 3. Repeat the process above to invite the old master account to the new org
 
 ### 201. Organizations - Hands on
 - AWS Organizations
-- Stephane created a new account named aws account master
+- Stéphane created a new account named AWS account master
 - Create organization
-- You can then invite aws accounts to join your organization
+- You can then invite AWS accounts to join your organization
     - Actually you can invite an account and create an account
 - Inviting account: By email or account ID
 - On the child account, go on organizations and you should have an invitation there
-- On the master account, you now should be able to see both accounts on the same organization
+- On the master account, you now should be able to see both accounts in the same organization
 - You can then go to the organize accounts and create OUs!
     - By default you only have root
 - You can create new OUs inside root, like dev and test
-- And inside those OUs you can add more OUs! 
+- And inside those OUs you can add more OUs!
 - You can then select an account and move it to the OU you want!
-- It's good pratice to leave your master account on the root OU but you can also move it if you want
+- It's good practice to leave your master account on the root OU but you can also move it if you want
 - On root, you can enable service control policies
 - Once they're enabled, you can attach policies to your accounts inside your OUs
-- FullAWSAccess is inherited from root
+- `FullAWSAccess` is inherited from root
 - Created a policy to deny access to Athena, all actions
-- Neat, you can't access athena
+- Neat, you can't access Athena
 
 ### 202. IAM Advanced
-
 #### IAM Conditions
 - A way to make your IAM policies a bit more restrictive based on a condition
-- aws:SourceIP: restrict the client IP from which the API calls are being made
+- `aws:SourceIp`: restrict the client IP from which the API calls are being made
     - Ex: Deny anything that doesn't come from these IPs
-- Aws:RequestedRegion: restrict the region the API calls are made to
-    Ex: You can only allow certain services on certain regions
+- `aws:RequestedRegion`: restrict the region the API calls are made to
+    - Ex: You can only allow certain services on certain regions
 - You can also restrict on tags!
-    - Ex: You can only stop and start instances that have "project:banana" on it
-    - ec2:ResourceTag 
-- You can also force MFA for certan actions, like stopping instances
+    - Ex: You can only stop and start instances that have `project:banana` on it
+    - `ec2:ResourceTag`
+- You can also force MFA for certain actions, like stopping instances
 
 #### IAM for S3
 - ListBucket permission applies to
-    - arn:aws:s3:::test
+    - `arn:aws:s3:::test`
     - bucket level permission
 - GetObject, PutObject, DeleteObject applies to
-    - arn:awn:s3:::test/*
+    - `arn:aws:s3:::test/*`
     - object level permission
 
-#### IAM Roles vc Resource Based Policies
-- Attach a policy to a resource (example: S3 bucket policy) versus attaching of a using a role as a proxy
-- What's the difference of using an S3 policy vs an IAM role?
+#### IAM Roles vs Resource-Based Policies
+- Attach a policy to a resource (example: S3 bucket policy) versus using a role as a proxy
+- What's the difference between using an S3 policy vs an IAM role?
 - When you assume a role (user, application or service), you give up your original permissions and take the permissions assigned to the role
 - When using a resource based policy, the principal doesn’t have to give up his permissions
-- Example: User in account A needs to scan a DynamoDB table in Account A and dump it in an S3 bucket in Account B.
+- Example: User in account A needs to scan a DynamoDB table in Account A and dump it in an S3 bucket in Account B
 - Supported by: Amazon S3 buckets, SNS topics, SQS queues (can have resource based policies)
 
 ### 203. [SAA-C02] IAM - Policy Evaluation Logic
-
 #### IAM Permission Boundaries
 - IAM Permission Boundaries are supported for users and roles (not available for groups)
 - Advanced feature to use a managed policy to set the maximum permissions an IAM entity can get
-- IAM Permission Boundary: It's an IAM policu that you attach to a use or role and it can only do those things.
+- IAM Permission Boundary: It's an IAM policy that you attach to a user or role, and it can only do those things
     - You can attach more roles to that user but it doesn't matter, it will still be bound by the IAM permission boundary
 
 #### Hands on!
@@ -244,7 +242,7 @@ also join the new organization, do the following:
 - Gave him S3 admin access and now that's all he can do!
 
 #### IAM Permission Boundaries, part 2
-- Can be used in combinations of AWS Organizations SCP
+- Can be used in combination with AWS Organizations SCP
 - Use cases for permission boundaries:
     - Delegate responsibilities to non administrators within their permission boundaries, for example create new IAM users
     - Allow developers to self-assign policies and manage their own permissions, while making sure they can’t “escalate” their privileges (= make themselves admin)
@@ -257,11 +255,11 @@ also join the new organization, do the following:
 
 #### Example IAM Policy
 - Has a deny for all SQS resources
-- And then an allow for sqs:Delete queue
-- You can't create a queue because there's a deny for sqs:*
+- And then an allow for `sqs:DeleteQueue`
+- You can't create a queue because there's a deny for `sqs:*`
 - As soon as you have an explicit deny, then the decision is going to be denied
     - You also can't delete the queue, because the deny prevails over the allow
-- You also can't perform ec2:Describe instances as there is no allow on your policy, and a deny is implied for everything that is not allowed
+- You also can't perform `ec2:DescribeInstances` as there is no allow on your policy, and a deny is implied for everything that is not allowed
 
 ### 204. [SAA-C02] Resource Access Manager (RAM)
 - Allows you to share AWS resources that you own with other AWS accounts
@@ -269,14 +267,14 @@ also join the new organization, do the following:
 - The idea is that you avoid resource duplication!
 - You can share:
 - VPC Subnets:
-    - allow to have all the resources launched in the same subnets
-    - Must be from the same AWS Organizations.
+    - Allow to have all the resources launched in the same subnets
+    - Must be from the same AWS Organizations
     - Cannot share security groups and default VPC
     - Participants can manage their own resources in there
     - Participants can't view, modify, delete resources that belong to other participants or the owner
 - You also can share:
     - AWS Transit Gateway
-    - Route53 Resolver Rules
+    - Route 53 Resolver Rules
     - License Manager Configurations
 
 #### Resource Access Manager - VPC example
@@ -298,32 +296,32 @@ also join the new organization, do the following:
 
 ### 205. [SAA-C02] AWS Single Sign On (SSO) - Overview
 - This is to centrally manage Single Sign-On to access multiple accounts and 3rd party business applications
-    - You go to a portal and once you're signed on to that single sign on portal, you can login to any of your AWS accounts and dropbox and office365 and slack and so on. 
+    - You go to a portal and once you're signed on to that single sign-on portal, you can log in to any of your AWS accounts and Dropbox and Office 365 and Slack and so on
 - Integrated with AWS Organizations
     - So if you have a ton of accounts on your org, you just set up SSO and you will have access to login into all the accounts within the org. One login for all the accounts!
 - Supports SAML 2.0 markup
 - Integration with on-premise Active Directory
 - Centralized permission management
 - Centralized auditing with CloudTrail
-- Exam tip: When you see a use case talking about doing a sign on to multiple AWS accounts, or to business applications that require SAML 2.0, think single sign on.
+- Exam tip: When you see a use case talking about doing a sign-on to multiple AWS accounts, or to business applications that require SAML 2.0, think single sign-on
 
-#### AWS Single Sign on (SSO) - Setup with AD
-- AWS SSO can connect to on premise AD to manage user 
+#### AWS Single Sign-On (SSO) - Setup with AD
+- AWS SSO can connect to on-premise AD to manage users
 - But you can also use MS Managed AD on AWS
 - SSO gets the users from AD
-- Once logged in with SSO you can give access to AWS consoles, business cloud apps (slack, dropbox) and custom SAML applications
+- Once logged in with SSO, you can give access to AWS consoles, business cloud apps (Slack, Dropbox) and custom SAML applications
 
 #### SSO vs AssumeRoleWithSAML
-- AssumeRoleWithSaml
-    - Browser > 3rd parrty IDP login portal > identity store > returns SAML
-    - Browser with SAML > STS > And with STS creds > AWS 
+- AssumeRoleWithSAML
+    - Browser > 3rd party IdP login portal > identity store > returns SAML
+    - Browser with SAML > STS > And with STS creds > AWS
 - AWS SSO
     - Browser > Login on AWS SSO Login Portal > Identity Store SAML 2.0 compatible
     - Browser > AWS
-- SSO is better for multiple accounts 
+- SSO is better for multiple accounts
 
 ### 206. [SAA-C02] AWS Single Sign On (SSO) - Hands on
-- AWS Sigle sign on
+- AWS Single Sign-On
 - Can enable SSO, and the steps after that are
 1. Choose your identity source
 2. Manage SSO access to your AWS accounts
@@ -335,32 +333,29 @@ also join the new organization, do the following:
 - Pending
 
 ### 284. Organizations - Tag Policies
-- This allows you to standardize tags acorus resources in an asw org
--  you can ensure consistent tagging
--  and you define tag keys and their allowed values
--  helps with cost allocation tags and attribute based access control
-- You can generate reports on tagged or non tagged resources and use event bridge to monitor noncompliant tags
+- This allows you to standardize tags across resources in an AWS org
+- You can ensure consistent tagging
+- And you define tag keys and their allowed values
+- Helps with cost allocation tags and attribute-based access control
+- You can generate reports on tagged or non-tagged resources and use EventBridge to monitor noncompliant tags
 
 ### 286. IAM - Resource-based Policies vs IAM Roles
-So to access something cross account-
+So to access something cross-account:
 - you can attach a resource based policy to a resource, like an S3 bucket policy
--  for you can use a role as a proxy
+- or you can use a role as a proxy
 
-The difference is that when you assume role you give up your original permissions and t take the permissions of the role
-(So you can do anything that a role can do but you cannot do anything with your original permission)
+The difference is that when you assume a role, you give up your original permissions and take the permissions of the role
+(So you can do anything that a role can do, but you cannot do anything with your original permissions)
 
-But when you use a resource based policy the principal doesn-t have to assume a role so he doesn't have to give up his permission
-
+But when you use a resource based policy, the principal doesn't have to assume a role, so he doesn't have to give up his permissions
 
 ### 289. AWS Directory Services
-- The lecture goes over briefly what is Microsoft active directory
-- AWS Directory ServicesLet-s you create a Microsoft active directory in as
+- The lecture goes over briefly what is Microsoft Active Directory
+- AWS Directory Services lets you create a Microsoft Active Directory in AWS
 
-not something I think I-m going to be using anytime --  this is usually the domain of the it support folks
+Not something I think I'm going to be using any time—this is usually the domain of the IT support folks
 
 ### 291. AWS Control Tower
- This offers a way to set up in govern amazon web services in multi account environments
- 
-- So one of the features is a preventative guardrails, using scp,  so for instance you can restrict regions across all your accounts
+This offers a way to set up and govern Amazon Web Services in multi-account environments
+- So one of the features is preventive guardrails, using SCPs, so for instance you can restrict regions across all your accounts
 - You also have a detective guardrail feature which can detect noncompliant resources like resources without tags
-- 

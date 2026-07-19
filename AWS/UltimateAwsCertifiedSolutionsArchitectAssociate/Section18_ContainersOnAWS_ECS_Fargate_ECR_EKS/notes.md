@@ -3,121 +3,115 @@
 ### 198. Docker Introduction
 
 ### 199. Amazon ECS
-- ecs  stands for elastic containers nervous
--  you launched docker containers on it, that is called an ess task
-- The standard type is implied to be the the ec2  launch type. this means the for container runs on an easy to instance,. or various instances
+- ECS stands for Elastic Container Service
+- You launch Docker containers on it; that is called an ECS task
+- The standard type is implied to be the EC2 launch type. This means the container runs on an EC2 instance or various instances
 
-However there-s a second launch type called the far gate load launch type
-- You launched docker containers on adobes,  but you do not provision the infrastructure, there are no es to instances to manage
-- It-s all serverless baby
-- You just create the task definitions and as will run ECS tasks for you you based on the cu and ram you need, kind of cool
-- To scaled up, just increase the number of tasks
+However, there's a second launch type called the Fargate launch type
+- You launch Docker containers on AWS, but you do not provision the infrastructure; there are no EC2 instances to manage
+- It's all serverless baby
+- You just create the task definitions, and AWS will run ECS tasks for you based on the CPU and RAM you need, kind of cool
+- To scale up, just increase the number of tasks
 
-As far as IAM goes there seemed to be two types of roles for ess-
- 
-the easy to instance profile role:
-- Used by the ess agents
--  makes apr calls to these yes service
--  and this seems to be the general
+As far as IAM goes, there seem to be two types of roles for ECS:
 
-- This seems to be a general role used by the EC2 instances that run your ECS workload to interact with various other amazon webservice is it may need to like,  send logs to cloudwatch, or pull images from cr, or retrieves parameter from parameter store, maybe upload something to as three? and soon iso worth
+The EC2 instance profile role:
+- Used by the ECS agents
+- Makes API calls to the ECS service
+- This seems to be a general role used by the EC2 instances that run your ECS workload to interact with various other Amazon Web Services it may need to, like sending logs to CloudWatch, pulling images from ECR, retrieving parameters from Parameter Store, maybe uploading something to S3? And so on and so forth
 
-You then can have roles per cs task-
+You then can have roles per ECS task:
 - Each task can have a specific role
-- So obviously you can have different ess servicess/tasks with different roles
+- So obviously you can have different ECS services/tasks with different roles
 - These are defined in the task definition
 
- what wasn-t clear for me was if the instance profile role and the ess task role are like two ways of accomplishing this same thing, or like if you need to have them together or separately or how do these work it's not very clear at this time.
-
+What wasn't clear for me was if the instance profile role and the ECS task role are like two ways of accomplishing the same thing, or like if you need to have them together or separately, or how these work. It's not very clear at this time.
 
 #### Load balancer integrations
 - The default approach here seems to be to use an application load balancer
--  you can also use the network load balancer if you need high throughput or high perform permits
-- The classic load balancer is also supported but not recommended since its old
+- You can also use the network load balancer if you need high throughput or high performance
+- The classic load balancer is also supported but not recommended since it's old
 
-#### data volumes
-- If you want to have a shared  file systemFor cs tasks,  you can use efs
--  works on both EC2 and far gate launch types
--  far gate plus efs equals serverless
+#### Data volumes
+- If you want to have a shared file system for ECS tasks, you can use EFS
+- Works on both EC2 and Fargate launch types
+- Fargate plus EFS equals serverless
 
 ### 200. Creating ECS Cluster - Hands On
-So we went through the user interface and created an cs cluster
+So we went through the user interface and created an ECS cluster
+
 ### 201. Creating ECS Service - Hands On
-- So you create task definition which is a service and then in this task definition you can choose the infrastructure requirements like launch type so if you wanted to run on far gate or on a managed instance
+- So you create a task definition, which is a service, and then in this task definition you can choose the infrastructure requirements, like launch type, so if you wanted to run on Fargate or on a managed instance
 - Once you create a task definition you can launch it as a service
 
 ### 202. Amazon ECS - Auto Scaling
 
 ### 203. Amazon ECS - Solutions Architectures
-- So you can have something like a client uploading something to a street bucket
--  which will send an event to amazon event bread
--  which can have a rule to run an ess task
--  and then this eases to ask can maybe save something  to  dynamo did
+- So you can have something like a client uploading something to an S3 bucket
+- Which will send an event to Amazon EventBridge
+- Which can have a rule to run an ECS task
+- And then this ECS task can maybe save something to DynamoDB
 
- so you can have this whole architecture around ecs
+So you can have this whole architecture around ECS
 
-You can alson:
--  have an amazon event bridge running every one hour
--  with a role to run an ECS task inside a cluster
--The task can do whatever you want,Like do some thatch processing of something in S3
+You can also:
+- Have Amazon EventBridge run every hour
+- With a role to run an ECS task inside a cluster
+- The task can do whatever you want, like do some batch processing of something in S3
 
-You can also have an sqs queue  and services on es gest polling that queue
-- You can then plug autoscaling into this so the more messages you have in the queue, the more tasvs are spined up officious
+You can also have an SQS queue and services on ECS just polling that queue
+- You can then plug autoscaling into this, so the more messages you have in the queue, the more tasks are spun up, obviously
 
-There-s the last thing since if you have an cs task fail
--  you can have that reach out to event bridge
--  which can then trigger a sans notification
--  which can send an email to someone who needs to know that the event failed
-
+There's the last thing: if you have an ECS task fail
+- You can have that reach out to EventBridge
+- Which can then trigger an SNS notification
+- Which can send an email to someone who needs to know that the event failed
 
 ### 204. Amazon ECS - Clean Up - Hands On
 
 ### 205. Amazon ECR
-- Elastic contain registry
--  stores and manages docker images on ars
+- Elastic Container Registry
+- Stores and manages Docker images on AWS
 - You can create your own repo and store image privately or you can use the public gallery
-- Fully integrated with TCS, backed by s3
-- It supports image vulnerability scanning, versioning, image tags and image life cycle. these are quite handy
+- Fully integrated with ECS, backed by S3
+- It supports image vulnerability scanning, versioning, image tags and image lifecycle. These are quite handy
 
-####Notes from Dani
--  the public gallery is particularly useful because if you're making calls from within amazon, you get charged per image poll, but you don-t get rate limited
--  so you can use it like any amazon service that you would normally use and just pay for your usage
-
+#### Notes from Dani
+- The public gallery is particularly useful because if you're making calls from within Amazon, you get charged per image pull, but you don't get rate limited
+- So you can use it like any Amazon service that you would normally use and just pay for your usage
 
 ### 206. Amazon EKS - Overview
-- Elastic Kubernetes service
-- Managed Kubernetes on arrs
-- It-s an alternative to ecs. 
--  it supports ec2  if you want to deploy worker nose or fargate if you want to deploy serverless contaienrs
-- Small note from the diagram-  you can have public and private log balancers. I actually never used the private load balancer I should use that sometime
+- Elastic Kubernetes Service
+- Managed Kubernetes on AWS
+- It's an alternative to ECS
+- It supports EC2 if you want to deploy worker nodes or Fargate if you want to deploy serverless containers
+- Small note from the diagram: you can have public and private load balancers. I actually never used the private load balancer; I should use that sometime
 
-Es supports three types of nodes
-- managed note groups
-  -  creates and manages nodes for you. 
-  - nodes are part of an autoscaling group managed by ekes. 
-  - supports on demand or spot instances
+EKS supports three types of nodes
+- Managed node groups
+    - Creates and manages nodes for you
+    - Nodes are part of an autoscaling group managed by EKS
+    - Supports On-Demand or Spot Instances
 
-- self managed nodes
-  -  notes created by you and registered to the EKS cluster managed by an ASG
-  -  you can use prebuilt amis
-  -  supports only mand or spot instances
+- Self-managed nodes
+    - Nodes created by you and registered to the EKS cluster, managed by an ASG
+    - You can use prebuilt AMIs
+    - Supports On-Demand or Spot Instances
 
--aws fargate
-- No maintenance and no nodes required
+- AWS Fargate
+    - No maintenance and no nodes required
 
 You can attach data volumes to your cluster by specifying a storage class manifest on your cluster
-- this will leverage a container storage interface compliant driver (csi)
+- This will leverage a Container Storage Interface-compliant driver (CSI)
 
 You also have support for
-- ebs
-- efs
-- fsx for lustre
-
+- EBS
+- EFS
+- FSx for Lustre
 
 ### 207. Amazon EKS - Hands On
 
 ### Quiz 15: Containers on AWS Quiz
 
-
 ## TODO
-- Terraform an ecs clusted and an ecs task and deploy it
+- Terraform an ECS cluster and an ECS task and deploy it
