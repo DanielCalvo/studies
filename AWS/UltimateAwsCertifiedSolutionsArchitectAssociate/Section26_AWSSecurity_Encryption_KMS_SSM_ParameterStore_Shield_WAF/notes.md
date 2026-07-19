@@ -253,4 +253,29 @@
     - Enabling encryption
 - Check this out for more details: https://aws.amazon.com/compliance/shared-responsibility-model/
 
+### 309. DDoS Protection Best Practices
+So according to the course, CloudFront offers protection from common DDoS attacks like SYN floods and UDP reflections
+Global Accelerator is integrated with Shield for DDoS protection—and it says it's helpful if your backend is not compatible with CloudFront
+It also claims Route 53 has some sort of DDoS protection mechanism but doesn't specify which
+
+### 310. Amazon GuardDuty
+- This is an intelligent threat discovery service that protects your Amazon account
+- It uses machine learning algorithms
+- Input data includes:
+    - CloudTrail
+    - VPC Flow Logs
+    - DNS logs
+    - Optional features like EKS audit logs, RDS, Aurora, Lambda, so on and so forth
+- You can also set up an EventBridge rule to be notified in case of findings
+
+### 311. Amazon Inspector
+Analyzes various AWS resources for vulnerabilities; it's an automated security assessment thing
+- It checks EC2 instances: checks for operating system vulnerabilities and analyzes for unintended network accessibility
+- Container images on ECR
+- And Lambda functions, like vulnerabilities in code and packages and so on
+
+### 312. Amazon Macie
+This is a fully managed data security and data privacy service that uses machine learning to discover and protect sensitive data
+It seems that by sensitive data this means personally identifiable information, and it also seems that this can analyze files on S3
+
 ### Quiz!

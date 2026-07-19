@@ -9,3 +9,9 @@
 4. When investigating something (ex: why did this helm chart fail to install, or why is this pod not initializing) do not take action (edit files or run commands) on your own. Only take action and change remote systems or files when requested to. Remember our purpose here is to study and learn, not rush into fixing things.
 
 5. When troubleshooting and having to change a config file to make things work, troubleshoot or fix something, leave a comment on top of the introduced/changed config briefly explaining why this is in place
+
+If asked to work with Kubernetes, read [.agents/kubernetes.md](.agents/kubernetes.md)
+
+If asked to work with Terraform, read [.agents/terraform.md](.agents/terraform.md)
+
+All codex skills are located under [.codex/skills](.codex/skills)

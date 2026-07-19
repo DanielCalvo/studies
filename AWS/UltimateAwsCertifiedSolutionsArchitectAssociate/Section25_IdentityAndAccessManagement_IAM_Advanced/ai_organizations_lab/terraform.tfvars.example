@@ -1,0 +1,2 @@
+dev_account_email  = "yourname+aws-dev@example.com"
+prod_account_email = "yourname+aws-prod@example.com"

@@ -333,3 +333,34 @@ also join the new organization, do the following:
 
 ### Quiz!
 - Pending
+
+### 284. Organizations - Tag Policies
+- This allows you to standardize tags acorus resources in an asw org
+-  you can ensure consistent tagging
+-  and you define tag keys and their allowed values
+-  helps with cost allocation tags and attribute based access control
+- You can generate reports on tagged or non tagged resources and use event bridge to monitor noncompliant tags
+
+### 286. IAM - Resource-based Policies vs IAM Roles
+So to access something cross account-
+- you can attach a resource based policy to a resource, like an S3 bucket policy
+-  for you can use a role as a proxy
+
+The difference is that when you assume role you give up your original permissions and t take the permissions of the role
+(So you can do anything that a role can do but you cannot do anything with your original permission)
+
+But when you use a resource based policy the principal doesn-t have to assume a role so he doesn't have to give up his permission
+
+
+### 289. AWS Directory Services
+- The lecture goes over briefly what is Microsoft active directory
+- AWS Directory ServicesLet-s you create a Microsoft active directory in as
+
+not something I think I-m going to be using anytime --  this is usually the domain of the it support folks
+
+### 291. AWS Control Tower
+ This offers a way to set up in govern amazon web services in multi account environments
+ 
+- So one of the features is a preventative guardrails, using scp,  so for instance you can restrict regions across all your accounts
+- You also have a detective guardrail feature which can detect noncompliant resources like resources without tags
+- 

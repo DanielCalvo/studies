@@ -18,10 +18,11 @@ Require a target file path from the user. If the user invokes the skill without 
 1. Identify the repository root with `git rev-parse --show-toplevel`.
 2. Inspect the target file's local diff against `HEAD` with `git diff -- <path>`.
 3. Work only on added lines from the diff: lines beginning with `+` that are not diff metadata (`+++`, hunk headers, etc.).
-4. Ignore deleted lines and unchanged context lines.
-5. For modified lines, edit only the newly added replacement line when it clearly contains dictation cleanup issues. Do not try to reconstruct deleted text.
-6. Apply focused edits to the file itself, keeping surrounding untouched content stable.
-7. Re-run `git diff -- <path>` and verify the final diff only changes intended added-line cleanup.
+4. If the added lines already satisfy this skill's rules and contain no clear cleanup issues, make no edits. Treat repeated runs as safe no-ops; do not invent further changes merely because the skill was invoked again.
+5. Ignore deleted lines and unchanged context lines.
+6. For modified lines, edit only the newly added replacement line when it clearly contains dictation cleanup issues. Do not try to reconstruct deleted text.
+7. Apply focused edits to the file itself, keeping surrounding untouched content stable.
+8. Re-run `git diff -- <path>` and verify the final diff only changes intended added-line cleanup. If no edits were needed, confirm that the file was already clean and leave it untouched.
 
 When the user explicitly asks to review before applying changes, show proposed edits or a concise summary and do not modify the target file.
 
@@ -45,6 +46,7 @@ Correct obvious Talon or voice-to-text artifacts:
 
 Apply these preferences to added Markdown lines:
 
+- Leave exactly one blank line before every Markdown heading, unless the heading is the first line of the file.
 - Do not leave a blank line between a Markdown heading and the first content line under it. A heading on line 1 should be followed immediately by text, a bullet, or other content on line 2.
 - Use four spaces for nested list indentation. Top-level bullets use `- `; subitems use exactly four leading spaces before `- `. Normalize one, two, three, or other odd indentation widths to four spaces when the item is clearly nested.
 - List items should not end with a period. Remove a final period from bullet items unless the line is a code command, URL, abbreviation, or literal text where the period is meaningful.
@@ -81,6 +83,7 @@ Examples:
 - `Gepeto says` should stay as `Gepeto says`.
 - `- keep rollout history.` -> `- keep rollout history`
 - `  - nested item` -> `    - nested item`
+- `Last sentence\n### Next topic` -> `Last sentence\n\n### Next topic`
 - `### Topic\n\nFirst sentence` -> `### Topic\nFirst sentence`
 - `I mean the scheduler, no wait sorry I mean the kubelet creates the pod` -> `the kubelet creates the pod`
 
@@ -89,6 +92,6 @@ Examples:
 Before finishing, report:
 
 - The target file reviewed.
-- Whether edits were applied or only proposed.
+- Whether edits were applied, only proposed, or unnecessary because the added lines were already clean.
 - The validation command used, usually `git diff -- <path>`.
 - Any uncertain terms left unchanged.
