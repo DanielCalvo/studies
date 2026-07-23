@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: image-resizer-api
+  namespace: monitoring
+  labels:
+    prometheus: homelab
+spec:
+  namespaceSelector:
+    matchNames:
+      - image-resizer
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: image-resizer-api
+  endpoints:
+    - port: http
+      path: /metrics
+      scheme: http
+      interval: 15s
+      scrapeTimeout: 5s

@@ -10,8 +10,8 @@
 
 5. When troubleshooting and having to change a config file to make things work, troubleshoot or fix something, leave a comment on top of the introduced/changed config briefly explaining why this is in place
 
-If asked to work with Kubernetes, read [.agents/kubernetes.md](.agents/kubernetes.md)
-
-If asked to work with Terraform, read [.agents/terraform.md](.agents/terraform.md)
+- If asked to work with Kubernetes, read [.agents/kubernetes.md](.agents/kubernetes.md)
+- If asked to work with Terraform, read [.agents/terraform.md](.agents/terraform.md)
+- If asked to work with Go, read [.agents/go.md](.agents/go.md)
 
 All codex skills are located under [.codex/skills](.codex/skills)

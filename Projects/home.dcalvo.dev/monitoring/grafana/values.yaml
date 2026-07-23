@@ -78,3 +78,19 @@ dashboards:
       datasource:
         - name: DS_THEMIS
           value: prometheus
+    kubernetes-views-global:
+      # Grafana dashboard: Kubernetes / Views / Global
+      gnetId: 15757
+      revision: 43
+    kubernetes-views-namespaces:
+      # Grafana dashboard: Kubernetes / Views / Namespaces
+      gnetId: 15758
+      revision: 46
+    kubernetes-views-nodes:
+      # Grafana dashboard: Kubernetes / Views / Nodes
+      gnetId: 15759
+      revision: 40
+    kubernetes-views-pods:
+      # Grafana dashboard: Kubernetes / Views / Pods
+      gnetId: 15760
+      revision: 39

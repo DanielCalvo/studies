@@ -12,3 +12,9 @@ spec:
   endpoints:
     - port: http #interesting, apparently you cant have a raw number here, you need to use a named port
       #Look at the Kubernetes service for this to know what the endpoint port is named
+      # Keep the real Kubernetes namespace/pod labels instead of exported_* labels.
+      honorLabels: true
+      relabelings:
+        # Supplies the cluster selector expected by the Kubernetes Views dashboards.
+        - targetLabel: cluster
+          replacement: homelab

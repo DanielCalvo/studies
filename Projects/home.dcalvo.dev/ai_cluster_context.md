@@ -21,6 +21,16 @@ This is a small local k3s cluster used for study and experimentation.
 - The local container registry is exposed through MetalLB.
 - Since this runs on a trusted home network, plain HTTP and no authentication are acceptable when they keep experiments simple.
 
+Current load balancers in use: 
+```
+container-registry   registry                   LoadBalancer   10.43.102.211   192.168.1.242   5000:31250/TCP                 21d
+image-resizer        image-resizer-api          LoadBalancer   10.43.119.23    192.168.1.222   80:32268/TCP                   21h
+kube-system          traefik                    LoadBalancer   10.43.34.169    192.168.1.220   80:32337/TCP,443:30100/TCP     25d
+monitoring           grafana                    LoadBalancer   10.43.40.120    192.168.1.221   80:31362/TCP                   15d
+monitoring           prometheus-lb              LoadBalancer   10.43.124.164   192.168.1.223   80:30596/TCP                   16d
+nginx                my-second-lb               LoadBalancer   10.43.1.121     192.168.1.241   80:31395/TCP                   22d
+```
+
 ## Container Registry
 - Registry endpoint: `192.168.1.242:5000`
 - Kubernetes namespace: `container-registry`
@@ -31,14 +41,28 @@ This is a small local k3s cluster used for study and experimentation.
 ## Monitoring
 - Namespace: `monitoring`
 - Prometheus Operator is installed from the upstream getting-started `bundle.yaml`.
-- Prometheus instance: `monitoring/prometheus`, exposed by MetalLB at `192.168.1.220`.
+- Prometheus instance: `monitoring/prometheus`.
+- Prometheus is exposed through `monitoring/prometheus-lb` at `192.168.1.223`.
 - Prometheus uses ServiceMonitor label selector `prometheus: homelab`.
-- Prometheus scrapes kube-state-metrics, node-exporter, itself, and the Prometheus Operator.
+- Prometheus scrapes kube-state-metrics, node-exporter, kubelet/cAdvisor, itself, and the Prometheus Operator.
 - kube-state-metrics is installed by Helm and scraped through `monitoring/kube-state-metrics`.
 - node-exporter is installed by Helm as a DaemonSet, one pod per node.
 - Grafana is installed by Helm, exposed by MetalLB at `192.168.1.221`.
-- Grafana uses a `local-path` PVC, datasource UID `prometheus`, and pinned Grafana.com dashboards for kube-state-metrics, node-exporter, and Prometheus.
-- Useful next monitoring target: kubelet/cAdvisor metrics for pod/container resource usage.
+- Grafana uses a `local-path` PVC, datasource UID `prometheus`, and pinned Grafana.com dashboards for kube-state-metrics, node-exporter, Prometheus, and the Kubernetes Views Global, Namespaces, Nodes, and Pods dashboards.
+- Kubelet `/metrics` and `/metrics/cadvisor` are scraped on both nodes through `monitoring/prometheus_operator/kubelet-servicemonitor.yaml`.
+
+## Image Resizer API
+
+- Namespace: `image-resizer`
+- Images use local-time tags in `vYYYY-MM-DD-HH-MM-SS` format. The checked-in Deployment contains `REPLACE_WITH_TAG`, and the build/deploy script substitutes the generated tag in a temporary manifest before applying it.
+- Current image: `192.168.1.242:5000/image-resizer-api:v2026-07-21-16-50-15`
+- Deployment: two ARM64 replicas, normally spread across `opi1` and `opi2`
+- LoadBalancer address: `192.168.1.222`
+- Application port: `8080`; LoadBalancer port: `80`
+- Endpoints: `/v1/resize`, `/livez`, `/readyz`, and `/metrics`
+- ServiceMonitor: `monitoring/image-resizer-api`, selected by
+  `prometheus: homelab`; scrapes both replicas at `/metrics` every 15 seconds
+- Declarative resources and the build/deploy script live in `image-resizer-api/`.
 
 ## Practical Constraints
 - Prefer lightweight components and simple deployments.

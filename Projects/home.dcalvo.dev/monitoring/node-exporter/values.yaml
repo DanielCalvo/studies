@@ -3,6 +3,10 @@ prometheus:
     enabled: true
     additionalLabels:
       prometheus: homelab
+    relabelings:
+      # Supplies the cluster selector expected by the Kubernetes Views dashboards.
+      - targetLabel: cluster
+        replacement: homelab
 
 resources:
   requests:

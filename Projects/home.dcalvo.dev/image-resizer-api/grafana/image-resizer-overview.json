@@ -1,0 +1,632 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "image-resizer-overview",
+    "title": "Image Resizer Overview",
+    "description": "Service health, image-processing behavior, and Go runtime signals for the Image Resizer API.",
+    "tags": [
+      "image-resizer"
+    ],
+    "timezone": "browser",
+    "schemaVersion": 41,
+    "version": 0,
+    "refresh": "15s",
+    "time": {
+      "from": "now-30m",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "type": "stat",
+        "title": "Healthy replicas",
+        "description": "Number of Image Resizer targets currently scraped successfully. The expected value is 2.",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 0,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 0,
+            "min": 0,
+            "max": 2,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 1
+                },
+                {
+                  "color": "green",
+                  "value": 2
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum(up{job=\"image-resizer-api\"})",
+            "instant": true,
+            "legendFormat": "Healthy replicas",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "type": "stat",
+        "title": "Total requests",
+        "description": "Total resize requests observed during the selected dashboard time range.",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 5,
+          "x": 4,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 0,
+            "color": {
+              "fixedColor": "blue",
+              "mode": "fixed"
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum(increase(image_resizer_http_requests_total{namespace=\"image-resizer\"}[$__range])) or vector(0)",
+            "instant": true,
+            "legendFormat": "Total",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "type": "stat",
+        "title": "Successful requests",
+        "description": "Resize requests completed successfully during the selected dashboard time range.",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 5,
+          "x": 9,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 0,
+            "color": {
+              "fixedColor": "green",
+              "mode": "fixed"
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum(increase(image_resizer_http_requests_total{namespace=\"image-resizer\",outcome=\"succeeded\"}[$__range])) or vector(0)",
+            "instant": true,
+            "legendFormat": "Successful",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "type": "stat",
+        "title": "Failed requests",
+        "description": "Resize requests that returned a server failure during the selected dashboard time range. Client rejections are not counted as failures.",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 5,
+          "x": 14,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum(increase(image_resizer_http_requests_total{namespace=\"image-resizer\",outcome=\"failed\"}[$__range])) or vector(0)",
+            "instant": true,
+            "legendFormat": "Failed",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "type": "timeseries",
+        "title": "Requests per minute",
+        "description": "Resize request rate over time, converted to requests per minute and averaged over Grafana's Prometheus rate interval.",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 4
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 1,
+            "color": {
+              "fixedColor": "purple",
+              "mode": "fixed"
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum(rate(image_resizer_http_requests_total{namespace=\"image-resizer\"}[$__rate_interval])) * 60 or vector(0)",
+            "legendFormat": "Requests per minute",
+            "range": true,
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "type": "timeseries",
+        "title": "Request rate by outcome",
+        "description": "Resize requests per second. Rejected client requests are separated from service failures.",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 4
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum by (outcome) (rate(image_resizer_http_requests_total{namespace=\"image-resizer\"}[$__rate_interval]))",
+            "legendFormat": "{{outcome}}",
+            "range": true,
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "type": "stat",
+        "title": "Successful request percentage",
+        "description": "Percentage of resize requests completed successfully over the selected rate interval. Client rejections are included in the denominator.",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 5,
+          "x": 19,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 1,
+            "min": 0,
+            "max": 100,
+            "unit": "percent",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 95
+                },
+                {
+                  "color": "green",
+                  "value": 99
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "100 * sum(rate(image_resizer_http_requests_total{namespace=\"image-resizer\",outcome=\"succeeded\"}[$__rate_interval])) / sum(rate(image_resizer_http_requests_total{namespace=\"image-resizer\"}[$__rate_interval]))",
+            "legendFormat": "Success",
+            "range": true,
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "type": "timeseries",
+        "title": "Successful request latency",
+        "description": "Estimated latency percentiles for successful resize requests.",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 12
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.50, sum by (le) (rate(image_resizer_http_request_duration_seconds_bucket{namespace=\"image-resizer\",outcome=\"succeeded\"}[$__rate_interval])))",
+            "legendFormat": "p50",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.95, sum by (le) (rate(image_resizer_http_request_duration_seconds_bucket{namespace=\"image-resizer\",outcome=\"succeeded\"}[$__rate_interval])))",
+            "legendFormat": "p95",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.99, sum by (le) (rate(image_resizer_http_request_duration_seconds_bucket{namespace=\"image-resizer\",outcome=\"succeeded\"}[$__rate_interval])))",
+            "legendFormat": "p99",
+            "range": true,
+            "refId": "C"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "type": "timeseries",
+        "title": "Processing-stage p95 latency",
+        "description": "Estimated p95 duration for JPEG decode, resize, and encode stages.",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 20
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.95, sum by (le, stage) (rate(image_resizer_processing_stage_duration_seconds_bucket{namespace=\"image-resizer\"}[$__rate_interval])))",
+            "legendFormat": "{{stage}}",
+            "range": true,
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "type": "timeseries",
+        "title": "Rejected requests by reason",
+        "description": "Client requests rejected by stable application error code.",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 20
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps"
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum by (reason) (rate(image_resizer_rejections_total{namespace=\"image-resizer\"}[$__rate_interval]))",
+            "legendFormat": "{{reason}}",
+            "range": true,
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "type": "timeseries",
+        "title": "Process CPU by pod",
+        "description": "CPU seconds consumed per second by each Image Resizer process; 1.0 represents one fully used CPU core.",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 28
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 3,
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum by (pod) (rate(process_cpu_seconds_total{job=\"image-resizer-api\"}[$__rate_interval]))",
+            "legendFormat": "{{pod}}",
+            "range": true,
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "type": "timeseries",
+        "title": "Resident memory by pod",
+        "description": "Resident memory currently held by each Image Resizer process.",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 28
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "bytes"
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "process_resident_memory_bytes{job=\"image-resizer-api\"}",
+            "legendFormat": "{{pod}}",
+            "range": true,
+            "refId": "A"
+          }
+        ]
+      }
+    ]
+  },
+  "overwrite": true
+}

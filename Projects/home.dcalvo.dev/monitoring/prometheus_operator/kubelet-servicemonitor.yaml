@@ -1,0 +1,47 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kubelet
+  namespace: monitoring
+  labels:
+    prometheus: homelab
+spec:
+  namespaceSelector:
+    matchNames:
+      - kube-system
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kubelet
+  endpoints:
+    - port: https-metrics
+      scheme: https
+      path: /metrics
+      interval: 30s
+      # Preserve kubelet metric labels such as the PVC namespace.
+      honorLabels: true
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      tlsConfig:
+        insecureSkipVerify: true
+      relabelings:
+        - sourceLabels:
+            - __meta_kubernetes_endpoint_node_name
+          targetLabel: node
+        # Supplies the cluster selector expected by the Kubernetes Views dashboards.
+        - targetLabel: cluster
+          replacement: homelab
+    - port: https-metrics
+      scheme: https
+      path: /metrics/cadvisor
+      interval: 30s
+      # Keep the real container namespace/pod labels instead of exported_* labels.
+      honorLabels: true
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      tlsConfig:
+        insecureSkipVerify: true
+      relabelings:
+        - sourceLabels:
+            - __meta_kubernetes_endpoint_node_name
+          targetLabel: node
+        # Supplies the cluster selector expected by the Kubernetes Views dashboards.
+        - targetLabel: cluster
+          replacement: homelab

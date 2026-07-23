@@ -11,6 +11,7 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update prometheus-community
 
 helm upgrade --install prometheus-node-exporter prometheus-community/prometheus-node-exporter \
+  --version 4.55.0 \
   --namespace monitoring \
   --values ../node-exporter/values.yaml
 ```
@@ -32,6 +33,9 @@ serviceMonitorSelector:
 ```
 
 The ServiceMonitor selects the chart-created Service by Service labels. The Service exposes the `metrics` port on `9100`.
+
+The ServiceMonitor attaches `cluster="homelab"` to node-exporter samples so the
+Kubernetes Grafana dashboards can use their cluster selector consistently.
 
 ## Resources
 

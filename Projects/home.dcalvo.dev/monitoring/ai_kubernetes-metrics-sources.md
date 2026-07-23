@@ -31,18 +31,16 @@ This cluster currently has:
 ```text
 kube-state-metrics
 node-exporter
+kubelet/cAdvisor metrics
 Prometheus self-scrape
 Prometheus Operator scrape
 Grafana dashboards for kube-state-metrics, node-exporter, and Prometheus
 ```
 
-The most useful next ingestion target is probably:
-
-```text
-kubelet/cAdvisor metrics
-```
-
-That fills the gap between node-level OS metrics and Kubernetes object-state metrics by adding pod/container usage metrics.
+Kubelet and cAdvisor are scraped through
+`prometheus_operator/kubelet-servicemonitor.yaml`. This fills the gap between
+node-level OS metrics and Kubernetes object-state metrics by adding pod and
+container usage metrics.
 
 ## 1. kube-state-metrics
 
@@ -131,7 +129,7 @@ Is the network interface busy?
 
 Usefulness: very high  
 Commonness: very common  
-Current cluster: not yet scraped directly
+Current cluster: scraped directly on both nodes
 
 kubelet embeds cAdvisor-derived container metrics. This is the usual source for pod/container usage in Prometheus.
 
@@ -625,16 +623,15 @@ device errors
 
 ## Recommended Next Steps for This Cluster
 
-1. Add kubelet/cAdvisor scraping.
-2. Add CoreDNS scraping.
-3. Consider Traefik metrics if ingress traffic matters.
-4. Consider basic alert rules:
+1. Add CoreDNS scraping.
+2. Consider Traefik metrics if ingress traffic matters.
+3. Consider basic alert rules:
    - target down
    - node disk low
    - node memory low
    - pod crash loops
    - Prometheus config reload failed
-5. Leave metrics-server alone unless debugging HPA or `kubectl top`.
+4. Leave metrics-server alone unless debugging HPA or `kubectl top`.
 
 ## Sources
 
