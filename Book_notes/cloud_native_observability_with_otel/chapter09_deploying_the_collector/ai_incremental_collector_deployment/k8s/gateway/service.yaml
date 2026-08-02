@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chapter9-gateway
+spec:
+  # The selector connects this stable virtual address to gateway Pods carrying
+  # the matching label.
+  selector:
+    app: chapter9-gateway-collector
+  ports:
+    - name: otlp-grpc
+      port: 4317
+      targetPort: otlp-grpc
+
+  # ClusterIP makes the gateway reachable inside the cluster without exposing
+  # OTLP outside Minikube.
+  type: ClusterIP

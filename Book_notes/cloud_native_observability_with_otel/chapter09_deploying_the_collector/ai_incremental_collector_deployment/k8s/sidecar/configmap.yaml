@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chapter9-sidecar-collector
+data:
+  # Kubernetes will make this key available as a file with the same name when
+  # the Deployment mounts the ConfigMap as a volume.
+  collector-config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            # Both containers share the Pod network, so the greeting
+            # application can reach this endpoint through localhost:4317.
+            endpoint: 0.0.0.0:4317
+
+    exporters:
+      debug:
+        verbosity: detailed
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          exporters: [debug]

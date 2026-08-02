@@ -6,7 +6,7 @@ to understand while still producing meaningful latency, CPU, memory, failure,
 and workload signals.
 
 This file describes the current state and the possible work ahead. It is not a
-commitment to implement everything listed here. `feature_list.md` remains the
+commitment to implement everything listed here. `ai_feature_list.md` remains the
 chronological record of features actually selected and implemented.
 
 ## Current state

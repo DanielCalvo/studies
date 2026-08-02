@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tempo-data
+  namespace: chapter10-tempo
+spec:
+  # Tempo has one replica in this monolithic exercise, so it needs the volume
+  # mounted read/write by one Kubernetes node at a time.
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      # This small capacity is enough for the handful of study traces. A real
+      # retention and ingestion estimate would determine production capacity.
+      storage: 1Gi

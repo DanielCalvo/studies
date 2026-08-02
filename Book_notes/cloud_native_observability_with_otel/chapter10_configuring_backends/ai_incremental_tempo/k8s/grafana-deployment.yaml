@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: chapter10-tempo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      securityContext:
+        # Grafana's container runs with group 472. This makes its temporary
+        # data directory writable without running the process as root.
+        fsGroup: 472
+      containers:
+        - name: grafana
+          # Pin the image so the study example remains reproducible.
+          image: grafana/grafana:13.1.1
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            # Anonymous access avoids a login step in this local Minikube
+            # exercise. Do not use this Admin setting for an exposed system.
+            - name: GF_AUTH_ANONYMOUS_ENABLED
+              value: "true"
+            - name: GF_AUTH_ANONYMOUS_ORG_ROLE
+              value: Admin
+            - name: GF_AUTH_DISABLE_LOGIN_FORM
+              value: "true"
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          volumeMounts:
+            - name: grafana-datasources
+              # Grafana reads YAML files in this directory at startup and
+              # creates the declared data sources automatically.
+              mountPath: /etc/grafana/provisioning/datasources/tempo.yaml
+              subPath: tempo.yaml
+              readOnly: true
+            - name: grafana-data
+              mountPath: /var/lib/grafana
+      volumes:
+        - name: grafana-datasources
+          configMap:
+            name: grafana-datasources
+        - name: grafana-data
+          # Grafana itself is disposable in this step. Tempo, not Grafana,
+          # owns the trace data that we are querying.
+          emptyDir: {}

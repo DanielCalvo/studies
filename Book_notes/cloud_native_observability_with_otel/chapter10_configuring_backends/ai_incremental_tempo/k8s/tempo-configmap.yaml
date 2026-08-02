@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempo
+  namespace: chapter10-tempo
+data:
+  tempo.yaml: |
+    # "all" runs Tempo's required components in one process. This is Tempo's
+    # monolithic mode: suitable for learning and small deployments, but it
+    # cannot scale individual internal components independently.
+    target: all
+
+    server:
+      # This is Tempo's HTTP API port. Readiness and, later, trace queries use
+      # this server. It is not an OTLP ingestion port.
+      http_listen_port: 3200
+
+    distributor:
+      # The distributor is Tempo's write entry point. It borrows receiver
+      # implementations from the OpenTelemetry Collector, but this does not
+      # turn Tempo into a general receiver -> processor -> exporter pipeline.
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              # Explicitly bind to all Pod interfaces so other Pods can send
+              # OTLP/gRPC through the Kubernetes Service.
+              endpoint: "0.0.0.0:4317"
+            http:
+              # OTLP/HTTP is enabled as a second ingestion option. We will pick
+              # one protocol when the trace producer is introduced.
+              endpoint: "0.0.0.0:4318"
+
+    storage:
+      trace:
+        # Local storage is intentionally simple for this exercise. Since Step
+        # 4, /data/tempo is backed by a Kubernetes PersistentVolumeClaim.
+        backend: local
+        wal:
+          # The write-ahead log holds trace data on its way to completed blocks.
+          path: /data/tempo/wal
+        local:
+          # Completed trace blocks are stored here.
+          path: /data/tempo/blocks
+
+    metrics_generator:
+      registry:
+        # Flush generated metric samples frequently so this small experiment
+        # becomes visible without waiting for the 15-second default.
+        collection_interval: 5s
+        external_labels:
+          source: tempo
+      storage:
+        # The metrics generator uses a Prometheus Agent WAL before remote
+        # writing samples. This path is separate from Tempo trace storage.
+        path: /var/tempo/metrics-generator/wal
+        # This is a single-tenant Prometheus without an organization-header
+        # requirement.
+        remote_write_add_org_id_header: false
+        remote_write:
+          - url: http://prometheus:9090/api/v1/write
+            # Tempo can attach a representative trace ID to histogram samples.
+            send_exemplars: true
+
+    overrides:
+      defaults:
+        ingestion:
+          # Tempo truncates attribute keys or values longer than this before
+          # storing them. The deliberately small value makes Step 6 observable
+          # without rejecting the entire span.
+          max_attribute_bytes: 64
+        metrics_generator:
+          # Processors are opt-in. Declaring the metrics_generator block above
+          # is not enough to derive metrics until they are enabled here.
+          processors:
+            - span-metrics
+            - service-graphs
+
+    # Keep the learning environment from sending anonymous usage statistics.
+    usage_report:
+      reporting_enabled: false

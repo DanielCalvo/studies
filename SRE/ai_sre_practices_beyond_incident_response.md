@@ -27,7 +27,7 @@ Take a service, such as an API, web application, or Kubernetes platform, and def
 - A simple policy describing what happens when the budget is healthy or exhausted.
 
 For interviews, expect scenario questions rather than only definitions. For example: *The service meets its availability SLO, but users are complaining. What might be wrong?* A strong answer examines whether the SLI represents the user experience, including latency, correctness, freshness, and dependency failures.
-
+()
 ## 2. Monitoring, Observability, and Alert Design
 
 This is extremely prominent in real infrastructure work. The important skill is not merely knowing Prometheus, Grafana, or tracing. It is knowing:

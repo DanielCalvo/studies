@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: service-graph-producer
+  namespace: chapter10-tempo
+spec:
+  # This is a finite experiment: one successful run emits one three-span trace.
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app: service-graph-producer
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: service-graph-producer
+          image: chapter10-service-graph-producer:step7
+          # Build directly into Minikube; no external registry is involved.
+          imagePullPolicy: Never
+          env:
+            - name: OTLP_ENDPOINT
+              # Alloy keeps the application independent of Tempo's address.
+              value: alloy:4317
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

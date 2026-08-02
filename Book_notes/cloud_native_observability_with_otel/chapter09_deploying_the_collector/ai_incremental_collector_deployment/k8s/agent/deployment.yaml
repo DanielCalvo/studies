@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chapter9-greeting
+  labels:
+    app: chapter9-greeting
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chapter9-greeting
+  template:
+    metadata:
+      labels:
+        app: chapter9-greeting
+    spec:
+      containers:
+        # Unlike ../sidecar/deployment.yaml, this Pod contains only the
+        # application. The node agent runs as a separate DaemonSet Pod.
+        - name: greeting
+          image: chapter9-greeting:step6
+          imagePullPolicy: Never
+          env:
+            # The Downward API copies information about this Pod into a
+            # container environment variable. status.hostIP is the address of
+            # the node on which Kubernetes scheduled the Pod.
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+
+            # Minikube's hostPort networking rewrites the connection source
+            # address. Supplying the Pod IP as a resource hint gives the agent
+            # a stable value for Kubernetes Pod association.
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+
+            # Kubernetes expands $(NODE_IP) using the variable declared above.
+            # The http scheme tells the OTLP/gRPC exporter that this local
+            # study connection does not use TLS.
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://$(NODE_IP):4317"
+
+            # The Go SDK reads this standard variable through
+            # resource.WithFromEnv. The agent uses only this identity hint to
+            # discover the Pod's remaining metadata through the Kubernetes API.
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: "k8s.pod.ip=$(POD_IP)"
+          ports:
+            - name: http
+              containerPort: 8080

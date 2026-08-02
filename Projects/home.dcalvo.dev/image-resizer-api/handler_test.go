@@ -14,6 +14,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestResizeJPEG(t *testing.T) {
@@ -233,6 +234,96 @@ func TestResizeLogsStableErrorCode(t *testing.T) {
 	}
 }
 
+func TestResizeRejectsOverloadWithoutReadingAnotherBody(t *testing.T) {
+	cfg := defaultConfig()
+	cfg.maxConcurrentResizes = 1
+
+	var logs bytes.Buffer
+	logger := slog.New(slog.NewJSONHandler(&logs, nil))
+	server := newHandler(cfg, logger)
+
+	body, contentType := multipartBody(t, "image", makeJPEG(t, 6, 4))
+	started := make(chan struct{})
+	release := make(chan struct{})
+	slowBody := &blockingReader{
+		data:    body,
+		started: started,
+		release: release,
+	}
+	slowRequest := httptest.NewRequest(http.MethodPost, "/v1/resize?width=3", slowBody)
+	slowRequest.Header.Set("Content-Type", contentType)
+	slowResponse := httptest.NewRecorder()
+	slowFinished := make(chan struct{})
+	go func() {
+		server.ServeHTTP(slowResponse, slowRequest)
+		close(slowFinished)
+	}()
+
+	select {
+	case <-started:
+	case <-time.After(time.Second):
+		t.Fatal("first request did not start reading its body")
+	}
+
+	overloadedRequest := multipartRequest(t, http.MethodPost, "/v1/resize?width=3", "image", makeJPEG(t, 6, 4))
+	overloadedResponse := httptest.NewRecorder()
+	server.ServeHTTP(overloadedResponse, overloadedRequest)
+
+	if overloadedResponse.Code != http.StatusServiceUnavailable {
+		t.Fatalf("overload status = %d, want %d; body: %s", overloadedResponse.Code, http.StatusServiceUnavailable, overloadedResponse.Body.String())
+	}
+	if got := overloadedResponse.Header().Get("Retry-After"); got != "1" {
+		t.Fatalf("Retry-After = %q, want 1", got)
+	}
+	if got := overloadedResponse.Header().Get("Connection"); got != "close" {
+		t.Fatalf("Connection = %q, want close", got)
+	}
+	if slowBody.bytesRead != 0 {
+		t.Fatalf("slow request read %d body bytes before release, want 0", slowBody.bytesRead)
+	}
+
+	metricsRequest := httptest.NewRequest(http.MethodGet, "/metrics", nil)
+	metricsResponse := httptest.NewRecorder()
+	server.ServeHTTP(metricsResponse, metricsRequest)
+	if !strings.Contains(metricsResponse.Body.String(), `image_resizer_overload_rejections_total 1`) {
+		t.Fatal("metrics do not contain the overload rejection")
+	}
+
+	close(release)
+	select {
+	case <-slowFinished:
+	case <-time.After(time.Second):
+		t.Fatal("first request did not finish after its body was released")
+	}
+	if slowResponse.Code != http.StatusOK {
+		t.Fatalf("first request status = %d, want %d; body: %s", slowResponse.Code, http.StatusOK, slowResponse.Body.String())
+	}
+
+	nextRequest := multipartRequest(t, http.MethodPost, "/v1/resize?width=3", "image", makeJPEG(t, 6, 4))
+	nextResponse := httptest.NewRecorder()
+	server.ServeHTTP(nextResponse, nextRequest)
+	if nextResponse.Code != http.StatusOK {
+		t.Fatalf("request after slot release status = %d, want %d; body: %s", nextResponse.Code, http.StatusOK, nextResponse.Body.String())
+	}
+
+	foundOverloadLog := false
+	decoder := json.NewDecoder(&logs)
+	for decoder.More() {
+		var entry map[string]any
+		if err := decoder.Decode(&entry); err != nil {
+			t.Fatalf("decode log entry: %v", err)
+		}
+		if entry["error"] == "server_overloaded" {
+			foundOverloadLog = true
+			assertLogNumber(t, entry, "status", http.StatusServiceUnavailable)
+			assertLogNumber(t, entry, "target_width", 3)
+		}
+	}
+	if !foundOverloadLog {
+		t.Fatal("structured logs do not contain a server_overloaded completion")
+	}
+}
+
 func TestMetricsDescribeRequestsAndImageProcessing(t *testing.T) {
 	server := newHandler(defaultConfig(), discardLogger())
 
@@ -298,6 +389,15 @@ func TestScaledHeight(t *testing.T) {
 func multipartRequest(t *testing.T, method, target, field string, data []byte) *http.Request {
 	t.Helper()
 
+	body, contentType := multipartBody(t, field, data)
+	request := httptest.NewRequest(method, target, bytes.NewReader(body))
+	request.Header.Set("Content-Type", contentType)
+	return request
+}
+
+func multipartBody(t *testing.T, field string, data []byte) ([]byte, string) {
+	t.Helper()
+
 	var body bytes.Buffer
 	writer := multipart.NewWriter(&body)
 	part, err := writer.CreateFormFile(field, "image")
@@ -310,10 +410,29 @@ func multipartRequest(t *testing.T, method, target, field string, data []byte) *
 	if err := writer.Close(); err != nil {
 		t.Fatalf("close multipart writer: %v", err)
 	}
+	return body.Bytes(), writer.FormDataContentType()
+}
 
-	request := httptest.NewRequest(method, target, &body)
-	request.Header.Set("Content-Type", writer.FormDataContentType())
-	return request
+type blockingReader struct {
+	data      []byte
+	started   chan struct{}
+	release   chan struct{}
+	blocked   bool
+	bytesRead int
+}
+
+func (r *blockingReader) Read(destination []byte) (int, error) {
+	if !r.blocked {
+		r.blocked = true
+		close(r.started)
+		<-r.release
+	}
+	count := copy(destination, r.data[r.bytesRead:])
+	r.bytesRead += count
+	if r.bytesRead == len(r.data) {
+		return count, io.EOF
+	}
+	return count, nil
 }
 
 func makeJPEG(t *testing.T, width, height int) []byte {

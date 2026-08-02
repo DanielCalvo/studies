@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chapter9-agent-collector
+data:
+  collector-config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            # The DaemonSet exposes this receiver on each node at port 4317.
+            # The application Deployment sends to its node IP at this port.
+            endpoint: 0.0.0.0:4317
+
+    exporters:
+      # This exporter makes the agent a forwarding layer. The Operator derives
+      # this Service name from the OpenTelemetryCollector resource name.
+      otlp_grpc/gateway:
+        endpoint: chapter9-gateway-collector:4317
+        tls:
+          # This is an in-cluster study connection without TLS. Production
+          # requirements may call for authenticated and encrypted transport.
+          insecure: true
+
+    processors:
+      # This processor queries the Kubernetes API and adds workload identity
+      # to the resource shared by the application's spans.
+      k8s_attributes:
+        auth_type: serviceAccount
+
+        # Each DaemonSet agent needs to discover only Pods on its own node.
+        # KUBE_NODE_NAME comes from the DaemonSet's Downward API environment.
+        filter:
+          node_from_env_var: KUBE_NODE_NAME
+
+        extract:
+          metadata:
+            - k8s.namespace.name
+            - k8s.pod.name
+            - k8s.pod.uid
+            - k8s.deployment.name
+            - k8s.node.name
+
+        # Try an explicit Pod IP resource hint first. Connection association
+        # remains a fallback for environments that preserve the source Pod IP.
+        pod_association:
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.ip
+          - sources:
+              - from: connection
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          # Association by connection must happen before any processor that
+          # could discard the receiver's connection context, such as batch.
+          processors: [k8s_attributes]
+          exporters: [otlp_grpc/gateway]

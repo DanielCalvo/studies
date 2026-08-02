@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tempo
+  namespace: chapter10-tempo
+spec:
+  # The Service gives Tempo a stable in-cluster name even though its Pod IP can
+  # change: tempo.chapter10-tempo.svc.cluster.local.
+  selector:
+    app: tempo
+  ports:
+    - name: http
+      port: 3200
+      targetPort: http
+    - name: otlp-grpc
+      port: 4317
+      targetPort: otlp-grpc
+    - name: otlp-http
+      port: 4318
+      targetPort: otlp-http

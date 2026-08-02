@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alloy
+  namespace: chapter10-tempo
+spec:
+  # One centralized Alloy instance is enough for this traces-only study
+  # pipeline. Clustering and high availability are deliberately out of scope.
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alloy
+  template:
+    metadata:
+      labels:
+        app: alloy
+    spec:
+      containers:
+        - name: alloy
+          # Pin the image so the study example remains reproducible.
+          image: grafana/alloy:v1.18.0
+          args:
+            - run
+            - --server.http.listen-addr=0.0.0.0:12345
+            - --storage.path=/var/lib/alloy/data
+            - --disable-reporting
+            - /etc/alloy/config.alloy
+          ports:
+            - name: http
+              containerPort: 12345
+            - name: otlp-grpc
+              containerPort: 4317
+          readinessProbe:
+            # Readiness means Alloy loaded its component graph and can accept
+            # traffic. Component health is also visible in its debugging UI.
+            httpGet:
+              path: /-/ready
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 512Mi
+          volumeMounts:
+            - name: alloy-config
+              mountPath: /etc/alloy/config.alloy
+              subPath: config.alloy
+              readOnly: true
+            - name: alloy-data
+              mountPath: /var/lib/alloy/data
+      volumes:
+        - name: alloy-config
+          configMap:
+            name: alloy
+        - name: alloy-data
+          # This pass-through trace pipeline does not need durable local state.
+          emptyDir: {}

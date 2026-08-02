@@ -1,0 +1,19 @@
+# The Operator itself is installed as a long-running Kubernetes Deployment.
+# This file configures that controller; it does not configure a Collector.
+replicaCount: 1
+
+admissionWebhooks:
+  # Minikube does not have cert-manager. For this local exercise, ask the Helm
+  # chart to create the webhook's self-signed certificate and Secret.
+  certManager:
+    enabled: false
+  autoGenerateCert:
+    enabled: true
+
+manager:
+  collectorImage:
+    # This is the default Collector image used when an OpenTelemetryCollector
+    # custom resource does not specify its own image.
+    repository: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-k8s
+    tag: 0.156.0
+

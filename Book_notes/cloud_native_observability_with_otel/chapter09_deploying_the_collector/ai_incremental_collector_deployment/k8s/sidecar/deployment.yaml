@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chapter9-greeting
+  labels:
+    app: chapter9-greeting
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chapter9-greeting
+  template:
+    metadata:
+      labels:
+        app: chapter9-greeting
+    spec:
+      containers:
+        - name: greeting
+          image: chapter9-greeting:step6
+          # The image will be built directly into Minikube's image store.
+          imagePullPolicy: Never
+          env:
+            # The same application image can still use the sidecar pattern by
+            # selecting the Collector through the standard OTLP variable.
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://localhost:4317"
+          ports:
+            - name: http
+              containerPort: 8080
+
+        # A sidecar is another container in the same Pod. It shares the Pod's
+        # network namespace with greeting, so the application can export OTLP
+        # to the Collector using localhost:4317.
+        - name: collector
+          # We can now use the official image directly because Kubernetes
+          # supplies its configuration through the ConfigMap volume below.
+          image: otel/opentelemetry-collector-contrib:0.153.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - --config=/etc/otelcol-contrib/config.yaml
+          ports:
+            - name: otlp-grpc
+              containerPort: 4317
+          volumeMounts:
+            # Mount the ConfigMap key at the exact file path passed above.
+            - name: collector-config
+              mountPath: /etc/otelcol-contrib/config.yaml
+              subPath: collector-config.yaml
+              readOnly: true
+
+      volumes:
+        # A ConfigMap-backed volume exposes ConfigMap data to containers as
+        # files. It does not become part of either container image.
+        - name: collector-config
+          configMap:
+            name: chapter9-sidecar-collector

@@ -1,0 +1,73 @@
+# The same chart can generate a Deployment, DaemonSet, or StatefulSet. In this
+# exercise it replaces our hand-written gateway Deployment.
+mode: deployment
+
+# Keep the existing in-cluster hostname. The agent already exports traces to
+# chapter9-gateway:4317, so it does not need to know who manages the gateway.
+fullnameOverride: chapter9-gateway
+
+# Two replicas preserve the scaling behavior explored in Step 8.
+replicaCount: 2
+
+image:
+  # This is the current Kubernetes Collector distribution recommended by the
+  # chart. Its default tag comes from the pinned chart's appVersion.
+  repository: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-k8s
+
+config:
+  # A null value removes a component supplied by the chart's default config.
+  # Our gateway accepts only OTLP/gRPC traces, so it does not need these
+  # additional receivers.
+  receivers:
+    jaeger: null
+    prometheus: null
+    zipkin: null
+    otlp:
+      protocols:
+        grpc:
+          endpoint: ${env:MY_POD_IP}:4317
+        http: null
+
+  exporters:
+    debug:
+      # As before, printing complete spans keeps the learning exercise
+      # observable without requiring a telemetry backend.
+      verbosity: detailed
+
+  service:
+    # Setting unused pipelines to null removes the chart defaults. The
+    # health_check extension remains because the chart's Pod probes require it.
+    pipelines:
+      logs: null
+      metrics: null
+      traces:
+        receivers: [otlp]
+        processors: [memory_limiter, batch]
+        exporters: [debug]
+
+ports:
+  # Generate only the Service/container port used by this traces-only gateway.
+  otlp:
+    enabled: true
+  otlp-http:
+    enabled: false
+  jaeger-compact:
+    enabled: false
+  jaeger-thrift:
+    enabled: false
+  jaeger-grpc:
+    enabled: false
+  zipkin:
+    enabled: false
+  metrics:
+    enabled: false
+
+# Unlike the hand-written prototype, the chart makes requests and limits easy
+# to declare centrally and uses the memory limit to configure memory_limiter.
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi

@@ -14,9 +14,17 @@ import (
 	"log/slog"
 	"mime/multipart"
 	"net/http"
+	"runtime"
 	"strconv"
 	"sync/atomic"
 	"time"
+
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/trace"
 )
 
 const multipartOverheadAllowance = 1 << 20
@@ -28,18 +36,20 @@ var (
 )
 
 type config struct {
-	maxUploadBytes int64
-	maxInputPixels int64
-	maxOutputWidth int
-	jpegQuality    int
+	maxUploadBytes       int64
+	maxInputPixels       int64
+	maxOutputWidth       int
+	jpegQuality          int
+	maxConcurrentResizes int
 }
 
 func defaultConfig() config {
 	return config{
-		maxUploadBytes: 10 << 20,
-		maxInputPixels: 40_000_000,
-		maxOutputWidth: 4_000,
-		jpegQuality:    85,
+		maxUploadBytes:       10 << 20,
+		maxInputPixels:       40_000_000,
+		maxOutputWidth:       4_000,
+		jpegQuality:          85,
+		maxConcurrentResizes: runtime.GOMAXPROCS(0),
 	}
 }
 
@@ -47,6 +57,8 @@ type handler struct {
 	config  config
 	logger  *slog.Logger
 	metrics *metrics
+	limiter *resizeLimiter
+	tracer  trace.Tracer
 }
 
 type routes struct {
@@ -55,11 +67,39 @@ type routes struct {
 }
 
 func newHandler(cfg config, logger *slog.Logger) *routes {
-	h := handler{config: cfg, logger: logger, metrics: newMetrics()}
+	return newHandlerWithTelemetry(
+		cfg,
+		logger,
+		otel.GetTracerProvider(),
+		otel.GetTextMapPropagator(),
+	)
+}
+
+func newHandlerWithTelemetry(
+	cfg config,
+	logger *slog.Logger,
+	tracerProvider trace.TracerProvider,
+	propagator propagation.TextMapPropagator,
+) *routes {
+	h := handler{
+		config:  cfg,
+		logger:  logger,
+		metrics: newMetrics(),
+		limiter: newResizeLimiter(cfg.maxConcurrentResizes),
+		tracer:  tracerProvider.Tracer(instrumentationName),
+	}
 	routes := &routes{}
 	routes.ready.Store(true)
 	mux := http.NewServeMux()
-	mux.HandleFunc("/v1/resize", h.resize)
+	mux.Handle(
+		"/v1/resize",
+		otelhttp.NewHandler(
+			http.HandlerFunc(h.resize),
+			"POST /v1/resize",
+			otelhttp.WithTracerProvider(tracerProvider),
+			otelhttp.WithPropagators(propagator),
+		),
+	)
 	mux.Handle("/metrics", h.metrics.handler())
 	mux.HandleFunc("/livez", routes.livez)
 	mux.HandleFunc("/readyz", routes.readyz)
@@ -121,12 +161,26 @@ func (h handler) resize(w http.ResponseWriter, r *http.Request) {
 	}
 	request.targetWidth = targetWidth
 
+	if !h.limiter.tryAcquire() {
+		w.Header().Set("Connection", "close")
+		w.Header().Set("Retry-After", "1")
+		h.metrics.overloadRejections.Inc()
+		request.writeError(w, http.StatusServiceUnavailable, "server_overloaded", "The server is processing its maximum number of images")
+		return
+	}
+	defer h.limiter.release()
+
 	r.Body = http.MaxBytesReader(w, r.Body, h.config.maxUploadBytes+multipartOverheadAllowance)
+	_, uploadSpan := h.tracer.Start(r.Context(), "image.read_upload")
 	data, err := readImagePart(r, h.config.maxUploadBytes)
 	if err != nil {
+		uploadSpan.SetStatus(codes.Error, "upload rejected")
+		uploadSpan.End()
 		h.writeUploadError(w, request, err)
 		return
 	}
+	uploadSpan.SetAttributes(attribute.Int("image.input_bytes", len(data)))
+	uploadSpan.End()
 	request.inputBytes = len(data)
 
 	imageConfig, format, err := image.DecodeConfig(bytes.NewReader(data))
@@ -153,26 +207,51 @@ func (h handler) resize(w http.ResponseWriter, r *http.Request) {
 	defer h.metrics.resizeInFlight.Dec()
 
 	stageStarted := time.Now()
+	_, decodeSpan := h.tracer.Start(r.Context(), "image.decode")
 	source, err := jpeg.Decode(bytes.NewReader(data))
 	h.metrics.observeStage("decode", time.Since(stageStarted))
 	if err != nil {
+		decodeSpan.SetAttributes(attribute.String("image.error_code", "invalid_jpeg"))
+		decodeSpan.SetStatus(codes.Error, "invalid_jpeg")
+		decodeSpan.End()
 		request.writeError(w, http.StatusUnsupportedMediaType, "invalid_jpeg", "The uploaded JPEG could not be decoded")
 		return
 	}
+	decodeSpan.SetAttributes(
+		attribute.Int("image.input_width", imageConfig.Width),
+		attribute.Int("image.input_height", imageConfig.Height),
+	)
+	decodeSpan.End()
 
 	stageStarted = time.Now()
+	_, resizeSpan := h.tracer.Start(r.Context(), "image.resize")
 	resized := resizeWidth(source, targetWidth)
 	h.metrics.observeStage("resize", time.Since(stageStarted))
 	request.outputHeight = resized.Bounds().Dy()
+	resizeSpan.SetAttributes(
+		attribute.Int("image.target_width", targetWidth),
+		attribute.Int("image.output_height", request.outputHeight),
+	)
+	resizeSpan.End()
 	var output bytes.Buffer
 	stageStarted = time.Now()
+	_, encodeSpan := h.tracer.Start(r.Context(), "image.encode")
 	if err := jpeg.Encode(&output, resized, &jpeg.Options{Quality: h.config.jpegQuality}); err != nil {
 		h.metrics.observeStage("encode", time.Since(stageStarted))
+		encodeSpan.RecordError(err)
+		encodeSpan.SetAttributes(attribute.String("image.error_code", "encoding_failed"))
+		encodeSpan.SetStatus(codes.Error, "encoding_failed")
+		encodeSpan.End()
 		request.writeError(w, http.StatusInternalServerError, "encoding_failed", "The resized image could not be encoded")
 		return
 	}
 	h.metrics.observeStage("encode", time.Since(stageStarted))
 	request.outputBytes = output.Len()
+	encodeSpan.SetAttributes(
+		attribute.Int("image.output_bytes", output.Len()),
+		attribute.Int("image.jpeg_quality", h.config.jpegQuality),
+	)
+	encodeSpan.End()
 	h.metrics.outputBytes.Observe(float64(output.Len()))
 	h.metrics.outputPixels.Observe(float64(targetWidth * request.outputHeight))
 
@@ -181,6 +260,27 @@ func (h handler) resize(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	request.status = http.StatusOK
 	_, _ = output.WriteTo(w)
+}
+
+type resizeLimiter struct {
+	slots chan struct{}
+}
+
+func newResizeLimiter(limit int) *resizeLimiter {
+	return &resizeLimiter{slots: make(chan struct{}, limit)}
+}
+
+func (l *resizeLimiter) tryAcquire() bool {
+	select {
+	case l.slots <- struct{}{}:
+		return true
+	default:
+		return false
+	}
+}
+
+func (l *resizeLimiter) release() {
+	<-l.slots
 }
 
 func (h handler) targetWidth(r *http.Request) (int, error) {
@@ -321,12 +421,21 @@ func (r *requestLog) writeError(w http.ResponseWriter, status int, code, message
 func (r *requestLog) write() {
 	duration := time.Since(r.started)
 	r.metrics.finishRequest(r.method, r.route, r.status, duration)
+	r.annotateSpan()
 	attributes := []any{
 		"request_id", r.id,
 		"method", r.method,
 		"route", r.route,
 		"status", r.status,
 		"duration_ms", duration.Milliseconds(),
+	}
+	spanContext := trace.SpanContextFromContext(r.context)
+	if spanContext.IsValid() {
+		attributes = append(attributes,
+			"trace_id", spanContext.TraceID().String(),
+			"span_id", spanContext.SpanID().String(),
+			"trace_sampled", spanContext.IsSampled(),
+		)
 	}
 	if r.errorCode != "" {
 		attributes = append(attributes, "error", r.errorCode)
@@ -355,6 +464,38 @@ func (r *requestLog) write() {
 		level = slog.LevelError
 	}
 	r.logger.Log(r.context, level, "request completed", attributes...)
+}
+
+func (r *requestLog) annotateSpan() {
+	span := trace.SpanFromContext(r.context)
+	attributes := []attribute.KeyValue{
+		attribute.String("image.outcome", requestOutcome(r.status)),
+	}
+	if r.errorCode != "" {
+		attributes = append(attributes, attribute.String("image.error_code", r.errorCode))
+	}
+	if r.targetWidth != 0 {
+		attributes = append(attributes, attribute.Int("image.target_width", r.targetWidth))
+	}
+	if r.inputWidth != 0 {
+		attributes = append(attributes,
+			attribute.Int("image.input_width", r.inputWidth),
+			attribute.Int("image.input_height", r.inputHeight),
+		)
+	}
+	if r.outputHeight != 0 {
+		attributes = append(attributes, attribute.Int("image.output_height", r.outputHeight))
+	}
+	if r.inputBytes != 0 {
+		attributes = append(attributes, attribute.Int("image.input_bytes", r.inputBytes))
+	}
+	if r.outputBytes != 0 {
+		attributes = append(attributes, attribute.Int("image.output_bytes", r.outputBytes))
+	}
+	span.SetAttributes(attributes...)
+	if r.status >= http.StatusInternalServerError {
+		span.SetStatus(codes.Error, r.errorCode)
+	}
 }
 
 func newRequestID() string {

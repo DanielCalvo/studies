@@ -1,0 +1,75 @@
+name: ai-incremental-collector
+
+services:
+  collector:
+    # Pin the image so future releases do not silently change this exercise.
+    image: otel/opentelemetry-collector-contrib:0.153.0
+    command: ["--config=/etc/otelcol-contrib/config.yaml"]
+    volumes:
+      - ./collector-config.yaml:/etc/otelcol-contrib/config.yaml:ro
+      # The Collector image has no writable filesystem by default. This bind
+      # mount lets the file exporter persist output in the exercise directory.
+      - ./collector-output:/var/lib/otelcol-output
+    ports:
+      # Binding to localhost makes both OTLP transports available to later
+      # local exercises without exposing them on every host interface.
+      - 127.0.0.1:4317:4317
+      - 127.0.0.1:4318:4318
+      # Local access to the Collector health endpoint. In Kubernetes this would
+      # normally be called by a liveness or readiness probe.
+      - 127.0.0.1:13133:13133
+
+  trace-generator:
+    # telemetrygen is only repeatable test input. It is not part of the
+    # Collector pipeline and is not a telemetry backend. This instance uses
+    # OTLP over gRPC.
+    image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.153.0
+    profiles: ["tools"]
+    depends_on:
+      - collector
+    command:
+      - traces
+      - --otlp-endpoint=collector:4317
+      - --otlp-insecure
+      - --traces=1
+
+  trace-generator-http:
+    # This generator creates the same kind of trace but carries OTLP over HTTP,
+    # allowing us to compare transports without changing the trace pipeline.
+    image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.153.0
+    profiles: ["tools"]
+    depends_on:
+      - collector
+    command:
+      - traces
+      - --otlp-endpoint=collector:4318
+      - --otlp-insecure
+      - --otlp-http
+      - --traces=1
+
+  metrics-generator:
+    # This sends one metric over OTLP/gRPC. The Collector routes it through the
+    # metrics pipeline; it does not mix it with or derive it from trace data.
+    image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.153.0
+    profiles: ["tools"]
+    depends_on:
+      - collector
+    command:
+      - metrics
+      - --otlp-endpoint=collector:4317
+      - --otlp-insecure
+      - --metrics=1
+
+  logs-generator:
+    # This sends one OpenTelemetry log record over OTLP/gRPC. It is explicit
+    # test input, not a process that tails container standard output.
+    image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.153.0
+    profiles: ["tools"]
+    depends_on:
+      - collector
+    command:
+      - logs
+      - --otlp-endpoint=collector:4317
+      - --otlp-insecure
+      - --logs=1
+      - --body=chapter 8 test log

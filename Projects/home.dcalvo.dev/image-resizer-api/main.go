@@ -9,21 +9,47 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 )
 
-const shutdownTimeout = 30 * time.Second
+const (
+	shutdownTimeout         = 30 * time.Second
+	telemetryStartupTimeout = 5 * time.Second
+	telemetryFlushTimeout   = 5 * time.Second
+	readHeaderTimeout       = 5 * time.Second
+	readTimeout             = 15 * time.Second
+	writeTimeout            = 30 * time.Second
+	idleTimeout             = 60 * time.Second
+	maxHeaderBytes          = 1 << 20
+	maxConcurrentResizesEnv = "MAX_CONCURRENT_RESIZES"
+)
 
 func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer stop()
-
-	if err := run(ctx, logger); err != nil {
+	if err := runApplication(logger); err != nil {
 		logger.Error("server stopped", "error", err)
 		os.Exit(1)
 	}
+}
+
+func runApplication(logger *slog.Logger) error {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	telemetryCtx, cancelTelemetry := context.WithTimeout(context.Background(), telemetryStartupTimeout)
+	provider, err := configureOpenTelemetry(telemetryCtx, logger)
+	cancelTelemetry()
+	if err != nil {
+		return err
+	}
+
+	runErr := run(ctx, logger)
+	flushCtx, cancelFlush := context.WithTimeout(context.Background(), telemetryFlushTimeout)
+	defer cancelFlush()
+	flushErr := provider.Shutdown(flushCtx)
+	return errors.Join(runErr, flushErr)
 }
 
 func run(ctx context.Context, logger *slog.Logger) error {
@@ -32,16 +58,12 @@ func run(ctx context.Context, logger *slog.Logger) error {
 		port = "8080"
 	}
 
-	cfg := defaultConfig()
-	routes := newHandler(cfg, logger)
-	server := &http.Server{
-		Addr:              ":" + port,
-		Handler:           routes,
-		ReadHeaderTimeout: 5 * time.Second,
-		ReadTimeout:       30 * time.Second,
-		WriteTimeout:      30 * time.Second,
-		IdleTimeout:       60 * time.Second,
+	cfg, err := configFromEnvironment()
+	if err != nil {
+		return err
 	}
+	routes := newHandler(cfg, logger)
+	server := newHTTPServer(":"+port, routes)
 
 	listener, err := net.Listen("tcp", server.Addr)
 	if err != nil {
@@ -54,6 +76,7 @@ func run(ctx context.Context, logger *slog.Logger) error {
 		"max_input_pixels", cfg.maxInputPixels,
 		"max_output_width", cfg.maxOutputWidth,
 		"jpeg_quality", cfg.jpegQuality,
+		"max_concurrent_resizes", cfg.maxConcurrentResizes,
 	)
 
 	serverErrors := make(chan error, 1)
@@ -83,5 +106,32 @@ func run(ctx context.Context, logger *slog.Logger) error {
 		}
 		logger.Info("server shutdown complete")
 		return nil
+	}
+}
+
+func configFromEnvironment() (config, error) {
+	cfg := defaultConfig()
+	value := os.Getenv(maxConcurrentResizesEnv)
+	if value == "" {
+		return cfg, nil
+	}
+
+	limit, err := strconv.Atoi(value)
+	if err != nil || limit <= 0 {
+		return config{}, fmt.Errorf("%s must be a positive integer", maxConcurrentResizesEnv)
+	}
+	cfg.maxConcurrentResizes = limit
+	return cfg, nil
+}
+
+func newHTTPServer(address string, handler http.Handler) *http.Server {
+	return &http.Server{
+		Addr:              address,
+		Handler:           handler,
+		ReadHeaderTimeout: readHeaderTimeout,
+		ReadTimeout:       readTimeout,
+		WriteTimeout:      writeTimeout,
+		IdleTimeout:       idleTimeout,
+		MaxHeaderBytes:    maxHeaderBytes,
 	}
 }

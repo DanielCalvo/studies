@@ -1,0 +1,157 @@
+# A receiver is an entry point into the Collector.
+# For Step 1, the Collector accepts only traces over OTLP/gRPC.
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        # Listen on every container interface so the separate trace-generator
+        # container can connect through the Docker Compose network.
+        endpoint: 0.0.0.0:4317
+      # OTLP can also carry the same telemetry over HTTP. Both transports feed
+      # the same receiver and therefore continue through the same pipeline.
+      http:
+        endpoint: 0.0.0.0:4318
+
+  # Unlike the passive OTLP receiver, this receiver actively scrapes system
+  # measurements on a schedule. Start with only memory to keep the step small.
+  # If Node Exporter already supplies the host metrics we need to Prometheus,
+  # we would normally omit this receiver rather than collect them twice.
+  host_metrics/local:
+    initial_delay: 1s
+    collection_interval: 10s
+    scrapers:
+      memory:
+      # Select eth0 inside the receiver. Measurements for lo are never
+      # collected, unlike processor filtering that would discard them later.
+      network:
+        include:
+          interfaces: [eth0]
+          match_type: strict
+
+# An exporter is an exit from the Collector.
+# The debug exporter prints received telemetry to the Collector's own output.
+# It is the current replacement for the book's older "logging" exporter.
+exporters:
+  debug:
+    # Detailed output lets us inspect individual resources, scopes, and spans.
+    verbosity: detailed
+  # A second exporter writes the same processed traces as OTLP JSON. This file
+  # is useful for demonstrating fan-out; it is not a telemetry backend.
+  file/local-traces:
+    path: /var/lib/otelcol-output/traces.json
+    format: json
+    flush_interval: 1s
+
+# A processor handles telemetry after a receiver accepts it and before an
+# exporter receives it. This processor waits up to five seconds so batching is
+# easy to observe in this study exercise.
+processors:
+  # The memory limiter protects the Collector process from running out of
+  # memory. Put it FIRST in every pipeline so it can refuse new telemetry and
+  # apply backpressure before later processors allocate more memory.
+  memory_limiter:
+    check_interval: 1s
+    # The soft limit is 128 - 32 = 96 MiB. Above it, the processor temporarily
+    # refuses data; above the 128 MiB hard limit, it can also force Go GC.
+    limit_mib: 128
+    spike_limit_mib: 32
+
+  # Resource attributes describe the entity producing telemetry, rather than
+  # one span, metric data point, or log record. Apply this consistently to all
+  # three signal pipelines.
+  resource/add-local-environment:
+    attributes:
+      - key: deployment.environment.name
+        value: development
+        action: upsert
+
+  # A slash gives this attributes processor instance a descriptive name. It
+  # adds a span attribute centrally without changing the sending application.
+  attributes/add-study-chapter:
+    actions:
+      - key: study.chapter
+        value: "8"
+        # Upsert inserts the attribute when absent and updates it when present.
+        action: upsert
+
+  # The transform processor uses OTTL (OpenTelemetry Transformation Language)
+  # to modify telemetry. Here it prefixes every span name with the chapter
+  # attribute so the transformation is immediately visible in debug output.
+  transform/prefix-span-name:
+    trace_statements:
+      - set(span.name, Concat([span.attributes["study.chapter"], span.name], ":"))
+
+  # A filter condition describes telemetry to DROP, not telemetry to retain.
+  # This condition is deliberately narrow so only our study span is removed.
+  filter/drop-reverse-span:
+    # Ignore evaluation errors so one malformed item does not drop its entire
+    # incoming payload. Matching telemetry is still intentionally discarded.
+    error_mode: ignore
+    trace_conditions:
+      - span.name == "8:reverse characters"
+
+  # Unlike the network receiver's interface selection, this filter sees an
+  # already-created metric and then prevents it from continuing downstream.
+  filter/drop-network-connections:
+    error_mode: ignore
+    metric_conditions:
+      - metric.name == "system.network.connections"
+
+  batch:
+    timeout: 5s
+
+# Extensions add capabilities to the Collector itself rather than participating
+# in a telemetry pipeline. This endpoint would mostly be used by Kubernetes as
+# a liveness or readiness probe for the Collector.
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+# The sections above only configure components that are available for use.
+# Referencing them under service is what enables and connects them. A configured
+# receiver, processor, exporter, or extension not used here remains inactive.
+service:
+  # Defining an extension above is not enough; this reference activates it.
+  extensions: [health_check]
+
+  pipelines:
+    # Defining a receiver or exporter above does not enable it. A pipeline
+    # activates the components and connects them for one telemetry signal.
+    traces:
+      receivers: [otlp]
+      # Processor order is the order in which telemetry passes through them.
+      # ORDER MATTERS: the attributes processor must create study.chapter
+      # before the transform reads it, and the transform must create the "8:"
+      # prefix before the filter compares the resulting name. Batch remains
+      # last so all changes happen before spans are grouped.
+      processors:
+        - memory_limiter
+        - resource/add-local-environment
+        - attributes/add-study-chapter
+        - transform/prefix-span-name
+        - filter/drop-reverse-span
+        - batch
+      # Both exporters receive the same three spans that survive processing.
+      exporters: [debug, file/local-traces]
+
+    # Pipelines are signal-specific. This independently enables OTLP metrics
+    # while reusing the same receiver and debug exporter configurations.
+    metrics:
+      # OTLP accepts pushed application metrics; host_metrics actively scrapes.
+      # Both sources feed the same metrics processor/exporter sequence.
+      receivers: [otlp, host_metrics/local]
+      # The memory limiter is first here for the same reason as in traces.
+      processors:
+        - memory_limiter
+        - resource/add-local-environment
+        - filter/drop-network-connections
+        - batch
+      exporters: [debug]
+
+    # Logs need their own signal pipeline too. Reusing otlp and debug does not
+    # merge log records with the traces or metrics handled above.
+    logs:
+      receivers: [otlp]
+      # Each pipeline gets an instance that observes the same process memory.
+      processors: [memory_limiter, resource/add-local-environment, batch]
+      exporters: [debug]

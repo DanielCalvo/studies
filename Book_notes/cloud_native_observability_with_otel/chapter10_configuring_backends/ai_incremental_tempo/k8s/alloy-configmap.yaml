@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alloy
+  namespace: chapter10-tempo
+data:
+  config.alloy: |
+    logging {
+      level  = "info"
+      format = "logfmt"
+    }
+
+    // The receiver is Alloy's application-facing OTLP entry point. Its output
+    // reference connects received traces to the batch processor below.
+    otelcol.receiver.otlp "applications" {
+      grpc {
+        endpoint = "0.0.0.0:4317"
+      }
+
+      output {
+        traces = [otelcol.processor.batch.traces.input]
+      }
+    }
+
+    // The batch processor groups spans before export, reducing the number of
+    // outbound requests. It does not change the spans' trace or span IDs.
+    otelcol.processor.batch "traces" {
+      output {
+        traces = [otelcol.exporter.otlp.tempo.input]
+      }
+    }
+
+    // This exporter is the backend-facing side of Alloy. Both network hops
+    // use OTLP/gRPC, but Alloy processes and forwards data while Tempo stores
+    // and queries it.
+    otelcol.exporter.otlp "tempo" {
+      client {
+        endpoint = "tempo:4317"
+
+        tls {
+          // Plaintext is limited to this local Minikube namespace.
+          insecure = true
+        }
+      }
+    }

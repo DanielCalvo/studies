@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chapter9-gateway-collector
+data:
+  collector-config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            # The Kubernetes Service forwards its OTLP port to this receiver.
+            endpoint: 0.0.0.0:4317
+
+    exporters:
+      debug:
+        # The gateway has no backend yet. Detailed output will make the first
+        # span forwarded by the agent directly observable in a later step.
+        verbosity: detailed
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          exporters: [debug]

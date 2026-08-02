@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: trace-producer
+  namespace: chapter10-tempo
+spec:
+  # If the producer cannot export, one retry is enough to expose the failure
+  # without creating a continuous stream of traces.
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app: trace-producer
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: trace-producer
+          image: chapter10-trace-producer:step6
+          # The image is built directly into Minikube for this local exercise.
+          imagePullPolicy: Never
+          env:
+            - name: OTLP_ENDPOINT
+              # The application now knows only Alloy's collection endpoint.
+              # Alloy owns the separate connection to the Tempo backend.
+              value: alloy:4317
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

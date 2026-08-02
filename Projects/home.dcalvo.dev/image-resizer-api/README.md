@@ -1,3 +1,5 @@
+(this document is AI generated)
+
 # Image Resizer API
 
 A small Go HTTP service that accepts a JPEG, resizes it to a smaller width while
@@ -54,6 +56,57 @@ The endpoint includes:
 Request IDs, filenames, exact dimensions, and raw error messages are not used as
 metric labels.
 
+## Traces
+
+OpenTelemetry traces are exported with OTLP gRPC. In Kubernetes the application
+sends them to Alloy at `alloy.monitoring.svc.cluster.local:4317`; Alloy batches
+them and forwards them to Tempo.
+
+Only `POST /v1/resize` is traced. Health and metrics requests are deliberately
+excluded. A successful resize contains one HTTP server span and four
+application-specific child spans:
+
+```text
+POST /v1/resize
+├── image.read_upload
+├── image.decode
+├── image.resize
+└── image.encode
+```
+
+The server span records the request outcome, stable application error code when
+present, available image dimensions, target width, and input/output byte sizes.
+Image contents, filenames, multipart bodies, and arbitrary headers are not
+recorded.
+
+Request-completion logs include `trace_id`, `span_id`, and `trace_sampled` when
+there is an active trace. These remain JSON fields rather than Loki labels. The
+existing request ID remains available independently in the log and
+`X-Request-ID` response header.
+
+The service uses parent-based, always-on sampling for this low-volume learning
+environment and accepts standard W3C `traceparent` headers. Pending spans are
+flushed for up to five seconds after the HTTP server finishes graceful shutdown.
+
+To export local traces to a collector:
+
+```bash
+OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4317 \
+OTEL_EXPORTER_OTLP_INSECURE=true \
+/usr/local/go/bin/go run .
+```
+
+In Grafana Explore, select the Tempo data source and find deployed application
+traces with:
+
+```traceql
+{ resource.service.name = "image-resizer-api" }
+```
+
+Grafana is provisioned to navigate from an image-resizer span to the matching
+Loki completion log and from a log's `trace_id` field back to its complete Tempo
+trace.
+
 ## Health and shutdown
 
 The service exposes separate process health and traffic-readiness endpoints:
@@ -66,6 +119,35 @@ GET /readyz
 Both return `200 OK` during normal operation. When the process receives
 `SIGTERM` or `SIGINT`, readiness changes to `503 Service Unavailable` and the HTTP
 server gets up to 30 seconds to finish in-flight requests before shutdown.
+
+## Overload protection
+
+The service admits at most one active resize per available Go execution thread.
+By default, the limit comes from `runtime.GOMAXPROCS(0)`, which follows the Go
+runtime's available CPU setting. Override it with a positive integer when
+running an experiment:
+
+```bash
+MAX_CONCURRENT_RESIZES=2 /usr/local/go/bin/go run .
+```
+
+The slot is acquired before the multipart body is read. When every slot is
+occupied, the service does not queue the request or read its image. It returns
+`503 Service Unavailable` with `Retry-After: 1`, closes the connection, and logs
+the request with the stable error code `server_overloaded`.
+
+Slow clients are bounded by a 5-second header timeout and a 15-second whole
+request read timeout. The existing 10 MiB upload limit and 40-megapixel decoded
+image limit remain in effect.
+
+Prometheus exposes overload rejections separately:
+
+```text
+image_resizer_overload_rejections_total
+```
+
+An invalid, zero, or negative `MAX_CONCURRENT_RESIZES` value prevents startup
+instead of silently disabling admission control.
 
 ## Build and deploy to the homelab
 
@@ -97,10 +179,13 @@ The Kubernetes resources use:
 - Readiness and liveness HTTP probes
 - A 35-second pod termination grace period
 - CPU and memory requests and limits
+- CPU-aware resize concurrency with immediate overload rejection
+- A Go soft memory limit below the container memory limit
 - A non-root user, read-only root filesystem, no Linux capabilities, and no
   mounted service-account token
 - A LoadBalancer Service at `192.168.1.222`
 - A cross-namespace `ServiceMonitor` that scrapes both replicas every 15 seconds
+- OTLP gRPC trace export to the internal Alloy Service
 
 Every script run produces a unique pod-template image reference, which triggers a
 Deployment rollout and works safely with `imagePullPolicy: IfNotPresent`. The
@@ -163,3 +248,10 @@ The version-controlled dashboard definition is stored at
 `http://192.168.1.221/d/image-resizer-overview/image-resizer-overview`. It
 presents service health, time-range request totals, request outcomes and latency,
 processing-stage latency, rejection reasons, and per-pod process CPU and memory.
+
+The Loki-backed request-log dashboard is stored at
+`grafana/image-resizer-logs.json` and published at
+`http://192.168.1.221/d/image-resizer-logs/image-resizer-logs`. It presents
+request counts, 4xx and 5xx outcomes, error reasons, log-derived latency and
+payload sizes, per-pod traffic, recent unsuccessful requests, and the complete
+request log stream.

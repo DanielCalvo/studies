@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chapter9-gateway-collector
+  labels:
+    app: chapter9-gateway-collector
+spec:
+  # A gateway is independent of application replicas and cluster node count.
+  # Two replicas demonstrate that the gateway can scale independently. The
+  # Service will expose both Pods as endpoints, but one long-lived OTLP/gRPC
+  # connection may remain attached to only one of them.
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chapter9-gateway-collector
+  template:
+    metadata:
+      labels:
+        app: chapter9-gateway-collector
+    spec:
+      containers:
+        - name: collector
+          image: otel/opentelemetry-collector-contrib:0.153.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - --config=/etc/otelcol-contrib/config.yaml
+          ports:
+            - name: otlp-grpc
+              containerPort: 4317
+          volumeMounts:
+            - name: collector-config
+              mountPath: /etc/otelcol-contrib/config.yaml
+              subPath: collector-config.yaml
+              readOnly: true
+
+      volumes:
+        - name: collector-config
+          configMap:
+            name: chapter9-gateway-collector

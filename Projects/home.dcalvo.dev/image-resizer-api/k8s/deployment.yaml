@@ -47,6 +47,20 @@ spec:
           env:
             - name: PORT
               value: "8080"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://alloy.monitoring.svc.cluster.local:4317"
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: "true"
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: "service.namespace=image-resizer,deployment.environment.name=homelab"
+            # Optional override for CPU-heavy resize concurrency. When omitted,
+            # the application uses runtime.GOMAXPROCS(0).
+            # - name: MAX_CONCURRENT_RESIZES
+            #   value: "2"
+            # Keep the Go heap below the container boundary so garbage
+            # collection has room to run before Kubernetes enforces the limit.
+            - name: GOMEMLIMIT
+              value: "1280MiB"
           ports:
             - name: http
               containerPort: 8080
@@ -69,10 +83,10 @@ spec:
             failureThreshold: 3
           resources:
             requests:
-              cpu: 100m
-              memory: 64Mi
-            limits:
+              cpu: "1"
               memory: 512Mi
+            limits:
+              memory: 1536Mi
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

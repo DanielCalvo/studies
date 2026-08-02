@@ -4,7 +4,7 @@ This file records the order in which features are implemented and why that order
 was chosen. The purpose is to make the reasoning and dependencies between steps
 visible, not merely to maintain a checklist.
 
-`feature_ideas.md` contains the broader collection of possible exercises. This
+`ai_feature_ideas.md` contains the broader collection of possible exercises. This
 file is the chronological record of what we actually build.
 
 ## How to maintain this file
@@ -386,6 +386,315 @@ dashboard structure and maintenance surface.
 - Selecting a user-visible success and latency SLI from real measurements
 - Choosing evidence-based alert thresholds and an initial SLO later
 
+### 10. Rate-configurable Go traffic generator
+
+**Status:** Implemented
+
+The original shell traffic generator has been replaced by a small Go program.
+It preserves the generated JPEG fixtures, half-width resize requests, sequential
+request behavior, and default homelab endpoint. Its request rate is configurable
+in requests per minute, and it independently selects a random fixture for every
+request so the observed image-size frequencies vary over time.
+
+The program reads each JPEG's real dimensions rather than relying on its
+filename, supports a configurable image directory and base URL, stops cleanly on
+`Ctrl+C`, and treats HTTP error responses as failures. Focused tests verify rate
+conversion, image discovery, multipart upload behavior, target resize width, and
+HTTP error handling.
+
+#### Why this came tenth
+
+The initial generator successfully populated the Grafana overview, which made
+its fixed 0.1-second pause and once-per-run shuffle the next practical
+limitations. A requests-per-minute setting makes slow demonstrations and denser
+dashboard experiments equally easy, while per-request random selection produces
+more natural variation without turning the utility into a concurrent capacity
+test.
+
+#### What this enables
+
+- Changing dashboard traffic density without editing source code
+- Observing naturally uneven image-size distributions
+- Pointing the same utility at local or alternate deployments
+- Adding bounded concurrency and run statistics later if load testing becomes
+  useful
+
+### 11. Open-loop traffic scheduling
+
+**Status:** Implemented
+
+The Go traffic generator now launches each request in its own goroutine on the
+configured schedule. Request completion no longer delays the next launch: at 60
+requests per minute, a request starts every second even if earlier requests are
+still in flight.
+
+The shared HTTP client safely reuses connections across concurrent requests.
+Each request retains the existing 30-second timeout. On `Ctrl+C` or the first
+request failure, the scheduler cancels all in-flight requests and waits for their
+goroutines before exiting.
+
+#### Why this came eleventh
+
+The rate-configurable sequential generator was useful for steady dashboard
+traffic, but its achieved rate remained limited by single-request latency.
+Open-loop scheduling separates the requested arrival rate from response time,
+making the requests-per-minute setting useful for deliberately applying load.
+
+#### What this enables
+
+- Maintaining a requested arrival rate while requests overlap
+- Observing queueing, latency, and saturation when the service cannot keep up
+- Comparing offered traffic with completed-request throughput
+- Adding an optional maximum in-flight limit later if a safety cap is useful
+
+### 12. In-flight request visibility
+
+**Status:** Implemented
+
+Every resize-start line now includes the current number of in-flight requests.
+Request completions remain silent, keeping the continuous output to one line per
+launched request. The counter uses atomic operations so concurrent request
+completions can update the value safely before the next request-start line.
+
+#### Why this came twelfth
+
+Open-loop scheduling intentionally allows requests to overlap. Once completion
+was decoupled from launch timing, the generator needed a direct way to show how
+much concurrent work its configured arrival rate was creating.
+
+#### What this enables
+
+- Seeing concurrency accumulate when the service falls behind
+- Relating the offered request rate to observed service latency
+- Choosing a future maximum in-flight safety limit from observed behavior
+
+### 13. Continue traffic after request failures
+
+**Status:** Implemented
+
+Individual request failures no longer stop the open-loop scheduler. EOFs,
+timeouts, connection failures, and HTTP error responses are logged with the
+current in-flight count, while later requests continue to launch at the
+configured rate. Startup and configuration failures remain fatal because the
+generator cannot begin useful traffic in those cases.
+
+#### Why this came thirteenth
+
+Applying enough traffic to reach a service or platform throughput limit can
+produce transient connection failures. Stopping on the first such failure ended
+the experiment precisely when the system began showing interesting overload
+behavior, so request errors now remain observations rather than generator-level
+failures.
+
+#### What this enables
+
+- Sustaining offered traffic through transient service failures
+- Observing recovery while the same traffic rate continues
+- Comparing error frequency with concurrency and service saturation
+- Running longer overload experiments without manually restarting the generator
+
+### 14. Bounded resize concurrency and overload rejection
+
+**Status:** Implemented
+
+The API now bounds active resize requests before reading their multipart bodies.
+The default concurrency is `runtime.GOMAXPROCS(0)`, matching the Go runtime's
+available CPU parallelism, and a positive `MAX_CONCURRENT_RESIZES` value can
+override it for experiments.
+
+When all processing slots are occupied, another request is not queued and its
+body is not read. The API immediately returns `503 Service Unavailable` with
+`Retry-After: 1`, closes the connection, emits a structured completion log with
+the stable `server_overloaded` error code, and increments
+`image_resizer_overload_rejections_total`. Slots are released after every
+successful or failed admitted request.
+
+The HTTP server also bounds slow clients with header, whole-request read, write,
+and idle timeouts plus a one-mebibyte header limit. The Kubernetes deployment
+now requests one CPU and 512 MiB of memory per replica, permits up to 1536 MiB,
+and sets `GOMEMLIMIT=1280MiB` so garbage collection has headroom before the
+container boundary. A commented `MAX_CONCURRENT_RESIZES` environment-variable
+example in the Deployment documents how to override the default without enabling
+the override.
+
+#### Why this came fourteenth
+
+Open-loop load testing exposed the first measured capacity failure: requests
+accumulated faster than the two ARM64 replicas could process them, concurrent
+decoded images exhausted the original 512 MiB limit, and both pods repeatedly
+terminated with `OOMKilled`. That lost in-flight request logs and temporarily
+removed every Service endpoint.
+
+Admission control was therefore prioritized over defining reliability targets.
+It changes overload from an uncontrolled pod failure into an explicit,
+observable API outcome while keeping health endpoints available.
+
+#### What this enables
+
+- Sustaining overload experiments without unbounded application concurrency
+- Measuring explicit overload responses instead of inferring lost requests from
+  pod restarts
+- Tuning concurrency independently from image-size and memory limits
+- Comparing offered load, completed throughput, and overload rejection rate
+- Establishing capacity-aware alerts, SLIs, and SLOs from stable behavior
+
+### 15. Image Resizer Loki log dashboard
+
+**Status:** Implemented, published, and validated with live logs
+
+The `Image Resizer Logs` dashboard is published to the homelab Grafana with the
+stable UID `image-resizer-logs`. Its version-controlled API payload lives at
+`grafana/image-resizer-logs.json` and contains twelve Loki-backed panels:
+
+- Total and successful request counts for the selected time range
+- Separate client rejection (4xx) and server failure (5xx) counts
+- Log-derived successful-request percentage
+- Request counts grouped by HTTP status, application error, and pod
+- Successful-request p50 and p95 latency grouped by pod
+- Successful input and output payload p95 sizes grouped by pod
+- Recent unsuccessful request logs with status, error, duration, request ID,
+  and pod
+- Recent logs for every completed request
+
+The dashboard defaults to the last hour so load experiments and their
+`server_overloaded` responses remain visible after the traffic generator stops.
+All request fields are parsed from the JSON log body at query time; high-cardinality
+fields such as request IDs remain unindexed.
+
+The dashboard queries were validated directly against Loki before publication.
+Live log data included successful resize traffic on both replicas, client-side
+`method_not_allowed` responses, and service-side `server_overloaded` failures.
+
+#### Why this came fifteenth
+
+Loki and Alloy made the application logs durable and queryable, while overload
+testing created enough successful and failed traffic to decide which log views
+were operationally useful. A dedicated dashboard now makes those logs usable
+without reconstructing LogQL queries during every investigation.
+
+Keeping this separate from the Prometheus overview also makes the distinction
+between metrics and logs explicit: the overview is the efficient aggregate
+health view, while the log dashboard provides request-level evidence and IDs for
+drill-down.
+
+#### What this enables
+
+- Seeing recent failed requests without manually writing LogQL
+- Distinguishing client rejection from service failure
+- Finding the error reason, request ID, and serving pod for an incident
+- Comparing log-derived latency and traffic distribution across replicas
+- Correlating the Loki dashboard with the existing Prometheus overview
+- Building future alerts from error patterns that prove useful
+
+### 16. OpenTelemetry request tracing
+
+**Status:** Implemented, deployed, and validated with Tempo and Loki
+
+The API now creates an OpenTelemetry HTTP server span for every
+`POST /v1/resize` request and four child spans for the application-specific
+processing stages:
+
+```text
+POST /v1/resize
+├── image.read_upload
+├── image.decode
+├── image.resize
+└── image.encode
+```
+
+Health and Prometheus endpoints are excluded from tracing. The server span
+records a bounded outcome and stable error code plus the available image
+dimensions, target width, and encoded byte sizes. Child spans expose where an
+individual request spent its time. The service accepts W3C Trace Context,
+samples new traces in this low-volume learning environment, batches completed
+spans, and exports them over OTLP gRPC to Alloy.
+
+The existing structured request-completion log now includes the active trace ID,
+span ID, and sampled flag. These high-cardinality identifiers remain fields in
+the JSON body rather than Loki labels. The request ID remains an independent
+application identifier.
+
+Focused tests use an in-memory exporter to verify incoming context propagation,
+the processing-span hierarchy, success and rejection attributes, trace/log
+identifier correlation, and the absence of traces for liveness checks.
+
+The ARM64 image was deployed to both Orange Pis and the complete post-deployment
+smoke suite passed. Its nine resize requests produced twenty spans. The
+successful `120x80` to `60x40` resize produced the expected server span and four
+child spans; rejected requests produced shorter traces with their stable error
+codes. Loki stored the matching completion logs with trace and span IDs, and
+Grafana's provisioned Tempo and Loki data sources expose bidirectional
+trace-to-log navigation. Alloy accepted and exported every application span
+without refusing one.
+
+#### Why this came sixteenth
+
+Metrics already explain aggregate rates, failures, latency, and resource usage,
+while Loki makes individual completion events searchable. Tempo and Alloy were
+then installed and verified independently with synthetic spans. Instrumenting
+the existing request path now adds the missing per-request timing structure
+without combining application changes with an untested tracing backend.
+
+The image-processing stages are already meaningful units of CPU and latency, so
+they provide a useful first trace without inventing another service or tracing
+every helper function.
+
+#### What this enables
+
+- Seeing which processing stage dominates one slow resize request
+- Finding an individual Tempo trace from its correlated Loki completion log
+- Comparing successful, rejected, and overloaded request traces
+- Propagating the same trace through the traffic generator later
+- Navigating bidirectionally between Tempo traces and Loki completion logs
+- Learning sampling, span metrics, and service graphs from real application data
+
+### 17. Metrics-to-traces Grafana dashboard
+
+**Status:** Implemented, published, and validated with generated traffic
+
+The `Image Resizer Tracing` dashboard provides a guided transition from
+aggregate Prometheus signals to individual Tempo traces. Its metric panels show
+request totals, success percentage, unsuccessful requests, request rate by
+outcome, request latency percentiles, and per-stage p95 latency. Its Tempo
+tables show recent resize traces, traces exceeding a selectable slow threshold,
+and rejected or failed traces.
+
+Each Tempo result retains Grafana's data-source-provided Trace ID link. Opening
+one shows the complete span waterfall and exposes the existing trace-to-Loki
+navigation. Links in the dashboard header also connect to the dedicated metrics
+overview and request-log dashboards.
+
+The dashboard uses the application's existing Prometheus histograms for trends
+and Tempo search for individual traces. It does not require Tempo's
+metrics-generator, which remains disabled to keep the homelab stack lightweight
+and avoid duplicating metrics already emitted by the application.
+
+Live traffic validation returned fifty recent traces, thirty traces slower than
+the default `500ms` threshold, and ten rejected or failed traces in the selected
+hour. During validation, Prometheus observed about two successful requests per
+second and returned processing-stage latency series for decode, resize, and
+encode.
+
+#### Why this came seventeenth
+
+Instrumentation and trace/log correlation were working, but using only Explore
+still required knowing what to query and where to start. The dashboard turns
+the existing telemetry into a repeatable investigation path without adding new
+collection components.
+
+Placing aggregate metrics above trace results also makes the different roles
+clear: metrics reveal a pattern across many requests, while a trace explains
+the work performed by one request.
+
+#### What this enables
+
+- Learning the relationship between metrics, traces, and logs in one workflow
+- Moving from a latency spike to examples of slow request traces
+- Comparing trace waterfalls with aggregate processing-stage latency
+- Finding rejected and failed traces without writing TraceQL manually
+- Adjusting the definition of a slow trace from a dashboard variable
+- Reusing the version-controlled dashboard after Grafana reinstalls
+
 ## Candidate next steps
 
 These are possible follow-up features, not yet an agreed sequence. When one is
@@ -394,8 +703,6 @@ was prioritized over the other candidates.
 
 - Service-level indicators based on user-visible success and latency
 - An initial service-level objective
-- OpenTelemetry traces for the request and image-processing stages
-- Request concurrency limits and overload behavior
 - Alerts and error-budget exercises
 - Asynchronous resizing with a queue and worker
 - Security and software supply-chain exercises

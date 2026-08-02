@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tempo
+  namespace: chapter10-tempo
+spec:
+  # A single replica matches Tempo's monolithic learning setup. Scaling this
+  # Deployment is not equivalent to deploying Tempo in microservices mode.
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tempo
+  template:
+    metadata:
+      labels:
+        app: tempo
+    spec:
+      securityContext:
+        # Tempo runs as a non-root user. The group makes the mounted emptyDir
+        # writable at /var/tempo.
+        fsGroup: 10001
+      containers:
+        - name: tempo
+          # Pin the image so this exercise does not change when "latest" moves.
+          image: grafana/tempo:3.0.2
+          args:
+            - -config.file=/etc/tempo/tempo.yaml
+          ports:
+            - name: http
+              containerPort: 3200
+            - name: otlp-grpc
+              containerPort: 4317
+            - name: otlp-http
+              containerPort: 4318
+          readinessProbe:
+            # Kubernetes marks the Pod ready only when Tempo's own readiness
+            # endpoint confirms that the process can serve requests.
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          volumeMounts:
+            - name: tempo-config
+              mountPath: /etc/tempo/tempo.yaml
+              subPath: tempo.yaml
+              readOnly: true
+            - name: tempo-data
+              # Keep trace-backend files separate from Tempo 3's live-store
+              # runtime files so each directory has one clear purpose.
+              mountPath: /data/tempo
+            - name: tempo-runtime
+              mountPath: /var/tempo
+      volumes:
+        - name: tempo-config
+          # Kubernetes supplies tempo.yaml from the ConfigMap. The Tempo
+          # process reads this file when it starts.
+          configMap:
+            name: tempo
+        - name: tempo-data
+          # The PVC has a lifecycle independent of this Pod. Tempo's WAL and
+          # completed local-backend blocks therefore remain when Kubernetes
+          # replaces the Tempo Pod.
+          persistentVolumeClaim:
+            claimName: tempo-data
+        - name: tempo-runtime
+          # Tempo 3 keeps recent live-store working data here. It remains
+          # temporary in Step 4 so the exercise distinguishes recent runtime
+          # state from completed blocks on the persistent backend.
+          emptyDir: {}

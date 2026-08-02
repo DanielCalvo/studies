@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: chapter10-tempo
+data:
+  tempo.yaml: |
+    apiVersion: 1
+
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        uid: prometheus
+        access: proxy
+        url: http://prometheus:9090
+        isDefault: false
+        editable: false
+        jsonData:
+          httpMethod: POST
+          prometheusType: Prometheus
+          prometheusVersion: 3.13.2
+          # The metrics generator uses "traceID" as its exemplar label. This
+          # link lets Grafana open that ID in the Tempo data source.
+          exemplarTraceIdDestinations:
+            - name: traceID
+              datasourceUid: tempo
+
+      - name: Tempo
+        # "tempo" selects Grafana's built-in Tempo data-source plugin.
+        type: tempo
+        uid: tempo
+        access: proxy
+        # Grafana uses Tempo's HTTP query API on port 3200. This is different
+        # from ports 4317 and 4318, which applications use to send OTLP data.
+        url: http://tempo:3200
+        isDefault: true
+        editable: false
+        jsonData:
+          # Grafana reads service-graph metrics from this Prometheus source.
+          serviceMap:
+            datasourceUid: prometheus
+          # Ordinary TraceQL queries use Tempo's HTTP API. Streaming is an
+          # optional enhancement that also requires stream_over_http_enabled
+          # in Tempo; keep it off so this step adds only the basic query path.
+          streamingEnabled:
+            search: false
+            metrics: false

@@ -10,17 +10,18 @@ import (
 )
 
 type metrics struct {
-	registry       *prometheus.Registry
-	httpRequests   *prometheus.CounterVec
-	httpDuration   *prometheus.HistogramVec
-	httpInFlight   *prometheus.GaugeVec
-	stageDuration  *prometheus.HistogramVec
-	resizeInFlight prometheus.Gauge
-	inputBytes     prometheus.Histogram
-	outputBytes    prometheus.Histogram
-	inputPixels    prometheus.Histogram
-	outputPixels   prometheus.Histogram
-	rejections     *prometheus.CounterVec
+	registry           *prometheus.Registry
+	httpRequests       *prometheus.CounterVec
+	httpDuration       *prometheus.HistogramVec
+	httpInFlight       *prometheus.GaugeVec
+	stageDuration      *prometheus.HistogramVec
+	resizeInFlight     prometheus.Gauge
+	inputBytes         prometheus.Histogram
+	outputBytes        prometheus.Histogram
+	inputPixels        prometheus.Histogram
+	outputPixels       prometheus.Histogram
+	rejections         *prometheus.CounterVec
+	overloadRejections prometheus.Counter
 }
 
 func newMetrics() *metrics {
@@ -89,6 +90,11 @@ func newMetrics() *metrics {
 			Name:      "rejections_total",
 			Help:      "Total number of rejected resize requests by stable reason.",
 		}, []string{"reason"}),
+		overloadRejections: prometheus.NewCounter(prometheus.CounterOpts{
+			Namespace: "image_resizer",
+			Name:      "overload_rejections_total",
+			Help:      "Total number of resize requests rejected because processing concurrency was full.",
+		}),
 	}
 
 	m.registry.MustRegister(
@@ -102,6 +108,7 @@ func newMetrics() *metrics {
 		m.inputPixels,
 		m.outputPixels,
 		m.rejections,
+		m.overloadRejections,
 		prometheus.NewGoCollector(),
 		prometheus.NewProcessCollector(prometheus.ProcessCollectorOpts{}),
 	)

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: chapter9-agent-collector
+  labels:
+    app: chapter9-agent-collector
+spec:
+  selector:
+    matchLabels:
+      app: chapter9-agent-collector
+  template:
+    metadata:
+      labels:
+        app: chapter9-agent-collector
+    spec:
+      # This identity receives only the read permissions in rbac.yaml.
+      serviceAccountName: chapter9-agent-collector
+      containers:
+        - name: collector
+          image: otel/opentelemetry-collector-contrib:0.153.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - --config=/etc/otelcol-contrib/config.yaml
+          env:
+            # The processor uses this Downward API value to limit discovery to
+            # Pods scheduled on the same node as this DaemonSet agent.
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          ports:
+            - name: otlp-grpc
+              containerPort: 4317
+              # One agent runs per node, so it can reserve this node port.
+              # The application uses its node IP and this port.
+              hostPort: 4317
+          volumeMounts:
+            - name: collector-config
+              mountPath: /etc/otelcol-contrib/config.yaml
+              subPath: collector-config.yaml
+              readOnly: true
+
+      volumes:
+        - name: collector-config
+          configMap:
+            name: chapter9-agent-collector

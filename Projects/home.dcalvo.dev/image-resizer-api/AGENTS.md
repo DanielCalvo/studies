@@ -29,7 +29,7 @@ when repetition itself becomes an ownership burden. Do not add speculative
 robustness or convenience options by default. This guidance applies only to
 shell scripts.
 
-Read `feature_list.md` for the chronological record of implemented features and
+Read `ai_feature_list.md` for the chronological record of implemented features and
 the reasoning behind their priority. Update it whenever a feature is selected
 and implemented.
 

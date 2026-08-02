@@ -1,0 +1,3 @@
+# Keep this writable directory but not the generated telemetry.
+*
+!.gitignore

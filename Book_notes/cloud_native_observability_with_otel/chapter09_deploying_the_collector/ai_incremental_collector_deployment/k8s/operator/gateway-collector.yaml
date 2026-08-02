@@ -1,0 +1,48 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: chapter9-gateway
+spec:
+  # "deployment" is the Kubernetes placement. This Collector plays the
+  # architectural role of our cluster-level gateway.
+  mode: deployment
+  replicas: 2
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+  # This is ordinary Collector configuration nested inside the custom
+  # resource. The Operator does not change the pipeline model.
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            # A literal address allows the Operator to discover this receiver
+            # and generate a Kubernetes Service exposing port 4317.
+            endpoint: 0.0.0.0:4317
+
+    processors:
+      memory_limiter:
+        check_interval: 5s
+        limit_percentage: 80
+        spike_limit_percentage: 25
+      batch: {}
+
+    exporters:
+      debug:
+        # Keep the result observable without adding a telemetry backend.
+        verbosity: detailed
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [debug]
+

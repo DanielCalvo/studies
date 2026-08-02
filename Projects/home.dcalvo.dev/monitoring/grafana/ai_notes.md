@@ -80,7 +80,7 @@ password: admin
 
 This is intentionally simple for the homelab. Move this to an existing Kubernetes Secret later if desired.
 
-## Datasource
+## Data sources
 
 The Prometheus datasource points at the in-cluster Prometheus LoadBalancer Service:
 
@@ -102,6 +102,46 @@ datasources:
         url: http://prometheus-lb.monitoring.svc.cluster.local
         isDefault: true
 ```
+
+The Loki datasource is also provisioned from `values.yaml`, so it does not need
+to be created in the Grafana UI:
+
+```yaml
+      - name: Loki
+        type: loki
+        uid: loki
+        access: proxy
+        url: http://loki.monitoring.svc.cluster.local:3100
+        isDefault: false
+```
+
+Use the `loki` data source in Grafana Explore or Logs Drilldown. The initial
+collector scope is limited to `image-resizer/image-resizer-api`.
+
+The Tempo datasource is provisioned with stable UID `tempo` and queries the
+internal Tempo HTTP Service:
+
+```yaml
+      - name: Tempo
+        type: tempo
+        uid: tempo
+        access: proxy
+        url: http://tempo.monitoring.svc.cluster.local:3200
+        isDefault: false
+```
+
+Use it in Grafana Explore to search with TraceQL or by service name.
+The Tempo data source maps the span resource attribute `service.name` to Loki's
+bounded `service_name` stream label and filters matching logs by `trace_id`. The
+Loki data source extracts the `trace_id` JSON field as a derived field linked
+back to the Tempo data source. This provides navigation in both directions:
+
+```text
+Tempo span -> matching Loki request log
+Loki request log -> complete Tempo trace
+```
+
+Trace IDs remain inside the JSON log body and are not promoted to Loki labels.
 
 ## Dashboards
 
