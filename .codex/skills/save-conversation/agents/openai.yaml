@@ -1,0 +1,4 @@
+interface:
+  display_name: "Save Conversation"
+  short_description: "Save a discussion as a reusable Markdown note"
+  default_prompt: "Use $save-conversation to save our most recent topic as a Markdown note."

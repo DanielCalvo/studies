@@ -1,0 +1,43 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  version: v3.13.1 #pins the version of prometheus running, not the operator version, prometheus itself
+  serviceAccountName: prometheus
+  replicas: 2
+  retention: 15d #this is the time limit for metric storage. Prometheus tries to retain the most recent 15 days of metrics and deletes older TSDB blocks.
+  retentionSize: 15GB #this is the size limit for metric storage.  When the Prometheus data directory approaches that amount, Prometheus deletes the oldest blocks first.
+  # when both retention and retentionsize are configured, whichever limit is reached first wins!
+  resources:
+    requests: #this has a statefulset under the hood, along with other occompanying resources (headless service, configmap, and secrets for tls/web config, and more things)
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
+  serviceMonitorSelector:
+    matchLabels:
+      prometheus: hp #selects all the service monitors that have these labels to know which metrics to scrape, so if you have a ton of them and they all have this label, prometheus will use all of them to know what to scrape
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              operator.prometheus.io/name: prometheus
+          topologyKey: kubernetes.io/hostname
+  storage:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: local-path
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
+
+#  alerting:
+#    alertmanagers:
+#    - namespace: default
+#      name: alertmanager-example
+#      port: web

@@ -1,0 +1,16 @@
+prometheus:
+  monitor:
+    enabled: true
+    additionalLabels:
+      prometheus: hp
+    relabelings:
+      # Supplies the cluster selector expected by the Kubernetes Views dashboards.
+      - targetLabel: cluster
+        replacement: hp
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    memory: 64Mi

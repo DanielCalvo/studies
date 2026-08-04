@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: local-path-smoke-test
+  namespace: local-path-storage
+  labels:
+    app.kubernetes.io/name: local-path-smoke-test
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 64Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: local-path-smoke-test
+  namespace: local-path-storage
+  labels:
+    app.kubernetes.io/name: local-path-smoke-test
+spec:
+  restartPolicy: Never
+  containers:
+    - name: test
+      image: docker.io/library/busybox:1.37.0
+      imagePullPolicy: IfNotPresent
+      command:
+        - /bin/sh
+        - -c
+        - while true; do sleep 3600; done
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: local-path-smoke-test
