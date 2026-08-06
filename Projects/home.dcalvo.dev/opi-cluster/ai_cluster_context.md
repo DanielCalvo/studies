@@ -6,7 +6,7 @@ This is a small local k3s cluster used for study and experimentation.
 - Hardware: Orange Pi arm64 nodes
 - Network: local trusted home LAN
 - Primary use: learning, experiments, and lightweight internal services
-- Live state last verified: 2026-08-03
+- Live state last verified: 2026-08-05
 
 ## Nodes
 - `opi1`: `192.168.1.201`, k3s server/control-plane
@@ -69,37 +69,54 @@ Current load balancer assignments:
 - `monitoring/storage-tempo-0`: 5 GiB, pinned to `opi2`.
 
 ## Monitoring
+
+The former local Prometheus, Loki, Tempo, and Grafana workloads were
+decommissioned on 2026-08-05. Their releases, Prometheus resource/operator
+controller, monitoring PVCs, and stale resources were removed to reclaim Orange
+Pi disk space. kube-state-metrics and node-exporter were then reinstalled as
+lightweight OPI metric producers; HP Prometheus stores their samples.
+
+- The local telemetry workloads are Alloy, kube-state-metrics, and
+  node-exporter. ServiceMonitors are retained for Alloy discovery and do not
+  require a local Prometheus server.
 - Namespace: `monitoring`
-- Prometheus Operator `v0.92.1` is installed in the `default` namespace from the
-  upstream getting-started `bundle.yaml`.
-- Prometheus instance: `monitoring/prometheus`.
-- Prometheus server version: `v3.12.0`.
-- Prometheus is exposed through `monitoring/prometheus-lb` at `192.168.1.223`.
-- Prometheus uses ServiceMonitor label selector `prometheus: homelab`.
-- Prometheus scrapes kube-state-metrics, node-exporter, kubelet/cAdvisor, itself, and the Prometheus Operator.
-- kube-state-metrics is installed from Helm chart `7.5.1` (app `2.19.1`) and
-  scraped through `monitoring/kube-state-metrics`.
-- node-exporter is installed from Helm chart `4.55.0` (app `1.11.1`) as a
-  DaemonSet, one pod per node.
-- Grafana is installed from Helm chart `10.5.15` (app `12.3.1`) and exposed by
-  MetalLB at `192.168.1.221`.
-- Grafana uses a `local-path` PVC, datasource UIDs `prometheus`, `loki`, and
-  `tempo`, and pinned Grafana.com dashboards for kube-state-metrics,
-  node-exporter, Prometheus, and the Kubernetes Views Global, Namespaces, Nodes,
-  and Pods dashboards.
-- Kubelet `/metrics` and `/metrics/cadvisor` are scraped on both nodes through `monitoring/prometheus_operator/kubelet-servicemonitor.yaml`.
-- Loki is installed from pinned Helm chart `grafana/loki` `7.0.0` in monolithic mode. It uses a 10 GiB `local-path` PVC, TSDB indexes, filesystem chunks, seven-day retention, and the internal `monitoring/loki` ClusterIP Service.
 - Grafana Alloy is installed from pinned Helm chart `grafana/alloy` `1.10.0` as
   one Deployment without host mounts. It tails logs through the Kubernetes API
   and currently keeps only `image-resizer/image-resizer-api` pods. It also
   accepts OTLP gRPC on internal Service port `4317` and OTLP HTTP on `4318`,
-  batches traces, and forwards them to Tempo.
-- Tempo is installed from pinned Helm chart `grafana-community/tempo` `2.2.3`
-  (Tempo `2.10.7`) as one monolithic replica. It uses a 5 GiB `local-path` PVC,
-  local filesystem trace storage, seven-day retention, and the internal
-  `monitoring/tempo` ClusterIP Service. Metrics-generator is disabled.
-- Prometheus scrapes Loki, Alloy, and Tempo through ServiceMonitors labeled
-  `prometheus: homelab`.
+  batches traces, and forwards them over the home LAN to the HP Alloy gateway
+  at `192.168.1.232:4317`. Applications continue sending traces to the local
+  OPI Alloy ClusterIP Service. Its Image Resizer log pipeline sends Loki Push
+  API requests to `http://192.168.1.232:3100/loki/api/v1/push`; HP Alloy then
+  forwards the logs to HP Loki. New streams use `cluster="opi"`.
+
+## Cross-cluster metrics
+
+- OPI Alloy selects ServiceMonitors labeled `alloy: opi`. The selected sources
+  are Image Resizer, kube-state-metrics, and node-exporter.
+- OPI Alloy forwards the samples to HP Alloy at
+  `http://192.168.1.232:9091/api/v1/metrics/write`, with `cluster="opi"`.
+- kube-state-metrics is pinned to chart `7.5.1` (app `v2.19.1`) as one
+  Deployment. node-exporter is pinned to chart `4.55.0` (app `v1.11.1`) as a
+  two-pod DaemonSet, one pod per OPI node.
+- On 2026-08-05, both HP Prometheus replicas independently reported two healthy
+  Image Resizer targets, one healthy kube-state-metrics target, and two healthy
+  node-exporter targets. `kube_node_info` and `node_uname_info` each described
+  both OPI nodes, and OPI Alloy logged no scrape or remote-write errors.
+- OPI's k3s-managed `kube-system/kubelet` headless Service exposes both nodes'
+  authenticated HTTPS port `10250`. The declarative kubelet ServiceMonitor in
+  `monitoring/kubelet/servicemonitor.yaml` is selected by OPI Alloy through its
+  `alloy: opi` label and scrapes `/metrics` plus `/metrics/cadvisor`, attaching
+  `cluster="opi"` and the endpoint node name. TLS verification is disabled
+  only for these trusted-LAN kubelet endpoint addresses. On 2026-08-05, HP
+  Prometheus had kubelet metrics for both OPI nodes and cAdvisor container CPU
+  and memory series for both nodes.
+- OPI Alloy's remote-write WAL is ephemeral pod storage; buffered samples may
+  be lost during pod replacement.
+- OPI Alloy's own chart-generated ServiceMonitor is labeled `alloy: opi`, so
+  HP Prometheus also receives the collector's self-metrics. This allows the
+  cross-cluster scrape and remote-write pipeline to be monitored without a
+  local Prometheus server.
 
 ## Image Resizer API
 
@@ -110,13 +127,18 @@ Current load balancer assignments:
 - LoadBalancer address: `192.168.1.222`
 - Application port: `8080`; LoadBalancer port: `80`
 - Endpoints: `/v1/resize`, `/livez`, `/readyz`, and `/metrics`
-- ServiceMonitor: `monitoring/image-resizer-api`, selected by
-  `prometheus: homelab`; scrapes both replicas at `/metrics` every 15 seconds
+- ServiceMonitor: `monitoring/image-resizer-api`, labeled `alloy: opi`; Alloy
+  scrapes both replicas at `/metrics` every 15 seconds
 - `POST /v1/resize` emits an OpenTelemetry HTTP server span plus child spans for
   upload reading, JPEG decoding, resizing, and encoding. The application exports
   OTLP gRPC to Alloy, and its completion logs include trace and span IDs for
   Tempo/Loki correlation in Grafana.
 - Declarative resources and the build/deploy script live in `image-resizer-api/`.
+- The in-cluster traffic generator runs as `image-resizer-traffic-gen` in the
+  `image-resizer` namespace with one replica. Its ARM64 image is built from
+  `image-resizer-api/traffic-gen/` and sends 30 requests per minute to the
+  internal `image-resizer-api` Service. Declarative manifests and the build /
+  deploy script are in that directory.
 
 ## Practical Constraints
 - Prefer lightweight components and simple deployments.

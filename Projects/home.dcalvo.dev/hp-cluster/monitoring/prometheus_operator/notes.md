@@ -33,12 +33,19 @@ Grafana dashboards can join cAdvisor metrics to kube-state-metrics data.
 The kubelet and kube-state-metrics ServiceMonitors preserve labels exposed by
 the scrape targets with `honorLabels: true`. This keeps the real Kubernetes
 `namespace` and `pod` labels instead of moving them to `exported_namespace` and
-`exported_pod`. Both ServiceMonitors also attach `cluster="homelab"` for Grafana
+`exported_pod`. Both ServiceMonitors also attach `cluster="hp"` for Grafana
 dashboard filtering.
+
+Verification on 2026-08-05 found two healthy `job="kubelet"` targets and
+`machine_cpu_cores`, `machine_memory_bytes`,
+`container_cpu_usage_seconds_total`, and
+`container_memory_working_set_bytes` for both `hp1` and `hp2`. The absence of
+`kubelet_volume_stats_*` series is not a scrape failure; it can occur when no
+currently mounted volume reports kubelet volume statistics.
 
 Apply and verify it with:
 
 ```bash
-kubectl apply -f kubelet-servicemonitor.yaml
+kubectl apply -f kubelet-kubelet-servicemonitor.yaml
 kubectl -n monitoring get servicemonitor kubelet
 ```

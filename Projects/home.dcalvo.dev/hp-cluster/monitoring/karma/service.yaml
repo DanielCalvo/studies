@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: karma
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: karma
+    app.kubernetes.io/component: alert-dashboard
+  annotations:
+    metallb.io/loadBalancerIPs: 192.168.1.234
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: karma
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

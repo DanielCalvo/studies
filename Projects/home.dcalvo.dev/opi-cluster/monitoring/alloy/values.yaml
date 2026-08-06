@@ -10,7 +10,7 @@ alloy:
       memory: 64Mi
     limits:
       cpu: 250m
-      memory: 256Mi
+      memory: 512Mi
   extraPorts:
     - name: otlp-grpc
       port: 4317
@@ -50,11 +50,43 @@ alloy:
 
       otelcol.exporter.otlp "tempo" {
         client {
-          endpoint = "tempo.monitoring.svc.cluster.local:4317"
+          // Send traces across the home LAN to the Alloy gateway in the HP
+          // cluster. That gateway forwards them to HP Tempo internally.
+          endpoint = "192.168.1.232:4317"
 
           tls {
             insecure = true
           }
+        }
+      }
+
+      // Scrapes only ServiceMonitors selected for cross-cluster forwarding.
+      prometheus.operator.servicemonitors "image_resizer" {
+        // The kubelet Service is owned by k3s in kube-system; the remaining
+        // selected ServiceMonitors live in monitoring.
+        namespaces = ["monitoring", "kube-system"]
+
+        selector {
+          match_expression {
+            key      = "alloy"
+            operator = "In"
+            values   = ["opi"]
+          }
+        }
+
+        // Record where the samples originated.
+        rule {
+          target_label = "cluster"
+          replacement  = "opi"
+        }
+
+        forward_to = [prometheus.remote_write.hp_gateway.receiver]
+      }
+
+      // Sends scraped samples to HP Alloy's remote-write-compatible endpoint.
+      prometheus.remote_write "hp_gateway" {
+        endpoint {
+          url = "http://192.168.1.232:9091/api/v1/metrics/write"
         }
       }
 
@@ -109,7 +141,7 @@ alloy:
 
         rule {
           target_label = "cluster"
-          replacement  = "homelab"
+          replacement  = "opi"
         }
 
         rule {
@@ -120,12 +152,14 @@ alloy:
 
       loki.source.kubernetes "image_resizer" {
         targets    = discovery.relabel.image_resizer_pods.output
-        forward_to = [loki.write.local.receiver]
+        forward_to = [loki.write.hp_gateway.receiver]
       }
 
-      loki.write "local" {
+      // Sends OPI log streams to the restricted HP Alloy gateway. The gateway
+      // then forwards them to the private Loki Service in the HP cluster.
+      loki.write "hp_gateway" {
         endpoint {
-          url = "http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push"
+          url = "http://192.168.1.232:3100/loki/api/v1/push"
         }
       }
 
@@ -140,5 +174,7 @@ service:
 serviceMonitor:
   enabled: true
   additionalLabels:
-    prometheus: homelab
+    prometheus: opi
+    # Select Alloy's own health and remote-write metrics for forwarding to HP.
+    alloy: opi
   interval: 30s

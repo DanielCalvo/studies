@@ -4,7 +4,8 @@ metadata:
   name: image-resizer-api
   namespace: monitoring
   labels:
-    prometheus: homelab
+    prometheus: opi
+    alloy: opi
 spec:
   namespaceSelector:
     matchNames:

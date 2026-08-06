@@ -1,0 +1,649 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "image-resizer-logs",
+    "title": "Image Resizer Logs",
+    "description": "Log-derived request, failure, latency, payload, and per-pod views for the Image Resizer API. All panels query Loki and parse the application's structured JSON at query time.",
+    "tags": [
+      "image-resizer",
+      "logs",
+      "loki"
+    ],
+    "timezone": "browser",
+    "schemaVersion": 41,
+    "version": 0,
+    "refresh": "15s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "type": "stat",
+        "title": "Total requests",
+        "description": "Request-completion log entries in the selected time range.",
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 4,
+          "x": 0,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 0,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "blue",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum(count_over_time({namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | __error__=\"\" [$__range])) or vector(0)",
+            "legendFormat": "Total",
+            "queryType": "instant",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "type": "stat",
+        "title": "Successful requests",
+        "description": "HTTP 2xx and 3xx request-completion logs in the selected time range.",
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 5,
+          "x": 4,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 0,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum(count_over_time({namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | status >= 200 | status < 400 | __error__=\"\" [$__range])) or vector(0)",
+            "legendFormat": "Successful",
+            "queryType": "instant",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "type": "stat",
+        "title": "Client rejections (4xx)",
+        "description": "Requests rejected because of invalid methods, inputs, formats, or other client errors.",
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 5,
+          "x": 9,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 0,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum(count_over_time({namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | status >= 400 | status < 500 | __error__=\"\" [$__range])) or vector(0)",
+            "legendFormat": "4xx",
+            "queryType": "instant",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "type": "stat",
+        "title": "Server failures (5xx)",
+        "description": "Service-side failures, including overload rejection, in the selected time range.",
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 5,
+          "x": 14,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 0,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum(count_over_time({namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | status >= 500 | __error__=\"\" [$__range])) or vector(0)",
+            "legendFormat": "5xx",
+            "queryType": "instant",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "type": "stat",
+        "title": "Success percentage",
+        "description": "Percentage of request-completion logs with HTTP status below 400.",
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 5,
+          "x": 19,
+          "y": 0
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 1,
+            "max": 100,
+            "min": 0,
+            "unit": "percent",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 90
+                },
+                {
+                  "color": "green",
+                  "value": 99
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "100 * sum(count_over_time({namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | status >= 200 | status < 400 | __error__=\"\" [$__range])) / sum(count_over_time({namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | __error__=\"\" [$__range]))",
+            "legendFormat": "Success",
+            "queryType": "instant",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "type": "timeseries",
+        "title": "Requests by HTTP status",
+        "description": "Rolling request counts grouped by the status parsed from each completion log.",
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 4
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 0,
+            "min": 0,
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "calcs": [
+              "sum"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum by (status) (count_over_time({namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | __error__=\"\" [$__interval]))",
+            "legendFormat": "HTTP {{status}}",
+            "queryType": "range",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "type": "timeseries",
+        "title": "Successful request latency by pod",
+        "description": "Rolling p50 and p95 duration from successful request logs. This is computed from duration_ms rather than Prometheus histograms.",
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 4
+        },
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "unit": "ms"
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "quantile_over_time(0.50, {namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | status >= 200 | status < 400 | unwrap duration_ms | __error__=\"\" [5m]) by (pod)",
+            "legendFormat": "{{pod}} p50",
+            "queryType": "range",
+            "refId": "A"
+          },
+          {
+            "editorMode": "code",
+            "expr": "quantile_over_time(0.95, {namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | status >= 200 | status < 400 | unwrap duration_ms | __error__=\"\" [5m]) by (pod)",
+            "legendFormat": "{{pod}} p95",
+            "queryType": "range",
+            "refId": "B"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "type": "timeseries",
+        "title": "Unsuccessful requests by reason",
+        "description": "Rolling counts grouped by the bounded application error code, such as server_overloaded or method_not_allowed.",
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 12
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 0,
+            "min": 0,
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "calcs": [
+              "sum"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum by (error) (count_over_time({namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | error != \"\" | __error__=\"\" [$__interval]))",
+            "legendFormat": "{{error}}",
+            "queryType": "range",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "type": "timeseries",
+        "title": "Request distribution by pod",
+        "description": "Rolling request counts by serving pod, useful for checking load-balancer distribution and noisy replicas.",
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 12
+        },
+        "fieldConfig": {
+          "defaults": {
+            "decimals": 0,
+            "min": 0,
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "calcs": [
+              "sum"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum by (pod) (count_over_time({namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | __error__=\"\" [$__interval]))",
+            "legendFormat": "{{pod}}",
+            "queryType": "range",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "type": "timeseries",
+        "title": "Successful image payload sizes by pod",
+        "description": "Rolling p95 input and output byte sizes parsed from successful resize logs.",
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 20
+        },
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "unit": "bytes"
+          },
+          "overrides": []
+        },
+        "options": {
+          "legend": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "quantile_over_time(0.95, {namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | status >= 200 | status < 400 | unwrap input_bytes | __error__=\"\" [5m]) by (pod)",
+            "legendFormat": "{{pod}} input p95",
+            "queryType": "range",
+            "refId": "A"
+          },
+          {
+            "editorMode": "code",
+            "expr": "quantile_over_time(0.95, {namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | status >= 200 | status < 400 | unwrap output_bytes | __error__=\"\" [5m]) by (pod)",
+            "legendFormat": "{{pod}} output p95",
+            "queryType": "range",
+            "refId": "B"
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "type": "logs",
+        "title": "Recent unsuccessful request logs",
+        "description": "HTTP 4xx and 5xx completion logs, newest first. Expand an entry for parsed fields and labels.",
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 24,
+          "x": 0,
+          "y": 28
+        },
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "options": {
+          "dedupStrategy": "none",
+          "enableInfiniteScrolling": false,
+          "enableLogDetails": true,
+          "prettifyLogMessage": false,
+          "showCommonLabels": false,
+          "showLabels": false,
+          "showTime": true,
+          "sortOrder": "Descending",
+          "wrapLogMessage": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "{namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | status >= 400 | __error__=\"\" | line_format \"{{.status}} {{.method}} {{.route}} error={{.error}} duration={{.duration_ms}}ms request_id={{.request_id}} pod={{.pod}}\"",
+            "maxLines": 200,
+            "queryType": "range",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "type": "logs",
+        "title": "Recent request logs",
+        "description": "All request-completion logs, newest first. Successful entries include dimensions and payload sizes when available.",
+        "datasource": {
+          "type": "loki",
+          "uid": "loki"
+        },
+        "gridPos": {
+          "h": 12,
+          "w": 24,
+          "x": 0,
+          "y": 38
+        },
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "options": {
+          "dedupStrategy": "none",
+          "enableInfiniteScrolling": false,
+          "enableLogDetails": true,
+          "prettifyLogMessage": false,
+          "showCommonLabels": false,
+          "showLabels": false,
+          "showTime": true,
+          "sortOrder": "Descending",
+          "wrapLogMessage": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "{namespace=\"image-resizer\", app=\"image-resizer-api\"} | json | msg=\"request completed\" | __error__=\"\" | line_format \"{{.status}} {{.method}} {{.route}} duration={{.duration_ms}}ms error={{.error}} input={{.input_width}}x{{.input_height}} target_width={{.target_width}} request_id={{.request_id}} pod={{.pod}}\"",
+            "maxLines": 300,
+            "queryType": "range",
+            "refId": "A"
+          }
+        ]
+      }
+    ]
+  },
+  "overwrite": true
+}

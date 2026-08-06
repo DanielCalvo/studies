@@ -1,7 +1,7 @@
 # Grafana dashboards
 
-This directory contains API payloads for dashboards published to the homelab
-Grafana instance at `http://192.168.1.221`.
+This directory contains API payloads for dashboards published to the HP cluster
+Grafana instance at `http://192.168.1.231`.
 
 `image-resizer-overview.json` uses the Prometheus datasource with UID
 `prometheus` and has a
@@ -17,7 +17,7 @@ separately.
 The published dashboard is available at:
 
 ```text
-http://192.168.1.221/d/image-resizer-overview/image-resizer-overview
+http://192.168.1.231/d/image-resizer-overview/image-resizer-overview
 ```
 
 `image-resizer-logs.json` uses the Loki datasource with UID `loki` and has the
@@ -34,7 +34,7 @@ Its default time range is one hour so recent overload and client-error
 experiments remain visible. The published dashboard is available at:
 
 ```text
-http://192.168.1.221/d/image-resizer-logs/image-resizer-logs
+http://192.168.1.231/d/image-resizer-logs/image-resizer-logs
 ```
 
 `image-resizer-tracing.json` connects the application's Prometheus metrics to
@@ -55,7 +55,14 @@ Tempo search supplies the trace tables.
 The published dashboard is available at:
 
 ```text
-http://192.168.1.221/d/image-resizer-tracing/image-resizer-tracing
+http://192.168.1.231/d/image-resizer-tracing/image-resizer-tracing
+```
+
+The Alert Sink Logs dashboard shows the disposable Alertmanager receiver's
+stdout through Loki:
+
+```text
+http://192.168.1.231/d/alert-sink-logs/alert-sink-logs
 ```
 
 Publish any version-controlled payload with:
@@ -65,17 +72,42 @@ curl --fail-with-body --silent --show-error \
   --user admin:admin \
   --header 'Content-Type: application/json' \
   --data-binary @image-resizer-overview.json \
-  http://192.168.1.221/api/dashboards/db
+  http://192.168.1.231/api/dashboards/db
 
 curl --fail-with-body --silent --show-error \
   --user admin:admin \
   --header 'Content-Type: application/json' \
   --data-binary @image-resizer-logs.json \
-  http://192.168.1.221/api/dashboards/db
+  http://192.168.1.231/api/dashboards/db
 
 curl --fail-with-body --silent --show-error \
   --user admin:admin \
   --header 'Content-Type: application/json' \
   --data-binary @image-resizer-tracing.json \
-  http://192.168.1.221/api/dashboards/db
+  http://192.168.1.231/api/dashboards/db
+
+curl --fail-with-body --silent --show-error \
+  --user admin:admin \
+  --header 'Content-Type: application/json' \
+  --data-binary @../alert-sink/alert-sink-logs.json \
+  http://192.168.1.231/api/dashboards/db
 ```
+
+## Synchronize the overview dashboard
+
+Use the sync script after saving manual Grafana UI changes to preserve them in
+the version-controlled JSON:
+
+```bash
+./sync-dashboard.sh pull
+git diff -- image-resizer-overview.json
+```
+
+Publish local JSON changes with:
+
+```bash
+./sync-dashboard.sh push
+```
+
+The script defaults to the homelab Grafana credentials. Override them when
+needed with `GRAFANA_URL`, `GRAFANA_USER`, and `GRAFANA_PASSWORD`.

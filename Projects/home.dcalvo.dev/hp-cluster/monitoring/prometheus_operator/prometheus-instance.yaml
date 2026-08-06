@@ -5,6 +5,7 @@ metadata:
   namespace: monitoring
 spec:
   version: v3.13.1 #pins the version of prometheus running, not the operator version, prometheus itself
+  enableRemoteWriteReceiver: true
   serviceAccountName: prometheus
   replicas: 2
   retention: 15d #this is the time limit for metric storage. Prometheus tries to retain the most recent 15 days of metrics and deletes older TSDB blocks.
@@ -19,6 +20,14 @@ spec:
   serviceMonitorSelector:
     matchLabels:
       prometheus: hp #selects all the service monitors that have these labels to know which metrics to scrape, so if you have a ton of them and they all have this label, prometheus will use all of them to know what to scrape
+  ruleSelector:
+    matchLabels:
+      prometheus: hp
+  alerting:
+    alertmanagers:
+      - namespace: monitoring
+        name: alertmanager-operated
+        port: web
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -35,9 +44,3 @@ spec:
         resources:
           requests:
             storage: 20Gi
-
-#  alerting:
-#    alertmanagers:
-#    - namespace: default
-#      name: alertmanager-example
-#      port: web

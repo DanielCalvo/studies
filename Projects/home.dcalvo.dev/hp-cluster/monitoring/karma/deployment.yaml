@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karma
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: karma
+    app.kubernetes.io/component: alert-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: karma
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: karma
+        app.kubernetes.io/component: alert-dashboard
+    spec:
+      containers:
+        - name: karma
+          image: ghcr.io/prymitive/karma:v0.131@sha256:7aefcecf6af1f0025a7c478bcb1243f38bd5f9f71c94f3f177c578fceba305e7
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ALERTMANAGER_URI
+              value: http://alertmanager-operated.monitoring.svc.cluster.local:9093
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65532
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault

@@ -10,7 +10,9 @@ exec xfce4-terminal \
     file_path="$1"
     cd "$(dirname "$file_path")"
 
-    /home/daniel/bin/c \
+    # Fix Markdown is routine cleanup, so use Luna at low reasoning for a faster run.
+    /home/daniel/bin/c luna \
+      -c model_reasoning_effort=low \
       "Run the fix markdown skill on $file_path -- the skill definition is located at /home/daniel/Projects/studies/.codex/skills/fix-markdown/SKILL.md"
 
     exec bash

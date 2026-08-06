@@ -1,8 +1,8 @@
 ## Metanotes
-I went over section 1 of the book with voice to text and an AI pass to fix typos. A quick pass on sections 2 and 3 is still pending. That and maybe organizing thes notes a bit better...
+I went over section 1 of the book with voice to text and an AI pass to fix typos. A quick pass on sections 2 and 3 is still pending. That and maybe organizing these notes a bit better...
 ---
 
-Chapter 1 the reliability stack
+## Chapter 1: The reliability stack
 
 I like that. On page two it says the question "is my service available?" is analogous to "is my service doing what its users need it to do?"
 
@@ -20,7 +20,7 @@ Your SLO then is a target for what that percentage should be.
 
 An error budget is a way of measuring how your SLI has performed against your SLO over a period of time. It defines how unreliable your service is permitted to be. If you go over your error budget, then you need to take corrective action. Like for example, dedicate a single engineer for reliability improvements.
 
-An SLA is a service level agreement that you have with the customer usually over a contract. SO FOR INSTANCE SLO IS USUALLY SOMETHING YOU HAVE INTERNALLY WITHIN YOUR ORG FOR AN OBJECTIVE THAT YOU'RE AIMING AT, while an SLA is something that you have agreed upon with a customer with a contract and if you break that contract, there might be some penalty or you might have to pay something back or you might not get paid or depends on the contract.
+An SLA is a service level agreement that you have with the customer usually over a contract. So for instance, an SLO is usually something you have internally within your org for an objective that you're aiming at, while an SLA is something that you have agreed upon with a customer with a contract and if you break that contract, there might be some penalty or you might have to pay something back or you might not get paid or it depends on the contract.
 
 The book then says SLIs are the most important part of the reliability stack and might be the most important part of the book! You might never get to the point of having a reasonable SLO target or a calculated error budget, but taking a step back and thinking about the service from your user's perspective can be very useful.
 On totality
@@ -65,7 +65,7 @@ The book encourages iterating. So for instance, first you pick some SLIs and the
 
 The author then says it's all about humans because SLOs should lead to happier engineers, product people, business and users. That should be the goal, not appending extra nines at the end of your SLO target
 
-chapter 2 How to think about reliability?
+## Chapter 2: How to think about reliability?
 
 The book says past performance matters. Your users probably expect the availability of your service to remain the same. So if it was reliable in the past, they expect it to be reliable in the future
 
@@ -92,7 +92,7 @@ When thinking of reliability, what really helps is to take a step back and put y
 
 This way you're thinking of your users first and they'll be happier and so will your engineering and operations teams because you won't be asking them to do the impossible
 
-Chapter 3 developing meaningful service level indicators
+## Chapter 3: Developing meaningful service level indicators
 
 SLIs are the most important part of the whole entire process
 
@@ -139,7 +139,7 @@ The book then briefly talks about user alignment and SLI and for instance an SLI
 
 The author then emphasizes that service level indicators are the most important part of an SLO based approach. You can have SLIs even if you don't have SLOs.
 
-Chapter 4 choosing good service level objectives
+## Chapter 4: Choosing good service level objectives
 
 SLOs are targets and good SLOs usually have two things in common. If you're exceeding your SLO target, your users are happy. If you are missing your SLO target, your users are unhappy.
 
@@ -205,7 +205,7 @@ If you're setting up an SLO for a service that doesn't have a history yet well t
 
 Remember that SLOs are objectives, not a formal agreement. Maybe you can pick data from other places like similar services or data from staging requests
 
-Chapter 5 how to use error budgets?
+## Chapter 5: How to use error budgets?
 
 Error budgets are the final part of the reliability stack and it takes a lot of effort and resources to use them properly and not every team or company always gets to that part
 
@@ -233,7 +233,7 @@ There's a famous and true story about a service named Chubby on Google that user
 
 Then the book goes into a bunch of details and calculating error budgets, choosing time windows like services that don't have to be available in the middle of the night and so on and so forth. I think this is all very useful reference, but perhaps it's best kept as reference as error budgets are very rarely reached in a capacity in which you have some surplus of it and that you can propose risky stuff yourself instead of it coming from various other sources. But still I think this is useful to keep in mind
 
-Then the book goes and discusses error budget policies.  These could document what you do if you burn a certain part of your error budget or all of it.
+Then the book goes and discusses error budget policies. These could document what you do if you burn a certain part of your error budget or all of it.
 For instance, you could have one of your engineers working on reliability after you've burnt a percentage of your budget.
 
 Error budgets might also have recommendations about communication because if you're out of error budget and services that depend on yours and they have their error budgets severely impacted the teams that are responsible for their services will want to know about this or maybe other departments. Yeah, I can see how this would happen so perhaps it is useful to document what to do

@@ -13,7 +13,7 @@ of 60 requests per minute:
 Set a different request rate with `-rpm`:
 
 ```bash
-/usr/local/go/bin/go run . -rpm 60
+/usr/local/go/bin/go run . -rpm 30
 ```
 
 The program creates any missing fixtures under `test-data/`, then sends one

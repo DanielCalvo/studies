@@ -19,6 +19,19 @@ file is the chronological record of what we actually build.
 
 ## Implemented sequence
 
+### 7. In-cluster steady observability traffic generator
+
+**Status:** Implemented and deployed
+
+The traffic generator is packaged as an ARM64 image and runs as one declarative
+Deployment replica in the OPI `image-resizer` namespace. It sends 30 resize
+requests per minute to the in-cluster Image Resizer Service, keeping logs,
+metrics, and traces active without requiring a workstation process.
+
+This follows the application deployment and observability work because it uses
+the existing internal Service and telemetry pipeline to provide a small,
+continuous workload for dashboards and operational experiments.
+
 ### 1. Minimal JPEG resizing service
 
 **Status:** Implemented
@@ -348,7 +361,8 @@ introducing concurrency controls and test-run statistics.
 
 The `Image Resizer Overview` dashboard is published to the homelab Grafana with
 the stable UID `image-resizer-overview`. Its version-controlled API payload lives
-at `grafana/image-resizer-overview.json` and contains twelve panels:
+at `hp-cluster/monitoring/grafana/dashboards/image-resizer/image-resizer-overview.json`
+and contains twelve panels:
 
 - Healthy Prometheus targets
 - Total, successful, and failed request counts for the selected time range
@@ -544,7 +558,8 @@ observable API outcome while keeping health endpoints available.
 
 The `Image Resizer Logs` dashboard is published to the homelab Grafana with the
 stable UID `image-resizer-logs`. Its version-controlled API payload lives at
-`grafana/image-resizer-logs.json` and contains twelve Loki-backed panels:
+`hp-cluster/monitoring/grafana/dashboards/image-resizer/image-resizer-logs.json`
+and contains twelve Loki-backed panels:
 
 - Total and successful request counts for the selected time range
 - Separate client rejection (4xx) and server failure (5xx) counts
@@ -694,6 +709,21 @@ the work performed by one request.
 - Finding rejected and failed traces without writing TraceQL manually
 - Adjusting the definition of a slow trace from a dashboard variable
 - Reusing the version-controlled dashboard after Grafana reinstalls
+
+### 18. SLI and SLO panels on the Image Resizer overview
+
+**Status:** Implemented
+
+The canonical HP Grafana overview now includes 30-day availability and latency
+SLI stat panels. Both exclude rejected requests, calculate only over eligible
+requests, and show the preliminary 99.9% SLO as the green threshold. The
+dashboard default time range is now 30 days so the panels match the stated
+rolling-window objective.
+
+This follows the metrics and dashboard work because the service already emits
+the request outcome and duration histograms needed to calculate the selected
+user-visible indicators. It also makes the SLO measurable without adding a
+new metrics component.
 
 ## Candidate next steps
 

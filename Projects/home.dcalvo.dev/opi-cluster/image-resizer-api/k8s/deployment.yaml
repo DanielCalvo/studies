@@ -52,7 +52,7 @@ spec:
             - name: OTEL_EXPORTER_OTLP_INSECURE
               value: "true"
             - name: OTEL_RESOURCE_ATTRIBUTES
-              value: "service.namespace=image-resizer,deployment.environment.name=homelab"
+              value: "service.namespace=image-resizer,deployment.environment.name=opi"
             # Optional override for CPU-heavy resize concurrency. When omitted,
             # the application uses runtime.GOMAXPROCS(0).
             # - name: MAX_CONCURRENT_RESIZES

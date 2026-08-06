@@ -203,7 +203,7 @@ curl http://192.168.1.222/metrics
 ```
 
 Prometheus is available at `http://192.168.1.223`. The ServiceMonitor is created
-in the `monitoring` namespace, carries the `prometheus: homelab` discovery label,
+in the `monitoring` namespace, carries the `prometheus: opi` discovery label,
 and selects the `image-resizer-api` Service in the `image-resizer` namespace.
 The deployment script applies it along with the application resources.
 
@@ -244,14 +244,16 @@ load test. See `traffic-gen/README.md` for details.
 ## Grafana dashboard
 
 The version-controlled dashboard definition is stored at
-`grafana/image-resizer-overview.json` and published to the homelab Grafana at
-`http://192.168.1.221/d/image-resizer-overview/image-resizer-overview`. It
+`hp-cluster/monitoring/grafana/dashboards/image-resizer/image-resizer-overview.json`
+and published to the HP Grafana at
+`http://192.168.1.231/d/image-resizer-overview/image-resizer-overview`. It
 presents service health, time-range request totals, request outcomes and latency,
 processing-stage latency, rejection reasons, and per-pod process CPU and memory.
 
 The Loki-backed request-log dashboard is stored at
-`grafana/image-resizer-logs.json` and published at
-`http://192.168.1.221/d/image-resizer-logs/image-resizer-logs`. It presents
+`hp-cluster/monitoring/grafana/dashboards/image-resizer/image-resizer-logs.json`
+and published at
+`http://192.168.1.231/d/image-resizer-logs/image-resizer-logs`. It presents
 request counts, 4xx and 5xx outcomes, error reasons, log-derived latency and
 payload sizes, per-pod traffic, recent unsuccessful requests, and the complete
 request log stream.

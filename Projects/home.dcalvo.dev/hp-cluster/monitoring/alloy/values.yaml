@@ -1,0 +1,213 @@
+# Pinned chart: grafana/alloy 1.10.0 (Alloy v1.17.0).
+crds:
+  create: false
+
+alloy:
+  enableReporting: false
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+  extraPorts:
+    - name: otlp-grpc
+      port: 4317
+      targetPort: 4317
+      protocol: TCP
+      appProtocol: h2c
+    - name: loki
+      port: 3100
+      targetPort: 3100
+      protocol: TCP
+    - name: metrics-rw
+      port: 9091
+      targetPort: 9091
+      protocol: TCP
+  configMap:
+    content: |
+      // Controls Alloy's own logs. This keeps operational messages readable
+      // without changing any of the traces that pass through the gateway.
+      logging {
+        level  = "info"
+        format = "logfmt"
+      }
+
+      // Listens for OTLP traces from the Orange Pi Alloy gateway on port 4317.
+      // Received traces are passed to the batch processor below.
+      otelcol.receiver.otlp "gateway" {
+        grpc {
+          endpoint = "0.0.0.0:4317"
+        }
+
+        output {
+          traces = [otelcol.processor.batch.traces.input]
+        }
+      }
+
+      // Groups spans into batches before exporting them. Batching reduces the
+      // number of requests sent from Alloy to Tempo.
+      otelcol.processor.batch "traces" {
+        output {
+          traces = [otelcol.exporter.otlp.tempo.input]
+        }
+      }
+
+      // Sends the batched traces to Tempo's private ClusterIP Service inside
+      // the HP cluster. TLS is disabled because this is the trusted home LAN.
+      otelcol.exporter.otlp "tempo" {
+        client {
+          endpoint = "tempo.monitoring.svc.cluster.local:4317"
+
+          tls {
+            insecure = true
+          }
+        }
+      }
+
+      // Receives Loki Push API requests from the Orange Pi Alloy instance on
+      // port 3100 and preserves the labels assigned by that edge collector.
+      loki.source.api "gateway" {
+        http {
+          listen_address = "0.0.0.0"
+          listen_port    = 3100
+        }
+
+        forward_to = [loki.write.loki.receiver]
+      }
+
+      // Keep the disposable Alertmanager test receiver's stdout available in
+      // Loki so it can be inspected from Grafana.
+      discovery.kubernetes "alert_sink_pods" {
+        role = "pod"
+      }
+
+      discovery.relabel "alert_sink_pods" {
+        targets = discovery.kubernetes.alert_sink_pods.targets
+
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          regex         = "monitoring"
+          action        = "keep"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+          regex         = "alert-sink"
+          action        = "keep"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          target_label  = "namespace"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+          target_label  = "app"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_name"]
+          target_label  = "pod"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_container_name"]
+          target_label  = "container"
+        }
+
+        rule {
+          target_label = "cluster"
+          replacement  = "hp"
+        }
+      }
+
+      loki.source.kubernetes "alert_sink" {
+        targets    = discovery.relabel.alert_sink_pods.output
+        forward_to = [loki.write.loki.receiver]
+      }
+
+      // Writes the received OPI log streams to Loki's private ClusterIP
+      // Service. This keeps Loki itself unreachable from the home LAN.
+      loki.write "loki" {
+        endpoint {
+          url = "http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push"
+        }
+      }
+
+      // Receives OPI remote-write requests and copies every sample to both HP
+      // Prometheus replicas.
+      prometheus.receive_http "gateway" {
+        http {
+          listen_address = "0.0.0.0"
+          listen_port    = 9091
+        }
+
+        forward_to = [
+          prometheus.remote_write.prometheus_0.receiver,
+          prometheus.remote_write.prometheus_1.receiver,
+        ]
+      }
+
+      prometheus.remote_write "prometheus_0" {
+        endpoint {
+          url = "http://prometheus-prometheus-0.prometheus-operated.monitoring.svc.cluster.local:9090/api/v1/write"
+        }
+      }
+
+      prometheus.remote_write "prometheus_1" {
+        endpoint {
+          url = "http://prometheus-prometheus-1.prometheus-operated.monitoring.svc.cluster.local:9090/api/v1/write"
+        }
+      }
+
+controller:
+  type: deployment
+  replicas: 1
+
+# Keep the Alloy UI and self-metrics private inside the HP cluster.
+service:
+  enabled: true
+  type: ClusterIP
+
+serviceMonitor:
+  enabled: true
+  additionalLabels:
+    prometheus: hp
+  interval: 30s
+
+# The chart's main Service also contains Alloy's UI port. Use a separate
+# LoadBalancer Service so the LAN can reach only telemetry ingestion ports.
+extraObjects:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: alloy-otlp
+      namespace: monitoring
+      annotations:
+        metallb.io/loadBalancerIPs: 192.168.1.232
+    spec:
+      type: LoadBalancer
+      externalTrafficPolicy: Local
+      loadBalancerSourceRanges:
+        - 192.168.1.201/32 # opi1
+        - 192.168.1.202/32 # opi2
+        - 192.168.1.46/32 # user's development machine
+      selector:
+        app.kubernetes.io/instance: alloy
+        app.kubernetes.io/name: alloy
+      ports:
+        - name: otlp-grpc
+          port: 4317
+          targetPort: otlp-grpc
+          protocol: TCP
+        - name: loki
+          port: 3100
+          targetPort: loki
+          protocol: TCP
+        - name: metrics-rw
+          port: 9091
+          targetPort: metrics-rw
+          protocol: TCP

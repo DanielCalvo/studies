@@ -63,12 +63,15 @@ For clarity, give each definition a unique `name`. The basic definition has an `
 
 For a tool that needs its own visible terminal, use `/usr/bin/xfce4-terminal` as `COMMAND`. Provide `--default-working-directory=&quot;$FileDir$&quot;` in `PARAMETERS`, then use `--execute` followed by the home-bin script and its arguments. This preserves the GoLand-selected directory while letting the user interact with the command.
 
+The `c` launcher accepts `resume` as its first argument. `c resume` opens the Codex session picker filtered to the current directory and does not override the saved session's model.
+
 ## Existing examples
 `External Tools.xml` already contains examples of these patterns:
 
-- `Fix Markdown` calls a home-bin script directly and passes `$FilePath$`
+- `Fix Markdown` calls a home-bin script directly, passes `$FilePath$`, and launches Codex with GPT-5.6 Luna at low reasoning
 - `Open terminal here` starts XFCE Terminal in `$FileDir$`
 - The `Open Codex` tools start XFCE Terminal in `$FileDir$`; the Terra and Luna variants pass model-selection arguments to the home-bin script, while the default tool relies on the script's Sol default
+- `Open Codex Resume` starts XFCE Terminal in `$FileDir$` and runs `c resume` to open the directory-filtered session picker
 
 Read their current XML entries as implementation examples, but do not modify unrelated tools when adding or changing another one.
 

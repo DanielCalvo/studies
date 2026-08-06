@@ -2,9 +2,15 @@
 set -euo pipefail
 
 model="gpt-5.6-sol"
+resume_session=false
 
 # A leading model selector is optional; running `c` without one defaults to Sol.
 case "${1:-}" in
+  resume)
+    # Resume without a model override so the saved session controls its model.
+    resume_session=true
+    shift
+    ;;
   luna)
     model="gpt-5.6-luna"
     shift
@@ -48,4 +54,9 @@ if [[ -z "$project_root" ]]; then
 fi
 
 cd "$project_root"
+
+if [[ "$resume_session" == true ]]; then
+  exec /home/daniel/.npm-global/bin/codex --cd "$relative_dir" resume "$@"
+fi
+
 exec /home/daniel/.npm-global/bin/codex --model "$model" --cd "$relative_dir" "$@"

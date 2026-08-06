@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: image-resizer-demo
+  namespace: monitoring
+  labels:
+    prometheus: hp
+spec:
+  groups:
+    - name: image-resizer-demo
+      rules:
+        - alert: ImageResizerDemoAlert
+          expr: vector(0) > 0
+          for: 1m
+          labels:
+            severity: info
+            environment: homelab
+          annotations:
+            summary: Image Resizer demo alert
+            description: This alert intentionally fires to test Prometheus and Alertmanager.

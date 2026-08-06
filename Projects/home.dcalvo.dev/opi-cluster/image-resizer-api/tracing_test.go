@@ -80,7 +80,7 @@ func TestSuccessfulResizeCreatesProcessingSpansAndCorrelatedLog(t *testing.T) {
 }
 
 func TestOpenTelemetryResourceMergesEnvironmentAttributes(t *testing.T) {
-	t.Setenv("OTEL_RESOURCE_ATTRIBUTES", "service.namespace=image-resizer,deployment.environment.name=homelab")
+	t.Setenv("OTEL_RESOURCE_ATTRIBUTES", "service.namespace=image-resizer,deployment.environment.name=opi")
 
 	res, err := newOpenTelemetryResource(context.Background())
 	if err != nil {
@@ -88,7 +88,7 @@ func TestOpenTelemetryResourceMergesEnvironmentAttributes(t *testing.T) {
 	}
 	assertSpanAttribute(t, res.Attributes(), "service.name", serviceName)
 	assertSpanAttribute(t, res.Attributes(), "service.namespace", "image-resizer")
-	assertSpanAttribute(t, res.Attributes(), "deployment.environment.name", "homelab")
+	assertSpanAttribute(t, res.Attributes(), "deployment.environment.name", "opi")
 }
 
 func TestRejectedResizeAnnotatesServerSpan(t *testing.T) {

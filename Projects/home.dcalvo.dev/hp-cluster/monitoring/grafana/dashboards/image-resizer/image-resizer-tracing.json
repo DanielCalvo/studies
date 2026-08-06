@@ -1,0 +1,738 @@
+{
+  "dashboard": {
+    "annotations": {
+      "list": []
+    },
+    "description": "A learning dashboard connecting aggregate image-resizer metrics in Prometheus with individual request traces in Tempo.",
+    "editable": true,
+    "graphTooltip": 1,
+    "id": null,
+    "links": [
+      {
+        "asDropdown": false,
+        "icon": "dashboard",
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Metrics overview",
+        "type": "link",
+        "url": "/d/image-resizer-overview/image-resizer-overview"
+      },
+      {
+        "asDropdown": false,
+        "icon": "logs",
+        "includeVars": true,
+        "keepTime": true,
+        "targetBlank": false,
+        "title": "Request logs",
+        "type": "link",
+        "url": "/d/image-resizer-logs/image-resizer-logs"
+      }
+    ],
+    "liveNow": true,
+    "panels": [
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "description": "Metrics summarize many requests; traces preserve the detailed timeline of one request.",
+        "gridPos": {
+          "h": 5,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "code": {
+            "language": "plaintext",
+            "showLineNumbers": false,
+            "showMiniMap": false
+          },
+          "content": "## How to read this dashboard\n\nThe charts use **Prometheus metrics** to answer “what is the service doing over time?” The tables use **Tempo traces** to answer “what happened inside this particular request?”\n\nStart with request rate and latency, then click a **Trace ID**. The trace view shows the parent `POST /v1/resize` span and its `read upload → decode → resize → encode` child spans. From a selected span, use **Logs for this span** to jump to its correlated Loki log.",
+          "mode": "markdown"
+        },
+        "pluginVersion": "12.3.1",
+        "title": "Metrics lead you to traces",
+        "transparent": true,
+        "type": "text"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "description": "All resize requests observed during the selected dashboard time range.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "blue",
+              "mode": "fixed"
+            },
+            "decimals": 0
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 0,
+          "y": 5
+        },
+        "id": 2,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum(increase(image_resizer_http_requests_total{namespace=\"image-resizer\",route=\"/v1/resize\"}[$__range])) or vector(0)",
+            "instant": true,
+            "legendFormat": "Requests",
+            "refId": "A"
+          }
+        ],
+        "title": "Requests in time range",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "description": "Percentage of requests that returned a successful response during the selected time range.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 1,
+            "max": 100,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 90
+                },
+                {
+                  "color": "green",
+                  "value": 99
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 6,
+          "y": 5
+        },
+        "id": 3,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "100 * sum(increase(image_resizer_http_requests_total{namespace=\"image-resizer\",route=\"/v1/resize\",outcome=\"succeeded\"}[$__range])) / clamp_min(sum(increase(image_resizer_http_requests_total{namespace=\"image-resizer\",route=\"/v1/resize\"}[$__range])), 1)",
+            "instant": true,
+            "legendFormat": "Success",
+            "refId": "A"
+          }
+        ],
+        "title": "Success percentage",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "description": "Current 95th-percentile successful-request latency calculated over five minutes.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 2,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 1
+                },
+                {
+                  "color": "red",
+                  "value": 2.5
+                }
+              ]
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 12,
+          "y": 5
+        },
+        "id": 4,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.95, sum(rate(image_resizer_http_request_duration_seconds_bucket{namespace=\"image-resizer\",route=\"/v1/resize\",outcome=\"succeeded\"}[5m])) by (le))",
+            "instant": true,
+            "legendFormat": "p95",
+            "refId": "A"
+          }
+        ],
+        "title": "Current p95 latency",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "description": "Client rejections and server failures during the selected time range.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "decimals": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 1
+                },
+                {
+                  "color": "red",
+                  "value": 10
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 6,
+          "x": 18,
+          "y": 5
+        },
+        "id": 5,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum(increase(image_resizer_http_requests_total{namespace=\"image-resizer\",route=\"/v1/resize\",outcome=~\"rejected|failed\"}[$__range])) or vector(0)",
+            "instant": true,
+            "legendFormat": "Unsuccessful",
+            "refId": "A"
+          }
+        ],
+        "title": "Unsuccessful requests",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "description": "Per-second request rate separated by outcome. Metrics reveal traffic shape but do not explain an individual request.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": true,
+              "axisColorMode": "text",
+              "axisPlacement": "auto",
+              "drawStyle": "line",
+              "fillOpacity": 18,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "smooth",
+              "lineWidth": 2,
+              "pointSize": 5,
+              "showPoints": "never",
+              "spanNulls": true,
+              "stacking": {
+                "group": "A",
+                "mode": "normal"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "min": 0,
+            "unit": "reqps"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 9
+        },
+        "id": 6,
+        "options": {
+          "legend": {
+            "calcs": [
+              "mean",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "sum(rate(image_resizer_http_requests_total{namespace=\"image-resizer\",route=\"/v1/resize\"}[$__rate_interval])) by (outcome)",
+            "legendFormat": "{{outcome}}",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Request rate by outcome",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "description": "Latency percentiles estimated from the request-duration histogram. A p95 spike is a good reason to inspect slow traces.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisPlacement": "auto",
+              "drawStyle": "line",
+              "fillOpacity": 8,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "smooth",
+              "lineWidth": 2,
+              "pointSize": 5,
+              "showPoints": "never",
+              "spanNulls": true,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "min": 0,
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 9
+        },
+        "id": 7,
+        "options": {
+          "legend": {
+            "calcs": [
+              "mean",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.50, sum(rate(image_resizer_http_request_duration_seconds_bucket{namespace=\"image-resizer\",route=\"/v1/resize\",outcome=\"succeeded\"}[$__rate_interval])) by (le))",
+            "legendFormat": "p50",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.95, sum(rate(image_resizer_http_request_duration_seconds_bucket{namespace=\"image-resizer\",route=\"/v1/resize\",outcome=\"succeeded\"}[$__rate_interval])) by (le))",
+            "legendFormat": "p95",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.99, sum(rate(image_resizer_http_request_duration_seconds_bucket{namespace=\"image-resizer\",route=\"/v1/resize\",outcome=\"succeeded\"}[$__rate_interval])) by (le))",
+            "legendFormat": "p99",
+            "range": true,
+            "refId": "C"
+          }
+        ],
+        "title": "Successful request latency",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "description": "The 95th percentile for each processing stage. These names correspond directly to child spans in successful traces.",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisPlacement": "auto",
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "smooth",
+              "lineWidth": 2,
+              "pointSize": 5,
+              "showPoints": "never",
+              "spanNulls": true,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "min": 0,
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 17
+        },
+        "id": 8,
+        "options": {
+          "legend": {
+            "calcs": [
+              "mean",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "right",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.95, sum(rate(image_resizer_processing_stage_duration_seconds_bucket{namespace=\"image-resizer\"}[$__rate_interval])) by (le, stage))",
+            "legendFormat": "{{stage}}",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Processing-stage p95 latency",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "tempo",
+          "uid": "tempo"
+        },
+        "description": "Individual request traces stored in Tempo. Click a Trace ID to open its complete waterfall and inspect span attributes.",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 12,
+          "w": 24,
+          "x": 0,
+          "y": 25
+        },
+        "id": 9,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "countRows": false,
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "limit": 50,
+            "query": "{ resource.service.name = \"image-resizer-api\" && name = \"POST /v1/resize\" }",
+            "queryType": "traceql",
+            "refId": "A",
+            "tableType": "traces"
+          }
+        ],
+        "title": "Recent resize traces — click a Trace ID",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "tempo",
+          "uid": "tempo"
+        },
+        "description": "Requests whose root span exceeded the selected threshold. Compare waterfalls to identify the dominant stage.",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 11,
+          "w": 12,
+          "x": 0,
+          "y": 37
+        },
+        "id": 10,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "countRows": false,
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "limit": 30,
+            "query": "{ resource.service.name = \"image-resizer-api\" && name = \"POST /v1/resize\" && duration > $slow_threshold }",
+            "queryType": "traceql",
+            "refId": "A",
+            "tableType": "traces"
+          }
+        ],
+        "title": "Slow traces (> $slow_threshold)",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "tempo",
+          "uid": "tempo"
+        },
+        "description": "Rejected or failed request traces selected using the custom image.outcome span attribute.",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 11,
+          "w": 12,
+          "x": 12,
+          "y": 37
+        },
+        "id": 11,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "countRows": false,
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "limit": 30,
+            "query": "{ resource.service.name = \"image-resizer-api\" && span.image.outcome =~ \"rejected|failed\" }",
+            "queryType": "traceql",
+            "refId": "A",
+            "tableType": "traces"
+          }
+        ],
+        "title": "Rejected and failed traces",
+        "type": "table"
+      }
+    ],
+    "refresh": "15s",
+    "schemaVersion": 41,
+    "tags": [
+      "image-resizer",
+      "tracing",
+      "opentelemetry",
+      "tempo"
+    ],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": true,
+            "text": "500ms",
+            "value": "500ms"
+          },
+          "hide": 0,
+          "includeAll": false,
+          "label": "Slow trace threshold",
+          "multi": false,
+          "name": "slow_threshold",
+          "options": [
+            {
+              "selected": false,
+              "text": "250ms",
+              "value": "250ms"
+            },
+            {
+              "selected": true,
+              "text": "500ms",
+              "value": "500ms"
+            },
+            {
+              "selected": false,
+              "text": "1s",
+              "value": "1s"
+            },
+            {
+              "selected": false,
+              "text": "2s",
+              "value": "2s"
+            }
+          ],
+          "query": "250ms,500ms,1s,2s",
+          "skipUrlSync": false,
+          "type": "custom"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "browser",
+    "title": "Image Resizer Tracing",
+    "uid": "image-resizer-tracing",
+    "version": 1
+  },
+  "folderUid": "",
+  "message": "Provision image-resizer metrics-to-traces learning dashboard",
+  "overwrite": true
+}

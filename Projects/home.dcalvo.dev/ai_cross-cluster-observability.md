@@ -33,7 +33,7 @@ OPI applications
                             restricted to OPI node IPs
                               |-- metrics --> Prometheus
                               |-- traces  --> Tempo
-                              `-- logs    --> Loki
+                              `-- logs    --> Loki.
 
                             Grafana --> internal ClusterIP backends
 ```

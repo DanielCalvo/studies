@@ -2,11 +2,12 @@ prometheus:
   monitor:
     enabled: true
     additionalLabels:
-      prometheus: homelab
+      prometheus: opi
+      alloy: opi
     relabelings:
       # Supplies the cluster selector expected by the Kubernetes Views dashboards.
       - targetLabel: cluster
-        replacement: homelab
+        replacement: opi
 
 resources:
   requests:

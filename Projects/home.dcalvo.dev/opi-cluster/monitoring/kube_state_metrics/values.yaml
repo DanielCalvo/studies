@@ -1,0 +1,21 @@
+# Pinned chart: prometheus-community/kube-state-metrics 7.5.1
+# (kube-state-metrics v2.19.1).
+prometheus:
+  monitor:
+    enabled: true
+    additionalLabels:
+      alloy: opi
+    http:
+      interval: 30s
+      honorLabels: true
+      relabelings:
+        # Identify the cluster where these metrics originated.
+        - targetLabel: cluster
+          replacement: opi
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    memory: 128Mi
